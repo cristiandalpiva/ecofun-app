@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,34 +18,39 @@ const EcoQuiz = ({ onComplete, onBack }: EcoQuizProps) => {
 
   const questions = [
     {
-      question: "¿Cuál es la mejor manera de ahorrar agua?",
-      options: ["Dejar el grifo abierto", "Cerrar el grifo al lavarse los dientes", "Bañarse por horas", "Usar más jabón"],
+      question: "¿Cuál es la mejor manera de ahorrar agua en casa?",
+      options: ["Dejar el grifo abierto mientras me lavo los dientes", "Cerrar el grifo cuando no lo necesito", "Bañarme por mucho tiempo", "Usar más jabón para limpiar mejor"],
       correct: 1,
-      explanation: "¡Correcto! Cerrar el grifo puede ahorrar hasta 20 litros de agua por minuto. 💧"
+      explanation: "¡Muy bien! Cerrar el grifo mientras te lavas los dientes puede ahorrar hasta 20 litros de agua. ¡Es súper fácil de hacer! 💧",
+      wrongExplanation: "Recuerda: cada gota cuenta. Cerrar el grifo cuando no lo usas es una forma súper fácil de cuidar el agua. ¡Tú puedes hacerlo! 💧"
     },
     {
-      question: "¿Qué podemos hacer con el papel usado?",
-      options: ["Tirarlo a la basura", "Quemarlo", "Reciclarlo o reutilizarlo", "Dejarlo en el suelo"],
+      question: "¿Qué puedo hacer con el papel que ya usé de un lado?",
+      options: ["Tirarlo directo a la basura", "Quemarlo en el patio", "Usarlo del otro lado para dibujar o escribir", "Dejarlo tirado por ahí"],
       correct: 2,
-      explanation: "¡Excelente! Reciclar papel ayuda a salvar árboles y reduce la contaminación. 🌳"
+      explanation: "¡Excelente idea! Usar el papel por ambos lados es súper inteligente. ¡Así ayudas a salvar árboles! 🌳",
+      wrongExplanation: "¡No te preocupes! El papel tiene dos lados útiles. Antes de tirarlo, puedes usarlo para dibujar o hacer tareas del otro lado. 📝"
     },
     {
-      question: "¿Cuál de estos es mejor para el medio ambiente?",
-      options: ["Caminar o andar en bicicleta", "Usar el auto para distancias cortas", "Dejar las luces encendidas", "Tirar basura en la calle"],
+      question: "¿Cuál es una buena forma de moverme cerca de casa?",
+      options: ["Caminar o andar en bici (siempre con un adulto)", "Pedir que me lleven en auto para distancias muy cortas", "Dejar las luces prendidas cuando salgo", "Tirar papeles en las plantas"],
       correct: 0,
-      explanation: "¡Perfecto! Caminar y andar en bici no contamina y es bueno para tu salud. 🚲"
+      explanation: "¡Perfecto! Caminar y andar en bici es divertido y cuida el planeta. Recuerda: siempre con un adulto que te cuide. 🚲",
+      wrongExplanation: "Caminar o andar en bici es súper divertido y cuida el aire que respiramos. ¡Solo recuerda hacerlo siempre con un adulto! 🚶‍♂️"
     },
     {
-      question: "¿Dónde va el plástico?",
-      options: ["En cualquier basurero", "En el contenedor de reciclaje", "En el suelo", "En el agua"],
+      question: "¿Dónde va una botella de plástico vacía?",
+      options: ["En cualquier basurero", "En el contenedor especial para plásticos", "Tirarla en la calle", "Dejarla en el parque"],
       correct: 1,
-      explanation: "¡Genial! El plástico reciclado puede convertirse en nuevos productos útiles. ♻️"
+      explanation: "¡Genial! Separar el plástico ayuda a que se pueda reciclar y se convierta en cosas nuevas y útiles. ♻️",
+      wrongExplanation: "El plástico es especial y necesita ir en su contenedor correcto para poder reciclarse. ¡Así puede tener una segunda vida! ♻️"
     },
     {
-      question: "¿Qué necesitan las plantas para crecer?",
-      options: ["Solo agua", "Agua, luz solar y aire limpio", "Solo tierra", "Música fuerte"],
+      question: "¿Qué necesitan las plantas para estar felices y crecer?",
+      options: ["Solo mucha agua", "Agua, luz del sol y aire limpio", "Solo tierra", "Música muy fuerte todo el día"],
       correct: 1,
-      explanation: "¡Correcto! Las plantas necesitan agua, luz solar y aire limpio para crecer sanas. 🌱"
+      explanation: "¡Correcto! Las plantas son como nosotros: necesitan agua, luz y aire limpio para estar sanas y felices. 🌱",
+      wrongExplanation: "Las plantas son seres vivos como nosotros. Necesitan agua cuando tienen sed, luz del sol para su comida y aire limpio para respirar. 🌿"
     }
   ];
 
@@ -90,8 +94,16 @@ const EcoQuiz = ({ onComplete, onBack }: EcoQuizProps) => {
               <p className="text-xl text-gray-700 mb-4">
                 Respondiste correctamente {score} de {questions.length} preguntas
               </p>
-              <p className="text-lg text-green-600 mb-6">
+              <p className="text-lg text-green-600 mb-4">
                 ¡Ganaste {score * 20} puntos ecológicos!
+              </p>
+              <p className="text-base text-gray-600 mb-6">
+                {score >= 4 
+                  ? "¡Eres un súper EcoHéroe! Sabes mucho sobre cuidar nuestro planeta 🌍" 
+                  : score >= 3 
+                  ? "¡Muy bien! Ya sabes muchas formas de cuidar la naturaleza 🌿"
+                  : "¡Buen trabajo! Cada día puedes aprender más sobre cómo cuidar nuestro hogar: la Tierra 🌱"
+                }
               </p>
               <div className="space-y-3">
                 <Button 
@@ -180,7 +192,10 @@ const EcoQuiz = ({ onComplete, onBack }: EcoQuizProps) => {
             {showExplanation && (
               <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-4">
                 <p className="text-blue-800 text-center font-semibold">
-                  {questions[currentQuestion].explanation}
+                  {selectedAnswer === questions[currentQuestion].correct 
+                    ? questions[currentQuestion].explanation
+                    : questions[currentQuestion].wrongExplanation
+                  }
                 </p>
               </div>
             )}

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,11 +23,41 @@ const Index = () => {
   const [badges, setBadges] = useState(["🌱", "💡"]);
 
   const weeklyAchievements = [
-    { id: 0, title: "Apaga 3 luces", description: "Ahorra energía en casa", points: 50, completed: true },
-    { id: 1, title: "Reutiliza papel", description: "Dibuja en el reverso", points: 30, completed: false },
-    { id: 2, title: "Riega una planta", description: "Cuida la naturaleza", points: 40, completed: true },
-    { id: 3, title: "Separa residuos", description: "Recicla correctamente", points: 60, completed: false },
-    { id: 4, title: "Camina al parque", description: "Movilidad sustentable", points: 35, completed: false },
+    { 
+      id: 0, 
+      title: "Apaga luces que no uses", 
+      description: "Cuando salgas de tu cuarto o no las necesites (pregúntale a un adulto si tienes dudas)", 
+      points: 50, 
+      completed: true 
+    },
+    { 
+      id: 1, 
+      title: "Reutiliza papel usado", 
+      description: "Usa el otro lado para dibujar, hacer aviones de papel o practicar escritura", 
+      points: 30, 
+      completed: false 
+    },
+    { 
+      id: 2, 
+      title: "Cuida una planta", 
+      description: "Riégala con ayuda de un adulto o ayuda a sembrar una semillita", 
+      points: 40, 
+      completed: true 
+    },
+    { 
+      id: 3, 
+      title: "Separa los residuos", 
+      description: "Pon cada cosa en su lugar: papel, plástico, orgánico (pide ayuda si no sabes)", 
+      points: 60, 
+      completed: false 
+    },
+    { 
+      id: 4, 
+      title: "Camina con un adulto", 
+      description: "Ve caminando a lugares cercanos acompañado de mamá, papá o un adulto de confianza", 
+      points: 35, 
+      completed: false 
+    },
   ];
 
   const games = [
