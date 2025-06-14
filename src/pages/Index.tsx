@@ -20,7 +20,8 @@ import {
   Play,
   Pause,
   Droplets,
-  Trash2
+  Trash2,
+  Leaf
 } from "lucide-react";
 import EcoMascot from "@/components/EcoMascot";
 import EcoQuiz from "@/components/games/EcoQuiz";
@@ -56,11 +57,41 @@ const Index = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   const plantStages = [
-    { name: "Semilla", emoji: "🌰", minPoints: 0 },
-    { name: "Brote", emoji: "🌱", minPoints: 100 },
-    { name: "Plantita", emoji: "🌿", minPoints: 300 },
-    { name: "Planta", emoji: "🪴", minPoints: 600 },
-    { name: "Árbol", emoji: "🌳", minPoints: 1000 }
+    { 
+      name: "Semilla", 
+      emoji: "🌰", 
+      minPoints: 0, 
+      icon: "✨", 
+      description: "Una pequeña semilla llena de potencial" 
+    },
+    { 
+      name: "Brote", 
+      emoji: "🌱", 
+      minPoints: 100, 
+      icon: "🌟", 
+      description: "¡Tu primera hojita ha aparecido!" 
+    },
+    { 
+      name: "Plantita", 
+      emoji: "🌿", 
+      minPoints: 300, 
+      icon: "💚", 
+      description: "Una hermosa plantita verde" 
+    },
+    { 
+      name: "Planta", 
+      emoji: "🪴", 
+      minPoints: 600, 
+      icon: "🏆", 
+      description: "Una planta fuerte y saludable" 
+    },
+    { 
+      name: "Árbol", 
+      emoji: "🌳", 
+      minPoints: 1000, 
+      icon: "👑", 
+      description: "¡Un majestuoso árbol protector!" 
+    }
   ];
 
   const educationalTopics = [
@@ -211,6 +242,17 @@ const Index = () => {
     }
   ];
 
+  // Detect mobile devices
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
+
   // Initialize speech synthesis
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -358,64 +400,67 @@ const Index = () => {
   if (showEducationalContent) {
     const topic = educationalTopics[currentEducationalTopic];
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-green-50 to-cyan-100 p-4">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-green-50 to-cyan-100 p-3 sm:p-4">
         <div className="max-w-2xl mx-auto">
           <Card className="bg-white/90 backdrop-blur-sm border-2 border-emerald-200 shadow-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-3">
-                  <div className="text-4xl">{topic.icon}</div>
-                  <h1 className="text-2xl font-bold text-emerald-700">{topic.title}</h1>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="text-3xl sm:text-4xl">{topic.icon}</div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-emerald-700">{topic.title}</h1>
                 </div>
                 <Button 
                   variant="outline" 
                   onClick={() => setShowEducationalContent(false)}
-                  className="text-gray-600 hover:text-gray-800"
+                  className="text-gray-600 hover:text-gray-800 text-sm sm:text-base"
                 >
                   ← Volver
                 </Button>
               </div>
               
-              <div className="space-y-4">
-                <div className="bg-gradient-to-r from-emerald-100 to-cyan-100 p-4 rounded-lg relative">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="bg-gradient-to-r from-emerald-100 to-cyan-100 p-3 sm:p-4 rounded-lg relative">
                   <div className="flex items-start justify-between">
-                    <p className="text-gray-700 leading-relaxed pr-4">{topic.content}</p>
+                    <p className="text-gray-700 leading-relaxed pr-3 sm:pr-4 text-sm sm:text-base">{topic.content}</p>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => readText(topic.content)}
                       className="text-emerald-600 hover:text-emerald-800 hover:bg-emerald-100 flex-shrink-0"
                       title="Escuchar contenido"
+                      aria-label="Escuchar contenido educativo"
                     >
-                      {isReading ? <Pause className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                      {isReading ? <Pause className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
                     </Button>
                   </div>
                 </div>
                 
-                <div className="bg-amber-100 p-4 rounded-lg border-2 border-amber-300 relative">
+                <div className="bg-amber-100 p-3 sm:p-4 rounded-lg border-2 border-amber-300 relative">
                   <div className="flex items-center space-x-2 mb-2">
-                    <Lightbulb className="text-amber-600 w-5 h-5" />
-                    <span className="font-semibold text-amber-800">Dato Curioso</span>
+                    <Lightbulb className="text-amber-600 w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="font-semibold text-amber-800 text-sm sm:text-base">Dato Curioso</span>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => readText(topic.tip)}
                       className="text-amber-600 hover:text-amber-800 hover:bg-amber-200 ml-auto"
                       title="Escuchar dato curioso"
+                      aria-label="Escuchar dato curioso"
                     >
-                      {isReading ? <Pause className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                      {isReading ? <Pause className="w-3 h-3 sm:w-4 sm:h-4" /> : <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />}
                     </Button>
                   </div>
-                  <p className="text-amber-700 text-sm">{topic.tip}</p>
+                  <p className="text-amber-700 text-xs sm:text-sm">{topic.tip}</p>
                 </div>
               </div>
               
-              <div className="flex justify-between items-center mt-6">
+              <div className="flex flex-col sm:flex-row justify-between items-center mt-4 sm:mt-6 space-y-3 sm:space-y-0">
                 <div className="flex space-x-2">
                   {currentEducationalTopic > 0 && (
                     <Button 
                       variant="outline"
                       onClick={() => setCurrentEducationalTopic(currentEducationalTopic - 1)}
+                      className="text-sm"
                     >
                       ← Anterior
                     </Button>
@@ -424,6 +469,7 @@ const Index = () => {
                     <Button 
                       variant="outline"
                       onClick={() => setCurrentEducationalTopic(currentEducationalTopic + 1)}
+                      className="text-sm"
                     >
                       Siguiente →
                     </Button>
@@ -432,14 +478,14 @@ const Index = () => {
                 
                 <Button 
                   onClick={handleEducationalComplete}
-                  className="bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-500 hover:to-cyan-500 text-white font-semibold px-6 py-2 rounded-full"
+                  className="bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-500 hover:to-cyan-500 text-white font-semibold px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base"
                 >
                   ¡Completar Reto! +45 pts
                 </Button>
               </div>
               
-              <div className="mt-4 text-center">
-                <p className="text-sm text-gray-500">
+              <div className="mt-3 sm:mt-4 text-center">
+                <p className="text-xs sm:text-sm text-gray-500">
                   Tema {currentEducationalTopic + 1} de {educationalTopics.length}
                 </p>
               </div>
@@ -515,8 +561,13 @@ const Index = () => {
             <>
               {/* Top row: Logo and Menu */}
               <div className="flex items-center justify-between mb-3">
-                <div className="text-xl font-bold text-white bg-white/20 px-2 py-1 rounded-full border border-white/30 shadow-lg backdrop-blur-sm">
-                  <span className="text-amber-300">Eco</span><span className="text-emerald-200">Fun</span>
+                <div className="flex items-center space-x-1">
+                  <Leaf className="w-5 h-5 text-emerald-200" />
+                  <div className="text-xl font-bold">
+                    <span className="text-transparent bg-gradient-to-r from-yellow-300 to-emerald-200 bg-clip-text">
+                      EcoFun
+                    </span>
+                  </div>
                 </div>
                 
                 <div className="relative">
@@ -525,6 +576,7 @@ const Index = () => {
                     size="icon"
                     onClick={() => setShowMenu(!showMenu)}
                     className="text-white hover:bg-white/20"
+                    aria-label={showMenu ? "Cerrar menú" : "Abrir menú"}
                   >
                     {showMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                   </Button>
@@ -536,7 +588,7 @@ const Index = () => {
                         <button
                           key={item.id}
                           onClick={item.action}
-                          className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-emerald-50 transition-colors text-left"
+                          className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-emerald-50 transition-colors text-left focus:outline-none focus:bg-emerald-50"
                         >
                           <item.icon className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                           <span className="text-sm font-medium">{item.title}</span>
@@ -550,10 +602,13 @@ const Index = () => {
               {/* Bottom row: Plant Info */}
               <div className="flex items-center justify-center">
                 <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/20">
-                  <EcoMascot size="small" plantStage={plantStage} />
+                  <div className="flex items-center space-x-1">
+                    <span className="text-lg">{plantStages[plantStage].emoji}</span>
+                    <span className="text-sm">{plantStages[plantStage].icon}</span>
+                  </div>
                   <div className="text-center">
                     <h1 className="text-sm font-bold">¡Hola, EcoExploradorx!</h1>
-                    <p className="text-emerald-100 text-xs">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} pts</p>
+                    <p className="text-emerald-100 text-xs">{plantStages[plantStage].name} • {points} pts</p>
                   </div>
                 </div>
               </div>
@@ -563,18 +618,26 @@ const Index = () => {
             <div className="flex items-center justify-between">
               {/* Logo - Left */}
               <div className="flex-shrink-0">
-                <div className="text-2xl sm:text-3xl font-bold text-white bg-white/20 px-3 py-2 rounded-full border-2 border-white/30 shadow-lg backdrop-blur-sm">
-                  <span className="text-amber-300">Eco</span><span className="text-emerald-200">Fun</span>
+                <div className="flex items-center space-x-2">
+                  <Leaf className="w-7 h-7 text-emerald-200" />
+                  <div className="text-2xl sm:text-3xl font-bold">
+                    <span className="text-transparent bg-gradient-to-r from-yellow-300 to-emerald-200 bg-clip-text">
+                      EcoFun
+                    </span>
+                  </div>
                 </div>
               </div>
               
               {/* Plant Info - Center */}
               <div className="flex-1 flex items-center justify-center px-4">
                 <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
-                  <EcoMascot size="large" plantStage={plantStage} />
+                  <div className="flex items-center space-x-2">
+                    <span className="text-2xl">{plantStages[plantStage].emoji}</span>
+                    <span className="text-xl">{plantStages[plantStage].icon}</span>
+                  </div>
                   <div className="text-center">
                     <h1 className="text-lg sm:text-xl font-bold">¡Hola, EcoExploradorx!</h1>
-                    <p className="text-emerald-100 text-sm">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
+                    <p className="text-emerald-100 text-sm">{plantStages[plantStage].name} • {points} puntos</p>
                   </div>
                 </div>
               </div>
@@ -586,6 +649,7 @@ const Index = () => {
                   size="icon"
                   onClick={() => setShowMenu(!showMenu)}
                   className="text-white hover:bg-white/20"
+                  aria-label={showMenu ? "Cerrar menú" : "Abrir menú"}
                 >
                   {showMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                 </Button>
@@ -597,7 +661,7 @@ const Index = () => {
                       <button
                         key={item.id}
                         onClick={item.action}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-emerald-50 transition-colors text-left"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-emerald-50 transition-colors text-left focus:outline-none focus:bg-emerald-50"
                       >
                         <item.icon className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                         <span className="text-sm font-medium">{item.title}</span>
@@ -612,7 +676,7 @@ const Index = () => {
       </header>
 
       <main className="flex-1">
-        <div className="max-w-6xl mx-auto p-3 sm:p-4 lg:p-6 space-y-6 sm:space-y-8">
+        <div className="max-w-6xl mx-auto p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6 lg:space-y-8">
           {/* Daily Tip */}
           <Card className="bg-gradient-to-r from-amber-100 to-orange-100 border-2 border-amber-300 shadow-lg">
             <CardContent className="p-3 sm:p-4 lg:p-6">
@@ -620,7 +684,7 @@ const Index = () => {
                 <Lightbulb className="text-amber-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
                 <div className="min-w-0">
                   <h3 className="font-bold text-amber-800 mb-1 text-sm sm:text-lg">Consejo del Día</h3>
-                  <p className="text-amber-700 text-xs sm:text-sm lg:text-base">{todaysTip}</p>
+                  <p className="text-amber-700 text-xs sm:text-sm lg:text-base leading-relaxed">{todaysTip}</p>
                 </div>
               </div>
             </CardContent>
@@ -632,8 +696,9 @@ const Index = () => {
               <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <span className="text-sm sm:text-lg lg:text-xl font-semibold text-emerald-700">Progreso de tu Planta</span>
                 <div className="flex items-center space-x-1 sm:space-x-2">
-                  <span className="text-xl sm:text-2xl lg:text-3xl">{plantStages[plantStage].emoji}</span>
-                  <span className="text-xs sm:text-sm lg:text-base text-emerald-600 font-medium">{plantStages[plantStage].name}</span>
+                  <span className="text-lg sm:text-2xl lg:text-3xl">{plantStages[plantStage].emoji}</span>
+                  <span className="text-sm sm:text-lg lg:text-xl">{plantStages[plantStage].icon}</span>
+                  <span className="text-xs sm:text-sm lg:text-base text-emerald-600 font-medium ml-1">{plantStages[plantStage].name}</span>
                 </div>
               </div>
               <Progress 
@@ -644,9 +709,10 @@ const Index = () => {
                 className="h-3 sm:h-4" 
               />
               {plantStage < plantStages.length - 1 && (
-                <p className="text-xs sm:text-sm text-gray-500 mt-2 text-center">
-                  {plantStages[plantStage + 1].minPoints - points} puntos para {plantStages[plantStage + 1].name}
-                </p>
+                <div className="flex justify-between items-center mt-2 text-xs sm:text-sm text-gray-500">
+                  <span>{plantStages[plantStage].description}</span>
+                  <span>{plantStages[plantStage + 1].minPoints - points} pts para {plantStages[plantStage + 1].name}</span>
+                </div>
               )}
             </CardContent>
           </Card>
@@ -689,7 +755,7 @@ const Index = () => {
                         <div className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-gray-300 rounded-full flex-shrink-0 group-hover:border-emerald-400 transition-colors duration-200"></div>
                       )}
                     </div>
-                    <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">{challenge.description}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed">{challenge.description}</p>
                     <Badge variant="secondary" className="bg-amber-100 text-amber-800 border border-amber-300 text-xs">
                       +{challenge.points} puntos
                     </Badge>
@@ -717,7 +783,7 @@ const Index = () => {
                       {game.icon}
                     </div>
                     <h3 className="font-bold text-sm sm:text-base lg:text-lg text-gray-800 mb-1 sm:mb-2 group-hover:text-emerald-700 transition-colors duration-200">{game.title}</h3>
-                    <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">{game.description}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed">{game.description}</p>
                     <Button className="bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-500 hover:to-cyan-500 text-white font-semibold px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-full shadow-lg transition-all duration-300 text-xs sm:text-sm lg:text-base hover:scale-105 hover:shadow-xl">
                       ¡Jugar!
                     </Button>

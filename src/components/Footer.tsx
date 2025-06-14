@@ -6,92 +6,98 @@ const Footer = () => {
 
   return (
     <footer className="bg-gradient-to-r from-green-600 to-blue-600 text-white mt-auto">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Logo y descripción */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="text-2xl font-bold text-white bg-white/20 px-3 py-1 rounded-full border border-white/30">
-                <span className="text-yellow-300">Eco</span><span className="text-green-200">Fun</span>
+              <div className="text-xl sm:text-2xl font-bold text-transparent bg-gradient-to-r from-yellow-300 to-green-200 bg-clip-text">
+                EcoFun
               </div>
             </div>
             <p className="text-green-100 text-sm leading-relaxed">
               Plataforma educativa que enseña a cuidar el planeta de forma divertida y segura para toda la familia.
             </p>
             <div className="flex items-center space-x-2 text-sm text-green-200">
-              <Shield className="w-4 h-4" />
+              <Shield className="w-4 h-4" aria-hidden="true" />
               <span>Contenido seguro para menores</span>
             </div>
           </div>
 
           {/* Enlaces útiles */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white">Contenido</h4>
-            <ul className="space-y-2 text-green-100">
-              <li>
-                <a href="#juegos" className="hover:text-white transition-colors text-sm">
-                  Juegos Educativos
-                </a>
-              </li>
-              <li>
-                <a href="#retos" className="hover:text-white transition-colors text-sm">
-                  Retos Semanales
-                </a>
-              </li>
-              <li>
-                <a href="#aprender" className="hover:text-white transition-colors text-sm">
-                  Contenido Educativo
-                </a>
-              </li>
-              <li>
-                <a href="#consejos" className="hover:text-white transition-colors text-sm">
-                  Consejos Diarios
-                </a>
-              </li>
-            </ul>
+          <div className="space-y-3 sm:space-y-4">
+            <h4 className="text-base sm:text-lg font-semibold text-white">Contenido</h4>
+            <nav aria-label="Enlaces de contenido">
+              <ul className="space-y-2 text-green-100">
+                <li>
+                  <a href="#juegos" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                    Juegos Educativos
+                  </a>
+                </li>
+                <li>
+                  <a href="#retos" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                    Retos Semanales
+                  </a>
+                </li>
+                <li>
+                  <a href="#aprender" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                    Contenido Educativo
+                  </a>
+                </li>
+                <li>
+                  <a href="#consejos" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                    Consejos Diarios
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
 
           {/* Información legal */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white">Información</h4>
-            <ul className="space-y-2 text-green-100">
-              <li>
-                <a href="#privacidad" className="hover:text-white transition-colors text-sm">
-                  Política de Privacidad
-                </a>
-              </li>
-              <li>
-                <a href="#terminos" className="hover:text-white transition-colors text-sm">
-                  Términos de Uso
-                </a>
-              </li>
-              <li>
-                <a href="#seguridad" className="hover:text-white transition-colors text-sm">
-                  Seguridad Infantil
-                </a>
-              </li>
-              <li>
-                <a href="#padres" className="hover:text-white transition-colors text-sm">
-                  Información para Padres
-                </a>
-              </li>
-            </ul>
+          <div className="space-y-3 sm:space-y-4">
+            <h4 className="text-base sm:text-lg font-semibold text-white">Información</h4>
+            <nav aria-label="Enlaces legales">
+              <ul className="space-y-2 text-green-100">
+                <li>
+                  <a href="#privacidad" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                    Política de Privacidad
+                  </a>
+                </li>
+                <li>
+                  <a href="#terminos" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                    Términos de Uso
+                  </a>
+                </li>
+                <li>
+                  <a href="#seguridad" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                    Seguridad Infantil
+                  </a>
+                </li>
+                <li>
+                  <a href="#padres" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                    Información para Padres
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
 
           {/* Contacto */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white">Contacto</h4>
+          <div className="space-y-3 sm:space-y-4">
+            <h4 className="text-base sm:text-lg font-semibold text-white">Contacto</h4>
             <div className="space-y-3 text-green-100">
               <div className="flex items-center space-x-2 text-sm">
-                <Mail className="w-4 h-4 text-green-200" />
-                <span>hola@ecofun.app</span>
+                <Mail className="w-4 h-4 text-green-200" aria-hidden="true" />
+                <a href="mailto:hola@ecofun.app" className="hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                  hola@ecofun.app
+                </a>
               </div>
               <div className="flex items-center space-x-2 text-sm">
-                <Phone className="w-4 h-4 text-green-200" />
+                <Phone className="w-4 h-4 text-green-200" aria-hidden="true" />
                 <span>Soporte familias</span>
               </div>
               <div className="flex items-center space-x-2 text-sm">
-                <MapPin className="w-4 h-4 text-green-200" />
+                <MapPin className="w-4 h-4 text-green-200" aria-hidden="true" />
                 <span>Educación global</span>
               </div>
             </div>
@@ -99,15 +105,15 @@ const Footer = () => {
         </div>
 
         {/* Separador */}
-        <div className="border-t border-white/20 mt-8 pt-6">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex items-center space-x-4 text-sm text-green-100">
+        <div className="border-t border-white/20 mt-6 sm:mt-8 pt-4 sm:pt-6">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0">
+            <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm text-green-100">
               <div className="flex items-center space-x-1">
-                <Heart className="w-4 h-4 text-red-300" />
+                <Heart className="w-4 h-4 text-red-300" aria-hidden="true" />
                 <span>Hecho con amor por el planeta</span>
               </div>
               <div className="flex items-center space-x-1">
-                <Leaf className="w-4 h-4 text-green-300" />
+                <Leaf className="w-4 h-4 text-green-300" aria-hidden="true" />
                 <span>Educación sostenible</span>
               </div>
             </div>

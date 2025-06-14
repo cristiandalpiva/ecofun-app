@@ -1,349 +1,367 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Heart, CheckCircle, XCircle } from 'lucide-react';
-import { toast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, CheckCircle, XCircle, Binoculars } from "lucide-react";
 
 interface AnimalQuizProps {
   onComplete: (points: number) => void;
   onBack: () => void;
 }
 
-interface Animal {
-  id: number;
-  name: string;
-  image: string;
-  description: string;
-  habitat: string;
-  diet: string;
-  conservation: string;
-}
-
-const AnimalQuiz: React.FC<AnimalQuizProps> = ({ onComplete, onBack }) => {
+const AnimalQuiz = ({ onComplete, onBack }: AnimalQuizProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(20);
-  const [gameCompleted, setGameCompleted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(25);
+  const [gamePhase, setGamePhase] = useState<'playing' | 'finished'>('playing');
 
-  const animals: Animal[] = [
+  const questions = [
     {
-      id: 1,
-      name: "León",
-      image: "🦁",
-      description: "Rey de la selva con melena dorada",
-      habitat: "Sabana africana",
-      diet: "Carnívoro",
-      conservation: "Vulnerable"
+      question: "¿Cuál es el animal más grande del mundo?",
+      image: "🐋",
+      options: ["Elefante africano", "Ballena azul", "Jirafa", "Tiburón blanco"],
+      correct: 1,
+      explanation: "La ballena azul puede medir hasta 30 metros de largo y es el animal más grande que ha existido."
     },
     {
-      id: 2,
-      name: "Elefante",
+      question: "¿Qué animal puede cambiar de color?",
+      image: "🦎",
+      options: ["Iguana", "Salamandra", "Camaleón", "Gecko"],
+      correct: 2,
+      explanation: "Los camaleones cambian de color para comunicarse y regular su temperatura corporal."
+    },
+    {
+      question: "¿Cuál de estos animales hiberna en invierno?",
+      image: "🐻",
+      options: ["Lobo", "Oso pardo", "Ciervo", "Zorro"],
+      correct: 1,
+      explanation: "Los osos pardos hibernan durante el invierno para conservar energía cuando hay menos comida."
+    },
+    {
+      question: "¿Qué animal es conocido por su memoria excepcional?",
       image: "🐘",
-      description: "Mamífero gigante con trompa larga",
-      habitat: "Sabana y bosques",
-      diet: "Herbívoro",
-      conservation: "En peligro"
+      options: ["Delfín", "Chimpancé", "Elefante", "Pulpo"],
+      correct: 2,
+      explanation: "Los elefantes tienen memoria extraordinaria y pueden recordar a otros elefantes por décadas."
     },
     {
-      id: 3,
-      name: "Pingüino",
+      question: "¿Cuál es el ave que no puede volar?",
       image: "🐧",
-      description: "Ave marina que no puede volar",
-      habitat: "Regiones polares",
-      diet: "Piscívoro",
-      conservation: "Varias especies amenazadas"
+      options: ["Pingüino", "Colibrí", "Águila", "Loro"],
+      correct: 0,
+      explanation: "Los pingüinos no pueden volar, pero son excelentes nadadores y pueden 'volar' bajo el agua."
     },
     {
-      id: 4,
-      name: "Panda",
-      image: "🐼",
-      description: "Oso blanco y negro que come bambú",
-      habitat: "Montañas de China",
-      diet: "Herbívoro (bambú)",
-      conservation: "Vulnerable"
+      question: "¿Qué animal es el más rápido en tierra?",
+      image: "🐆",
+      options: ["León", "Guepardo", "Caballo", "Antílope"],
+      correct: 1,
+      explanation: "El guepardo puede correr hasta 120 km/h, convirtiéndolo en el animal terrestre más rápido."
     },
     {
-      id: 5,
-      name: "Tigre",
-      image: "🐅",
-      description: "Felino rayado, el más grande del mundo",
-      habitat: "Bosques asiáticos",
-      diet: "Carnívoro",
-      conservation: "En peligro"
+      question: "¿Cuántos corazones tiene un pulpo?",
+      image: "🐙",
+      options: ["1", "2", "3", "4"],
+      correct: 2,
+      explanation: "Los pulpos tienen 3 corazones: dos bombean sangre a las branquias y uno al resto del cuerpo."
     },
     {
-      id: 6,
-      name: "Koala",
-      image: "🐨",
-      description: "Marsupial que vive en eucaliptos",
-      habitat: "Bosques de Australia",
-      diet: "Herbívoro (eucalipto)",
-      conservation: "Vulnerable"
+      question: "¿Qué animal construye presas en los ríos?",
+      image: "🦫",
+      options: ["Nutria", "Castor", "Rata almizclera", "Visón"],
+      correct: 1,
+      explanation: "Los castores son ingenieros naturales que construyen presas para crear estanques profundos."
     },
     {
-      id: 7,
-      name: "Jirafa",
-      image: "🦒",
-      description: "Animal más alto del mundo",
-      habitat: "Sabana africana",
-      diet: "Herbívoro",
-      conservation: "Vulnerable"
+      question: "¿Cuál de estos animales es venenoso?",
+      image: "🐸",
+      options: ["Rana verde", "Rana dardo dorada", "Sapo común", "Salamandra"],
+      correct: 1,
+      explanation: "La rana dardo dorada es uno de los animales más venenosos del mundo."
     },
     {
-      id: 8,
-      name: "Delfín",
+      question: "¿Qué animal puede regenerar sus extremidades?",
+      image: "🦎",
+      options: ["Gecko", "Lagartija", "Estrella de mar", "Todas las anteriores"],
+      correct: 3,
+      explanation: "Muchos animales pueden regenerar partes del cuerpo: lagartijas (cola), estrellas de mar (brazos)."
+    },
+    {
+      question: "¿Cuál es el mamífero que vuela?",
+      image: "🦇",
+      options: ["Ardilla voladora", "Murciélago", "Lemur volador", "Petauro"],
+      correct: 1,
+      explanation: "Los murciélagos son los únicos mamíferos con vuelo verdadero."
+    },
+    {
+      question: "¿Qué animal tiene la lengua más larga en proporción a su cuerpo?",
+      image: "🦌",
+      options: ["Jirafa", "Oso hormiguero", "Camaleón", "Colibrí"],
+      correct: 2,
+      explanation: "La lengua del camaleón puede ser hasta 2.5 veces la longitud de su cuerpo."
+    },
+    {
+      question: "¿Cuál de estos animales es nocturno?",
+      image: "🦉",
+      options: ["Águila", "Búho", "Halcón", "Buitre"],
+      correct: 1,
+      explanation: "Los búhos son aves nocturnas con excelente visión y audición para cazar en la oscuridad."
+    },
+    {
+      question: "¿Qué animal puede vivir más tiempo sin agua?",
+      image: "🐪",
+      options: ["Elefante", "Camello", "Rinoceronte", "Hipopótamo"],
+      correct: 1,
+      explanation: "Los camellos pueden sobrevivir hasta 10 días sin agua gracias a sus adaptaciones."
+    },
+    {
+      question: "¿Cuál es el pez más grande del océano?",
+      image: "🦈",
+      options: ["Tiburón blanco", "Tiburón ballena", "Manta raya", "Atún rojo"],
+      correct: 1,
+      explanation: "El tiburón ballena puede medir hasta 18 metros, pero solo come plancton y peces pequeños."
+    },
+    {
+      question: "¿Qué animal construye el nido más elaborado?",
+      image: "🕷️",
+      options: ["Araña tejedora", "Pájaro tejedor", "Abeja", "Termita"],
+      correct: 1,
+      explanation: "Los pájaros tejedores construyen nidos increíblemente complejos con forma de cesta."
+    },
+    {
+      question: "¿Cuál de estos animales es un marsupial?",
+      image: "🦘",
+      options: ["Conejo", "Canguro", "Liebre", "Capibara"],
+      correct: 1,
+      explanation: "Los canguros son marsupiales: las crías nacen muy pequeñas y crecen en la bolsa de la madre."
+    },
+    {
+      question: "¿Qué animal tiene la mordida más fuerte?",
+      image: "🐊",
+      options: ["Tiburón blanco", "Cocodrilo del Nilo", "León", "Hipopótamo"],
+      correct: 1,
+      explanation: "El cocodrilo del Nilo tiene la mordida más fuerte con una fuerza de más de 1,500 kg/cm²."
+    },
+    {
+      question: "¿Cuál de estos animales es considerado el más inteligente?",
       image: "🐬",
-      description: "Mamífero marino muy inteligente",
-      habitat: "Océanos",
-      diet: "Piscívoro",
-      conservation: "Varias especies amenazadas"
+      options: ["Delfín", "Perro", "Gato", "Caballo"],
+      correct: 0,
+      explanation: "Los delfines tienen autoconciencia, usan herramientas y pueden reconocerse en espejos."
     },
     {
-      id: 9,
-      name: "Lobo",
-      image: "🐺",
-      description: "Ancestro salvaje de los perros",
-      habitat: "Bosques y tundra",
-      diet: "Carnívoro",
-      conservation: "Preocupación menor"
-    },
-    {
-      id: 10,
-      name: "Tortuga Marina",
-      image: "🐢",
-      description: "Reptil marino de caparazón duro",
-      habitat: "Océanos tropicales",
-      diet: "Omnívoro",
-      conservation: "En peligro crítico"
+      question: "¿Qué animal puede sobrevivir en el espacio?",
+      image: "🌌",
+      options: ["Cucaracha", "Tardígrado", "Escorpión", "Ninguno"],
+      correct: 1,
+      explanation: "Los tardígrados son casi indestructibles y pueden sobrevivir en el vacío del espacio."
     }
   ];
 
-  const [questions, setQuestions] = useState<Array<{
-    animal: Animal;
-    options: string[];
-    correct: string;
-  }>>([]);
-
   useEffect(() => {
-    // Generate 6 random questions
-    const shuffledAnimals = [...animals].sort(() => Math.random() - 0.5).slice(0, 6);
-    const newQuestions = shuffledAnimals.map(animal => {
-      const wrongAnswers = animals
-        .filter(a => a.id !== animal.id)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 3)
-        .map(a => a.name);
-      
-      const options = [animal.name, ...wrongAnswers].sort(() => Math.random() - 0.5);
-      
-      return {
-        animal,
-        options,
-        correct: animal.name
-      };
-    });
-    
-    setQuestions(newQuestions);
-  }, []);
-
-  useEffect(() => {
-    if (timeLeft > 0 && !showResult && !gameCompleted) {
+    if (gamePhase === 'playing' && timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (timeLeft === 0 && !showResult) {
-      handleAnswer("");
+    } else if (timeLeft === 0 && gamePhase === 'playing') {
+      handleTimeout();
     }
-  }, [timeLeft, showResult, gameCompleted]);
+  }, [timeLeft, gamePhase]);
 
-  const handleAnswer = (answer: string) => {
-    if (showResult) return;
+  const handleTimeout = () => {
+    setShowResult(true);
+    setTimeout(() => {
+      if (currentQuestion + 1 < questions.length) {
+        nextQuestion();
+      } else {
+        endGame();
+      }
+    }, 2000);
+  };
+
+  const handleAnswer = (answerIndex: number) => {
+    if (selectedAnswer !== null) return;
     
-    setSelectedAnswer(answer);
+    setSelectedAnswer(answerIndex);
     setShowResult(true);
     
-    const isCorrect = answer === questions[currentQuestion].correct;
-    if (isCorrect) {
-      setScore(score + 1);
-      toast({
-        title: "¡Excelente! 🦁",
-        description: `¡${questions[currentQuestion].animal.name} es correcto!`,
-      });
-    } else {
-      toast({
-        title: "¡Inténtalo de nuevo! 🤔",
-        description: `Era ${questions[currentQuestion].correct}. ¡Sigue aprendiendo!`,
-        variant: "destructive"
-      });
+    if (answerIndex === questions[currentQuestion].correct) {
+      setScore(score + 15);
     }
     
     setTimeout(() => {
-      if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion(currentQuestion + 1);
-        setSelectedAnswer(null);
-        setShowResult(false);
-        setTimeLeft(20);
+      if (currentQuestion + 1 < questions.length) {
+        nextQuestion();
       } else {
-        setGameCompleted(true);
+        endGame();
       }
-    }, 2500);
+    }, 3000);
   };
 
-  const handleComplete = () => {
-    const basePoints = score * 25;
-    const timeBonus = Math.floor(timeLeft / 4);
-    const perfectBonus = score === questions.length ? 40 : 0;
-    const totalPoints = basePoints + timeBonus + perfectBonus;
-    onComplete(totalPoints);
+  const nextQuestion = () => {
+    setCurrentQuestion(currentQuestion + 1);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setTimeLeft(25);
   };
 
-  if (questions.length === 0) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 flex items-center justify-center">
-        <div className="text-center">
-          <Heart className="w-12 h-12 text-pink-600 animate-pulse mx-auto mb-4" />
-          <p className="text-pink-700">Preparando el safari...</p>
-        </div>
-      </div>
-    );
-  }
+  const endGame = () => {
+    setGamePhase('finished');
+    const finalPoints = Math.floor(score * 1.2);
+    setTimeout(() => onComplete(finalPoints), 2000);
+  };
 
-  if (gameCompleted) {
-    const percentage = Math.round((score / questions.length) * 100);
+  const resetGame = () => {
+    setCurrentQuestion(0);
+    setScore(0);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setTimeLeft(25);
+    setGamePhase('playing');
+  };
+
+  if (gamePhase === 'finished') {
+    const finalPoints = Math.floor(score * 1.2);
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 p-4">
-        <div className="max-w-2xl mx-auto">
-          <Card className="bg-white/90 backdrop-blur-sm border-2 border-purple-200 shadow-xl">
-            <CardContent className="p-8 text-center">
-              <div className="text-6xl mb-4">🦁</div>
-              <h2 className="text-3xl font-bold text-purple-800 mb-4">¡Safari Completado!</h2>
-              <div className="text-5xl font-bold text-purple-600 mb-4">{score}/{questions.length}</div>
-              <p className="text-xl text-purple-700 mb-6">{percentage}% de aciertos</p>
-              
-              <Card className="bg-purple-50 border-2 border-purple-300 mb-6">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-bold text-purple-800 mb-3">🐾 Mensaje de Conservación</h3>
-                  <p className="text-purple-700 text-sm leading-relaxed">
-                    Los animales salvajes enfrentan grandes desafíos por la pérdida de hábitat, la caza ilegal y el cambio climático. 
-                    Muchas especies están en peligro de extinción. Proteger la vida silvestre es responsabilidad de todos. 
-                    Podemos ayudar respetando sus hábitats, no comprando productos de animales en peligro, 
-                    y apoyando organizaciones de conservación. ¡Cada animal tiene un papel importante en la naturaleza! 🌍❤️
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <div className="space-y-4">
-                <Button 
-                  onClick={handleComplete}
-                  className="bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 text-white font-semibold px-8 py-3 rounded-full text-lg"
-                >
-                  ¡Completar! (+{score * 25 + (score === questions.length ? 40 : 0)} pts)
-                </Button>
-                
-                <Button variant="outline" onClick={onBack} className="ml-4">
-                  Volver al Menú
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-orange-100 via-yellow-50 to-amber-100 p-4 flex items-center justify-center">
+        <Card className="bg-white/90 backdrop-blur-sm border-2 border-orange-300 shadow-2xl max-w-md w-full">
+          <CardContent className="p-8 text-center">
+            <div className="text-6xl mb-4">🏆</div>
+            <h2 className="text-2xl font-bold text-orange-700 mb-4">¡Safari completado!</h2>
+            <div className="space-y-3 mb-6">
+              <p className="text-lg">Puntuación: <span className="font-bold text-orange-600">{score}/{questions.length * 15}</span></p>
+              <p className="text-sm text-gray-600">
+                Identificaste correctamente {score / 15} de {questions.length} animales
+              </p>
+              <Badge className="bg-orange-100 text-orange-800 border border-orange-300">
+                +{finalPoints} puntos ecológicos
+              </Badge>
+            </div>
+            <div className="space-y-3">
+              <Button
+                onClick={resetGame}
+                className="w-full bg-gradient-to-r from-orange-400 to-amber-400 hover:from-orange-500 hover:to-amber-500 text-white font-semibold py-2 rounded-full"
+              >
+                🦁 Nuevo Safari
+              </Button>
+              <Button
+                onClick={onBack}
+                variant="outline"
+                className="w-full text-gray-600 hover:text-gray-800"
+              >
+                ← Volver al Menú
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   const currentQ = questions[currentQuestion];
+  const progress = ((currentQuestion + 1) / questions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 p-4">
-      <div className="max-w-4xl mx-auto">
-        <Card className="bg-white/90 backdrop-blur-sm border-2 border-purple-200 shadow-xl">
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-yellow-50 to-amber-100 p-4">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <Button
+            onClick={onBack}
+            variant="outline"
+            className="text-gray-600 hover:text-gray-800"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Volver
+          </Button>
+          <div className="flex items-center space-x-2">
+            <Binoculars className="w-5 h-5 text-orange-600" />
+            <span className="font-semibold text-orange-700">Safari Animal</span>
+          </div>
+          <div className="text-right">
+            <div className="text-sm text-gray-500">Puntos: {score}</div>
+            <div className="text-sm font-medium text-orange-600">
+              Tiempo: {timeLeft}s
+            </div>
+          </div>
+        </div>
+
+        {/* Progress */}
+        <div className="mb-6">
+          <div className="flex justify-between text-sm text-gray-600 mb-2">
+            <span>Animal {currentQuestion + 1} de {questions.length}</span>
+            <span>{Math.round(progress)}% explorado</span>
+          </div>
+          <Progress value={progress} className="h-2" />
+        </div>
+
+        {/* Question Card */}
+        <Card className="bg-white/90 backdrop-blur-sm border-2 border-orange-200 shadow-xl mb-6">
           <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <Button variant="outline" onClick={onBack}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Volver
-              </Button>
-              <h1 className="text-2xl font-bold text-purple-700 flex items-center">
-                <Heart className="mr-2" />
-                Safari Animal
-              </h1>
-              <div className="text-right">
-                <p className="text-lg font-bold text-purple-600">⏰ {timeLeft}s</p>
-                <p className="text-sm text-purple-500">{score}/{questions.length}</p>
-              </div>
+            <div className="text-center mb-6">
+              <div className="text-4xl mb-4">{currentQ.image}</div>
+              <h2 className="text-xl font-bold text-gray-800 mb-2">{currentQ.question}</h2>
+              {showResult && (
+                <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <p className="text-sm text-blue-800">
+                    <strong>🔍 Dato curioso:</strong> {currentQ.explanation}
+                  </p>
+                </div>
+              )}
             </div>
 
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-purple-600">Pregunta {currentQuestion + 1} de {questions.length}</span>
-                <span className="text-sm text-purple-600">Puntuación: {score}</span>
-              </div>
-              <Progress value={((currentQuestion + 1) / questions.length) * 100} className="h-2" />
-            </div>
-
-            <div className="text-center mb-8">
-              <div className="text-8xl mb-4">{currentQ.animal.image}</div>
-              <h2 className="text-2xl font-bold text-purple-800 mb-2">¿Qué animal es este?</h2>
-              <p className="text-purple-600 mb-2">{currentQ.animal.description}</p>
-              <p className="text-sm text-purple-500">Hábitat: {currentQ.animal.habitat}</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            <div className="grid gap-3">
               {currentQ.options.map((option, index) => {
-                let buttonClass = "p-4 text-lg font-semibold border-2 transition-all duration-300 ";
+                let buttonClass = "w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ";
                 
                 if (showResult) {
-                  if (option === currentQ.correct) {
+                  if (index === currentQ.correct) {
                     buttonClass += "bg-green-100 border-green-400 text-green-800";
-                  } else if (option === selectedAnswer && option !== currentQ.correct) {
+                  } else if (index === selectedAnswer && index !== currentQ.correct) {
                     buttonClass += "bg-red-100 border-red-400 text-red-800";
                   } else {
                     buttonClass += "bg-gray-100 border-gray-300 text-gray-600";
                   }
                 } else {
-                  buttonClass += "bg-white border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-400 hover:scale-105";
+                  buttonClass += "bg-white border-gray-200 hover:border-orange-400 hover:bg-orange-50 text-gray-800";
                 }
 
                 return (
-                  <Button
+                  <button
                     key={index}
-                    onClick={() => handleAnswer(option)}
+                    onClick={() => handleAnswer(index)}
                     disabled={showResult}
                     className={buttonClass}
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <span>{option}</span>
-                      {showResult && option === currentQ.correct && (
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">{option}</span>
+                      {showResult && index === currentQ.correct && (
                         <CheckCircle className="w-5 h-5 text-green-600" />
                       )}
-                      {showResult && option === selectedAnswer && option !== currentQ.correct && (
+                      {showResult && index === selectedAnswer && index !== currentQ.correct && (
                         <XCircle className="w-5 h-5 text-red-600" />
                       )}
                     </div>
-                  </Button>
+                  </button>
                 );
               })}
             </div>
-            
-            {showResult && (
-              <div className="text-center mt-6">
-                <Card className="bg-purple-50 border-2 border-purple-300 max-w-md mx-auto">
-                  <CardContent className="p-4">
-                    <p className="text-sm text-purple-700 mb-1">
-                      <strong>Dieta:</strong> {currentQ.animal.diet}
-                    </p>
-                    <p className="text-sm text-purple-700">
-                      <strong>Estado:</strong> {currentQ.animal.conservation}
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
           </CardContent>
         </Card>
+
+        {/* Timer Bar */}
+        <div className="mb-4">
+          <Progress 
+            value={(timeLeft / 25) * 100} 
+            className="h-2"
+            style={{
+              background: timeLeft <= 7 ? '#fee2e2' : '#fff7ed'
+            }}
+          />
+        </div>
       </div>
     </div>
   );
