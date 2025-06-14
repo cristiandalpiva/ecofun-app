@@ -34,17 +34,6 @@ const EcoMascot = ({ size = "medium", mood = "happy", plantStage = 1 }: EcoMasco
 
   const currentPlant = plantStages[plantStage] || plantStages[0];
 
-  const getMoodMessage = () => {
-    switch (mood) {
-      case 'thinking':
-        return '🤔';
-      case 'excited':
-        return '¡Genial!';
-      default:
-        return '¡Hola!';
-    }
-  };
-
   const getAnimationIntensity = () => {
     switch (mood) {
       case 'excited':
@@ -88,15 +77,6 @@ const EcoMascot = ({ size = "medium", mood = "happy", plantStage = 1 }: EcoMasco
               </div>
             </>
           )}
-        </div>
-      )}
-      
-      {/* Mensaje animado con posicionamiento mejorado */}
-      {isAnimating && (
-        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white rounded-lg px-2 py-1 text-xs font-semibold text-green-600 shadow-lg animate-fade-in z-10 whitespace-nowrap max-w-screen border border-green-200">
-          {getMoodMessage()}
-          {/* Flecha apuntando hacia abajo */}
-          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-white"></div>
         </div>
       )}
     </div>
