@@ -66,6 +66,7 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
   const [gameLoopId, setGameLoopId] = useState<NodeJS.Timeout | null>(null);
   const gameAreaRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const keysPressed = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     const checkMobile = () => {
@@ -212,29 +213,53 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
       }, 1000);
       
       // Add keyboard event listeners
-      window.addEventListener('keydown', handleKeyPress);
+      const handleKeyDown = (event: KeyboardEvent) => {
+        keysPressed.current.add(event.key.toLowerCase());
+      };
+      
+      const handleKeyUp = (event: KeyboardEvent) => {
+        keysPressed.current.delete(event.key.toLowerCase());
+      };
+      
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('keyup', handleKeyUp);
       
       return () => {
         clearInterval(gameLoop);
         clearInterval(timer);
-        window.removeEventListener('keydown', handleKeyPress);
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('keyup', handleKeyUp);
       };
     }
   }, [gameState, currentLevel]);
 
   const updateGameState = () => {
-    // Update player position
+    // Handle continuous key presses
     setPlayer(prev => {
-      let newX = prev.x + prev.velocityX;
-      let newY = prev.y + prev.velocityY;
-      let newVelocityY = prev.velocityY - 0.5; // Gravity
+      let newVelocityX = prev.velocityX;
+      let newVelocityY = prev.velocityY;
+      
+      // Handle movement
+      if (keysPressed.current.has('arrowleft') || keysPressed.current.has('a')) {
+        newVelocityX = -4;
+      }
+      if (keysPressed.current.has('arrowright') || keysPressed.current.has('d')) {
+        newVelocityX = 4;
+      }
+      if ((keysPressed.current.has('arrowup') || keysPressed.current.has('w') || keysPressed.current.has(' ')) && prev.onGround) {
+        newVelocityY = 12;
+      }
+      
+      let newX = prev.x + newVelocityX;
+      let newY = prev.y + newVelocityY;
+      newVelocityY -= 0.8; // Gravity
       let onGround = false;
       
       // Check platform collisions
       for (const platform of platforms) {
         // Check if player is on platform
         if (newX + 15 > platform.x && newX - 15 < platform.x + platform.width &&
-            newY <= platform.y + platform.height && newY - 5 >= platform.y) {
+            newY <= platform.y + platform.height && newY > platform.y && newVelocityY <= 0) {
           onGround = true;
           newY = platform.y + platform.height;
           newVelocityY = 0;
@@ -242,100 +267,31 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
         
         // Check if player hits platform from below
         if (newX + 15 > platform.x && newX - 15 < platform.x + platform.width &&
-            newY + 30 >= platform.y && newY < platform.y) {
+            newY + 30 >= platform.y && newY < platform.y && newVelocityY > 0) {
           newVelocityY = -1;
           newY = platform.y - 30;
         }
         
-        // Check if player hits platform from sides
+        // Check side collisions
         if (newY + 30 > platform.y && newY < platform.y + platform.height) {
           // From left
-          if (newX + 15 >= platform.x && newX < platform.x) {
+          if (newX + 15 >= platform.x && prev.x + 15 <= platform.x) {
             newX = platform.x - 15;
+            newVelocityX = 0;
           }
           // From right
-          if (newX - 15 <= platform.x + platform.width && newX > platform.x + platform.width) {
+          if (newX - 15 <= platform.x + platform.width && prev.x - 15 >= platform.x + platform.width) {
             newX = platform.x + platform.width + 15;
+            newVelocityX = 0;
           }
         }
       }
       
-      // Check collectible collisions
-      setCollectibles(prev => {
-        let updated = false;
-        const newCollectibles = prev.map(item => {
-          if (!item.collected && 
-              Math.abs(newX - item.x) < 20 && 
-              Math.abs(newY - item.y) < 30) {
-            updated = true;
-            setScore(s => {
-              const newScore = s + 1;
-              if (newScore >= levels[currentLevel].targetScore) {
-                if (gameLoopId) clearInterval(gameLoopId);
-                setGameState('levelComplete');
-              }
-              return newScore;
-            });
-            return { ...item, collected: true };
-          }
-          return item;
-        });
-        
-        if (updated) {
-          toast({
-            title: "¡Objeto recogido! ♻️",
-            description: "Sigue así, estás ayudando al planeta.",
-            duration: 1500,
-          });
-        }
-        
-        return newCollectibles;
-      });
-      
-      // Check enemy collisions
-      for (const enemy of enemies) {
-        if (Math.abs(newX - enemy.x) < 25 && 
-            Math.abs(newY - enemy.y) < 25) {
-          setLives(l => {
-            const newLives = l - 1;
-            if (newLives <= 0) {
-              if (gameLoopId) clearInterval(gameLoopId);
-              setGameState('gameOver');
-            } else {
-              toast({
-                title: "¡Cuidado! ⚠️",
-                description: `Te quedan ${newLives} vidas.`,
-                duration: 1500,
-              });
-              // Reset player position after hit
-              newX = 50;
-              newY = 50;
-              newVelocityY = 0;
-            }
-            return newLives;
-          });
-          break;
-        }
+      // Apply friction when on ground
+      if (onGround && !keysPressed.current.has('arrowleft') && !keysPressed.current.has('arrowright') && 
+          !keysPressed.current.has('a') && !keysPressed.current.has('d')) {
+        newVelocityX *= 0.8;
       }
-      
-      // Update enemy positions
-      setEnemies(prev => prev.map(enemy => {
-        let newX = enemy.x + enemy.velocityX;
-        
-        // Bounce enemies off platforms edges
-        for (const platform of platforms) {
-          if (newX >= platform.x + platform.width || newX <= platform.x) {
-            return { ...enemy, velocityX: -enemy.velocityX };
-          }
-        }
-        
-        // Bounce enemies off walls
-        if (newX >= 780 || newX <= 20) {
-          return { ...enemy, velocityX: -enemy.velocityX };
-        }
-        
-        return { ...enemy, x: newX };
-      }));
       
       // Keep player within bounds
       newX = Math.max(20, Math.min(newX, 780));
@@ -359,9 +315,6 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
         return { x: 50, y: 50, velocityX: 0, velocityY: 0, onGround: false };
       }
       
-      // Apply friction when on ground
-      const newVelocityX = onGround ? prev.velocityX * 0.8 : prev.velocityX;
-      
       return { 
         x: newX, 
         y: newY, 
@@ -370,32 +323,82 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
         onGround 
       };
     });
-  };
 
-  const handleKeyPress = useCallback((event: KeyboardEvent) => {
-    if (gameState !== 'playing') return;
-    
-    switch (event.key) {
-      case 'ArrowLeft':
-      case 'a':
-      case 'A':
-        movePlayer('left');
-        break;
-      case 'ArrowRight':
-      case 'd':
-      case 'D':
-        movePlayer('right');
-        break;
-      case 'ArrowUp':
-      case ' ':
-      case 'w':
-      case 'W':
-        if (player.onGround) {
-          jump();
+    // Check collectible collisions
+    setCollectibles(prev => {
+      let updated = false;
+      const newCollectibles = prev.map(item => {
+        if (!item.collected && 
+            Math.abs(player.x - item.x) < 20 && 
+            Math.abs(player.y - item.y) < 30) {
+          updated = true;
+          setScore(s => {
+            const newScore = s + 1;
+            if (newScore >= levels[currentLevel].targetScore) {
+              if (gameLoopId) clearInterval(gameLoopId);
+              setGameState('levelComplete');
+            }
+            return newScore;
+          });
+          return { ...item, collected: true };
         }
+        return item;
+      });
+      
+      if (updated) {
+        toast({
+          title: "¡Objeto recogido! ♻️",
+          description: "Sigue así, estás ayudando al planeta.",
+          duration: 1500,
+        });
+      }
+      
+      return newCollectibles;
+    });
+    
+    // Check enemy collisions
+    for (const enemy of enemies) {
+      if (Math.abs(player.x - enemy.x) < 25 && 
+          Math.abs(player.y - enemy.y) < 25) {
+        setLives(l => {
+          const newLives = l - 1;
+          if (newLives <= 0) {
+            if (gameLoopId) clearInterval(gameLoopId);
+            setGameState('gameOver');
+          } else {
+            toast({
+              title: "¡Cuidado! ⚠️",
+              description: `Te quedan ${newLives} vidas.`,
+              duration: 1500,
+            });
+            // Reset player position after hit
+            setPlayer(prev => ({ ...prev, x: 50, y: 50, velocityX: 0, velocityY: 0 }));
+          }
+          return newLives;
+        });
         break;
+      }
     }
-  }, [gameState, player.onGround]);
+    
+    // Update enemy positions
+    setEnemies(prev => prev.map(enemy => {
+      let newX = enemy.x + enemy.velocityX;
+      
+      // Bounce enemies off platforms edges
+      for (const platform of platforms) {
+        if (newX >= platform.x + platform.width || newX <= platform.x) {
+          return { ...enemy, velocityX: -enemy.velocityX };
+        }
+      }
+      
+      // Bounce enemies off walls
+      if (newX >= 780 || newX <= 20) {
+        return { ...enemy, velocityX: -enemy.velocityX };
+      }
+      
+      return { ...enemy, x: newX };
+    }));
+  };
 
   // Mobile control functions
   const handleMobileControl = (action: 'left' | 'right' | 'jump') => {
@@ -403,32 +406,17 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
     
     switch (action) {
       case 'left':
-        movePlayer('left');
+        setPlayer(prev => ({ ...prev, velocityX: -4 }));
         break;
       case 'right':
-        movePlayer('right');
+        setPlayer(prev => ({ ...prev, velocityX: 4 }));
         break;
       case 'jump':
         if (player.onGround) {
-          jump();
+          setPlayer(prev => ({ ...prev, velocityY: 12, onGround: false }));
         }
         break;
     }
-  };
-
-  const movePlayer = (direction: 'left' | 'right') => {
-    setPlayer(prev => ({
-      ...prev,
-      velocityX: direction === 'left' ? -3 : 3
-    }));
-  };
-
-  const jump = () => {
-    setPlayer(prev => ({
-      ...prev,
-      velocityY: 10,
-      onGround: false
-    }));
   };
 
   const startLevel = (levelIndex: number) => {
@@ -555,7 +543,7 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
                   ))}
 
                   {/* Collectibles */}
-                  {collectibles.map((item) => (
+                  {collectibles.filter(item => !item.collected).map((item) => (
                     <div
                       key={item.id}
                       className="absolute animate-bounce"

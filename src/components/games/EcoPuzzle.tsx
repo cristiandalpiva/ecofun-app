@@ -18,13 +18,14 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const [moves, setMoves] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
+  const [draggedPiece, setDraggedPiece] = useState<number | null>(null);
 
   const puzzles = [
     {
       id: 0,
-      name: "Bosque Mágico",
-      description: "Un hermoso bosque lleno de vida",
-      image: "🌲🦋🌸🐰🌿🍄🦜🌺🐿️",
+      name: "Granja Divertida",
+      description: "Animales felices en la granja",
+      image: "🐷🐄🐔🌾🚜🏚️🦆🐑🌻",
       difficulty: "Fácil",
       gridSize: 3,
       points: 30
@@ -32,65 +33,65 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     {
       id: 1,
       name: "Jardín de Mariposas",
-      description: "Coloridas mariposas en un jardín florido",
+      description: "Mariposas coloridas en el jardín",
       image: "🦋🌺🌻🌷🦋🌸🌼🌹🦋",
-      difficulty: "Medio",
-      gridSize: 3,
-      points: 40
-    },
-    {
-      id: 2,
-      name: "Safari Aventura",
-      description: "Animales salvajes en la sabana",
-      image: "🦁🌍🦒🐘🦓🌳🦏🦌🦮",
       difficulty: "Fácil",
       gridSize: 3,
       points: 35
     },
     {
-      id: 3,
-      name: "Océano Colorido",
-      description: "Vida marina en aguas cristalinas",
-      image: "🐠🌊🐙🦈🐚🏝️🦀🌺🐢",
-      difficulty: "Medio",
-      gridSize: 3,
-      points: 45
-    },
-    {
-      id: 4,
-      name: "Granja Feliz",
-      description: "Animales de granja en un día soleado",
-      image: "🐷🐄🐔🌾🚜🏚️🦆🐑🌻",
-      difficulty: "Fácil",
-      gridSize: 3,
-      points: 30
-    },
-    {
-      id: 5,
-      name: "Jardín de Frutas",
-      description: "Deliciosas frutas maduras",
+      id: 2,
+      name: "Fiesta de Frutas",
+      description: "Deliciosas frutas de colores",
       image: "🍎🍊🍌🍓🍇🥝🍑🍍🥭",
       difficulty: "Medio",
       gridSize: 3,
       points: 40
     },
     {
+      id: 3,
+      name: "Safari Aventura",
+      description: "Animales salvajes africanos",
+      image: "🦁🌍🦒🐘🦓🌳🦏🦌🦮",
+      difficulty: "Medio",
+      gridSize: 3,
+      points: 45
+    },
+    {
+      id: 4,
+      name: "Océano Mágico",
+      description: "Criaturas marinas fascinantes",
+      image: "🐠🌊🐙🦈🐚🏝️🦀🌺🐢",
+      difficulty: "Medio",
+      gridSize: 3,
+      points: 50
+    },
+    {
+      id: 5,
+      name: "Bosque Encantado",
+      description: "Bosque lleno de vida y magia",
+      image: "🌲🦋🌸🐰🌿🍄🦜🌺🐿️",
+      difficulty: "Difícil",
+      gridSize: 3,
+      points: 55
+    },
+    {
       id: 6,
-      name: "Parque de Diversiones Natural",
-      description: "Aventura al aire libre",
+      name: "Parque de Diversiones",
+      description: "Día de aventura al aire libre",
       image: "🌈☀️🌳🦜🌸🏔️🦋🌻🎈",
       difficulty: "Difícil",
       gridSize: 4,
-      points: 60
+      points: 70
     },
     {
       id: 7,
-      name: "Campamento Ecológico",
-      description: "Una noche bajo las estrellas",
-      image: "⭐🏕️🌙🔥🦉🌲🎒🗻✨",
+      name: "Campamento Estrellado",
+      description: "Noche mágica bajo las estrellas",
+      image: "⭐🏕️🌙🔥🦉🌲🎒🗻✨🌌🚁🎁🌠🎭🎪🎨",
       difficulty: "Difícil",
       gridSize: 4,
-      points: 65
+      points: 80
     }
   ];
 
@@ -114,6 +115,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
 
   const shufflePuzzle = () => {
     const newPieces = Array.from({ length: totalPieces }, (_, i) => i);
+    // Shuffle the array
     for (let i = newPieces.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [newPieces[i], newPieces[j]] = [newPieces[j], newPieces[i]];
@@ -134,7 +136,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
         if (currentPuzzle < puzzles.length - 1) {
           setCurrentPuzzle(currentPuzzle + 1);
         } else {
-          // All puzzles completed
           const totalPoints = puzzles.reduce((sum, puzzle) => sum + puzzle.points, 0);
           onComplete(totalPoints);
         }
@@ -142,7 +143,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     }
   };
 
-  const movePiece = (index: number) => {
+  const handlePieceClick = (index: number) => {
     if (!gameStarted) setGameStarted(true);
     
     const emptyIndex = pieces.indexOf(totalPieces - 1);
@@ -158,6 +159,44 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       setMoves(moves + 1);
       checkCompletion(newPieces);
     }
+  };
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedPiece(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (draggedPiece === null) return;
+
+    if (!gameStarted) setGameStarted(true);
+
+    const emptyIndex = pieces.indexOf(totalPieces - 1);
+    
+    // Check if we're dropping on the empty space
+    if (dropIndex === emptyIndex) {
+      // Check if the dragged piece is adjacent to empty space
+      const canMove = (
+        (Math.abs(draggedPiece - emptyIndex) === 1 && Math.floor(draggedPiece / gridSize) === Math.floor(emptyIndex / gridSize)) ||
+        Math.abs(draggedPiece - emptyIndex) === gridSize
+      );
+
+      if (canMove) {
+        const newPieces = [...pieces];
+        [newPieces[draggedPiece], newPieces[emptyIndex]] = [newPieces[emptyIndex], newPieces[draggedPiece]];
+        setPieces(newPieces);
+        setMoves(moves + 1);
+        checkCompletion(newPieces);
+      }
+    }
+
+    setDraggedPiece(null);
   };
 
   const getPieceContent = (pieceNumber: number) => {
@@ -195,7 +234,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
             Volver
           </Button>
           <div className="text-center">
-            <h1 className="text-xl font-bold text-emerald-700">Puzzle Verde</h1>
+            <h1 className="text-xl font-bold text-emerald-700">🧩 Puzzle Verde</h1>
             <p className="text-sm text-gray-600">Rompecabezas {currentPuzzle + 1} de {puzzles.length}</p>
           </div>
           <div className="text-right text-sm">
@@ -276,28 +315,33 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
               }}
             >
               {pieces.map((piece, index) => (
-                <button
+                <div
                   key={index}
-                  onClick={() => movePiece(index)}
+                  draggable={piece !== totalPieces - 1 && !isComplete}
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, index)}
+                  onClick={() => handlePieceClick(index)}
                   className={`
                     aspect-square rounded-lg border-2 transition-all duration-200 text-2xl sm:text-3xl font-bold
+                    flex items-center justify-center cursor-pointer select-none
                     ${piece === totalPieces - 1 
                       ? 'bg-gray-100 border-gray-300' 
                       : 'bg-gradient-to-br from-emerald-50 to-cyan-50 border-emerald-300 hover:border-emerald-500 hover:scale-105 shadow-md hover:shadow-lg'
                     }
                     ${isComplete ? 'animate-pulse' : ''}
+                    ${draggedPiece === index ? 'opacity-50 scale-95' : ''}
                   `}
-                  disabled={isComplete}
                 >
                   {getPieceContent(piece)}
-                </button>
+                </div>
               ))}
             </div>
 
             {!gameStarted && !isComplete && (
               <div className="text-center mt-4">
                 <p className="text-sm text-gray-600">
-                  💡 Toca las piezas adyacentes al espacio vacío para moverlas
+                  💡 Arrastra las piezas al espacio vacío o haz clic en las piezas adyacentes
                 </p>
               </div>
             )}
