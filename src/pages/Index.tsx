@@ -205,7 +205,7 @@ const Index = () => {
 
       <div className="max-w-4xl mx-auto p-4 space-y-6">
         {/* Daily Tip */}
-        <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300">
+        <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300 hover:border-yellow-400 hover:shadow-lg transition-all duration-300">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
               <Lightbulb className="text-yellow-600 w-6 h-6 flex-shrink-0" />
@@ -218,7 +218,7 @@ const Index = () => {
         </Card>
 
         {/* Progress Bar */}
-        <Card className="bg-white/80 backdrop-blur-sm border-2 border-green-200">
+        <Card className="bg-white/80 backdrop-blur-sm border-2 border-green-200 hover:border-green-300 hover:shadow-lg transition-all duration-300">
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-lg font-semibold text-green-700">Progreso de tu Planta</span>
@@ -252,11 +252,11 @@ const Index = () => {
             {weeklyAchievements.map((challenge) => (
               <Card 
                 key={challenge.id} 
-                className={`transition-all duration-300 hover:scale-105 cursor-pointer border-2 ${
+                className={`transition-all duration-300 hover:scale-105 cursor-pointer border-2 shadow-lg group ${
                   completedChallenges.includes(challenge.id) 
-                    ? 'bg-green-100 border-green-300 shadow-green-200' 
-                    : 'bg-white border-gray-200 hover:border-green-300'
-                } shadow-lg`}
+                    ? 'bg-green-100 border-green-300 shadow-green-200 hover:bg-green-200 hover:border-green-400 hover:shadow-green-300' 
+                    : 'bg-white border-gray-200 hover:border-green-400 hover:bg-green-50 hover:shadow-xl'
+                }`}
                 onClick={() => completedChallenges.includes(challenge.id) 
                   ? uncompleteChallenge(challenge.id) 
                   : completeChallenge(challenge.id)
@@ -264,15 +264,21 @@ const Index = () => {
               >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-bold text-gray-800 text-sm sm:text-base">{challenge.title}</h3>
+                    <h3 className={`font-bold text-sm sm:text-base transition-colors duration-200 ${
+                      completedChallenges.includes(challenge.id) 
+                        ? 'text-green-800 group-hover:text-green-900' 
+                        : 'text-gray-800 group-hover:text-green-700'
+                    }`}>
+                      {challenge.title}
+                    </h3>
                     {completedChallenges.includes(challenge.id) ? (
-                      <CircleCheck className="text-green-500 w-6 h-6 flex-shrink-0" />
+                      <CircleCheck className="text-green-500 w-6 h-6 flex-shrink-0 group-hover:text-green-600" />
                     ) : (
-                      <div className="w-6 h-6 border-2 border-gray-300 rounded-full flex-shrink-0"></div>
+                      <div className="w-6 h-6 border-2 border-gray-300 rounded-full flex-shrink-0 group-hover:border-green-400 transition-colors duration-200"></div>
                     )}
                   </div>
-                  <p className="text-xs sm:text-sm text-gray-600 mb-3">{challenge.description}</p>
-                  <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-3 group-hover:text-gray-700">{challenge.description}</p>
+                  <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border border-yellow-300 group-hover:bg-yellow-200 transition-colors duration-200">
                     +{challenge.points} puntos
                   </Badge>
                 </CardContent>
@@ -291,16 +297,16 @@ const Index = () => {
             {games.map((game) => (
               <Card 
                 key={game.id}
-                className="transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-gray-200 hover:border-blue-300 shadow-lg bg-white/90 backdrop-blur-sm"
+                className="transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-gray-200 hover:border-blue-400 shadow-lg bg-white/90 backdrop-blur-sm hover:bg-white hover:shadow-2xl group"
                 onClick={() => playGame(game.id)}
               >
                 <CardContent className="p-4 sm:p-6 text-center">
-                  <div className={`w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 ${game.color} rounded-full flex items-center justify-center text-xl sm:text-2xl shadow-lg`}>
+                  <div className={`w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 ${game.color} rounded-full flex items-center justify-center text-xl sm:text-2xl shadow-lg group-hover:scale-110 group-hover:shadow-xl transition-all duration-300`}>
                     {game.icon}
                   </div>
-                  <h3 className="font-bold text-base sm:text-lg text-gray-800 mb-2">{game.title}</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 mb-4">{game.description}</p>
-                  <Button className="bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-500 hover:to-blue-500 text-white font-semibold px-4 sm:px-6 py-2 rounded-full shadow-lg transition-all duration-300 text-sm sm:text-base">
+                  <h3 className="font-bold text-base sm:text-lg text-gray-800 mb-2 group-hover:text-blue-700 transition-colors duration-200">{game.title}</h3>
+                  <p className="text-xs sm:text-sm text-gray-600 mb-4 group-hover:text-gray-700">{game.description}</p>
+                  <Button className="bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-500 hover:to-blue-500 text-white font-semibold px-4 sm:px-6 py-2 rounded-full shadow-lg transition-all duration-300 text-sm sm:text-base hover:scale-105 hover:shadow-xl">
                     ¡Jugar!
                   </Button>
                 </CardContent>
@@ -310,7 +316,7 @@ const Index = () => {
         </div>
 
         {/* Motivational Message */}
-        <Card className="bg-gradient-to-r from-purple-400 to-pink-400 text-white border-none shadow-xl">
+        <Card className="bg-gradient-to-r from-purple-400 to-pink-400 text-white border-none shadow-xl hover:shadow-2xl hover:scale-102 transition-all duration-300">
           <CardContent className="p-4 sm:p-6 text-center">
             <div className="text-3xl sm:text-4xl mb-3">🌟</div>
             <h3 className="text-lg sm:text-xl font-bold mb-2">¡Eres un verdadero EcoHéroe!</h3>
@@ -320,6 +326,3 @@ const Index = () => {
       </div>
     </div>
   );
-};
-
-export default Index;
