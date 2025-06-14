@@ -8,7 +8,8 @@ import {
   Gamepad, 
   Puzzle, 
   CirclePlus,
-  Lightbulb
+  Lightbulb,
+  BookOpen
 } from "lucide-react";
 import EcoMascot from "@/components/EcoMascot";
 import EcoQuiz from "@/components/games/EcoQuiz";
@@ -24,6 +25,8 @@ const Index = () => {
   const [completedChallenges, setCompletedChallenges] = useState([0, 2]);
   const [badges, setBadges] = useState(["🌱", "💡"]);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showEducationalContent, setShowEducationalContent] = useState(false);
+  const [currentEducationalTopic, setCurrentEducationalTopic] = useState(0);
 
   const plantStages = [
     { name: "Semilla", emoji: "🌰", minPoints: 0 },
@@ -31,6 +34,44 @@ const Index = () => {
     { name: "Plantita", emoji: "🌿", minPoints: 300 },
     { name: "Planta", emoji: "🪴", minPoints: 600 },
     { name: "Árbol", emoji: "🌳", minPoints: 1000 }
+  ];
+
+  const educationalTopics = [
+    {
+      id: 0,
+      title: "Cuidado del Agua",
+      icon: "💧",
+      content: "El agua es muy importante para todos los seres vivos. ¡Imagínate que eres un detective del agua! Tu misión es encontrar todas las formas de no desperdiciarla. Puedes cerrar la llave mientras te lavas los dientes, tomar duchas más cortas, y usar el agua de lluvia para regar las plantas. ¡Cada gota cuenta para nuestro planeta!",
+      tip: "¿Sabías que una llave que gotea puede desperdiciar hasta 15 litros de agua al día? ¡Eso es como llenar 15 botellas de agua!"
+    },
+    {
+      id: 1,
+      title: "Protección de Animales",
+      icon: "🐘",
+      content: "Los animales son nuestros amigos del planeta y necesitan nuestra ayuda. Algunos animales como los elefantes, pandas y tortugas marinas están en peligro. Podemos ayudarlos no tirando basura en la naturaleza, respetando sus hogares y aprendiendo sobre ellos. ¡Tú puedes ser un guardián de los animales!",
+      tip: "Las tortugas marinas confunden las bolsas de plástico con medusas y se las comen. ¡Por eso es importante reciclar el plástico!"
+    },
+    {
+      id: 2,
+      title: "Reducir la Contaminación",
+      icon: "🌍",
+      content: "La contaminación es como cuando ensuciamos nuestro planeta. Podemos ser superhéroes anti-contaminación usando menos plástico, caminando más en lugar de usar el auto, y separando bien la basura. Cada vez que reciclas o caminas, ¡estás luchando contra la contaminación!",
+      tip: "Un auto produce aproximadamente su propio peso en contaminación cada año. ¡Caminar es súper poder para el planeta!"
+    },
+    {
+      id: 3,
+      title: "Cuidado de las Plantas",
+      icon: "🌱",
+      content: "Las plantas son como las fábricas de oxígeno del planeta. Nos dan el aire que respiramos y hacen que todo se vea hermoso. Podemos cuidarlas regándolas, no cortando flores sin permiso, y sembrando nuevas plantas. ¡Cada planta es un pequeño héroe verde!",
+      tip: "Un árbol grande puede producir oxígeno para 2 personas durante todo un día. ¡Las plantas son nuestras mejores amigas!"
+    },
+    {
+      id: 4,
+      title: "Ahorro de Energía",
+      icon: "💡",
+      content: "La energía es como la comida de nuestras casas. Podemos ser detectives de la energía apagando las luces que no usamos, desconectando aparatos que no necesitamos, y usando la luz del sol siempre que podamos. ¡Ahorrar energía es como darle un abrazo al planeta!",
+      tip: "Dejar un televisor encendido toda la noche gasta la misma energía que 100 focos LED. ¡Recuerda apagarlo antes de dormir!"
+    }
   ];
 
   const dailyTips = [
@@ -81,6 +122,13 @@ const Index = () => {
       points: 35, 
       completed: false 
     },
+    {
+      id: 5,
+      title: "Lee o escucha contenido educativo",
+      description: "Explora y aprende sobre un tema ambiental con ayuda de un adulto. ¡Descubre datos increíbles!",
+      points: 45,
+      completed: false
+    },
   ];
 
   const games = [
@@ -118,6 +166,12 @@ const Index = () => {
 
   const completeChallenge = (challengeId: number) => {
     if (!completedChallenges.includes(challengeId)) {
+      // Special handling for educational content challenge
+      if (challengeId === 5) {
+        setShowEducationalContent(true);
+        return;
+      }
+      
       setCompletedChallenges([...completedChallenges, challengeId]);
       const challenge = weeklyAchievements.find(c => c.id === challengeId);
       if (challenge) {
@@ -129,7 +183,7 @@ const Index = () => {
         
         // Add new badge every 2 challenges
         if ((completedChallenges.length + 1) % 2 === 0) {
-          const newBadges = ["🌍", "🌳", "🔋", "🚶‍♂️"];
+          const newBadges = ["🌍", "🌳", "🔋", "🚶‍♂️", "📚"];
           const nextBadge = newBadges[Math.floor((completedChallenges.length + 1) / 2) - 1];
           if (nextBadge && !badges.includes(nextBadge)) {
             setBadges([...badges, nextBadge]);
@@ -153,6 +207,21 @@ const Index = () => {
     }
   };
 
+  const handleEducationalComplete = () => {
+    setShowEducationalContent(false);
+    setCompletedChallenges([...completedChallenges, 5]);
+    setPoints(points + 45);
+    toast({
+      title: "¡Excelente! 📚",
+      description: "Completaste el reto educativo. +45 puntos",
+    });
+    
+    // Add educational badge
+    if (!badges.includes("📚")) {
+      setBadges([...badges, "📚"]);
+    }
+  };
+
   const playGame = (gameId: string) => {
     setCurrentGame(gameId);
   };
@@ -165,6 +234,81 @@ const Index = () => {
       description: `¡Ganaste ${gamePoints} puntos ecológicos!`,
     });
   };
+
+  if (showEducationalContent) {
+    const topic = educationalTopics[currentEducationalTopic];
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-100 via-green-50 to-yellow-100 p-4">
+        <div className="max-w-2xl mx-auto">
+          <Card className="bg-white/90 backdrop-blur-sm border-2 border-blue-200 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="text-4xl">{topic.icon}</div>
+                  <h1 className="text-2xl font-bold text-blue-700">{topic.title}</h1>
+                </div>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowEducationalContent(false)}
+                  className="text-gray-600 hover:text-gray-800"
+                >
+                  ← Volver
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="bg-gradient-to-r from-green-100 to-blue-100 p-4 rounded-lg">
+                  <p className="text-gray-700 leading-relaxed">{topic.content}</p>
+                </div>
+                
+                <div className="bg-yellow-100 p-4 rounded-lg border-2 border-yellow-300">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Lightbulb className="text-yellow-600 w-5 h-5" />
+                    <span className="font-semibold text-yellow-800">Dato Curioso</span>
+                  </div>
+                  <p className="text-yellow-700 text-sm">{topic.tip}</p>
+                </div>
+              </div>
+              
+              <div className="flex justify-between items-center mt-6">
+                <div className="flex space-x-2">
+                  {currentEducationalTopic > 0 && (
+                    <Button 
+                      variant="outline"
+                      onClick={() => setCurrentEducationalTopic(currentEducationalTopic - 1)}
+                    >
+                      ← Anterior
+                    </Button>
+                  )}
+                  {currentEducationalTopic < educationalTopics.length - 1 && (
+                    <Button 
+                      variant="outline"
+                      onClick={() => setCurrentEducationalTopic(currentEducationalTopic + 1)}
+                    >
+                      Siguiente →
+                    </Button>
+                  )}
+                </div>
+                
+                <Button 
+                  onClick={handleEducationalComplete}
+                  className="bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-500 hover:to-blue-500 text-white font-semibold px-6 py-2 rounded-full"
+                >
+                  ¡Completar Reto! +45 pts
+                </Button>
+              </div>
+              
+              <div className="mt-4 text-center">
+                <p className="text-sm text-gray-500">
+                  Tema {currentEducationalTopic + 1} de {educationalTopics.length}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   if (currentGame === "quiz") {
     return <EcoQuiz onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
@@ -263,13 +407,16 @@ const Index = () => {
               >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className={`font-bold text-sm sm:text-base transition-colors duration-200 ${
-                      completedChallenges.includes(challenge.id) 
-                        ? 'text-green-800 group-hover:text-green-900' 
-                        : 'text-gray-800 group-hover:text-green-700'
-                    }`}>
-                      {challenge.title}
-                    </h3>
+                    <div className="flex items-center space-x-2">
+                      {challenge.id === 5 && <BookOpen className="w-4 h-4 text-blue-600" />}
+                      <h3 className={`font-bold text-sm sm:text-base transition-colors duration-200 ${
+                        completedChallenges.includes(challenge.id) 
+                          ? 'text-green-800 group-hover:text-green-900' 
+                          : 'text-gray-800 group-hover:text-green-700'
+                      }`}>
+                        {challenge.title}
+                      </h3>
+                    </div>
                     {completedChallenges.includes(challenge.id) ? (
                       <CircleCheck className="text-green-500 w-6 h-6 flex-shrink-0 group-hover:text-green-600" />
                     ) : (
