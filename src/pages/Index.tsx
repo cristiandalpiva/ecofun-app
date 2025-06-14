@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -187,7 +186,7 @@ const Index = () => {
       <div className="bg-gradient-to-r from-green-400 to-blue-400 text-white p-4 shadow-lg">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <EcoMascot size="large" />
+            <EcoMascot size="large" plantStage={plantStage} />
             <div>
               <h1 className="text-xl sm:text-2xl font-bold">¡Hola, EcoHéroe!</h1>
               <p className="text-green-100 text-sm sm:text-base">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
