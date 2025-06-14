@@ -441,23 +441,26 @@ const Index = () => {
       {/* Header */}
       <header className="bg-gradient-to-r from-green-400 to-blue-400 text-white p-4 shadow-lg">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-3">
-              <div className="text-3xl sm:text-4xl font-bold text-white bg-white/20 px-4 py-2 rounded-full border-2 border-white/30 shadow-lg backdrop-blur-sm">
-                <span className="text-yellow-300">Eco</span><span className="text-green-200">Fun</span>
-              </div>
+          {/* Logo - Left */}
+          <div className="flex-shrink-0">
+            <div className="text-2xl sm:text-3xl font-bold text-white bg-white/20 px-3 py-2 rounded-full border-2 border-white/30 shadow-lg backdrop-blur-sm">
+              <span className="text-yellow-300">Eco</span><span className="text-green-200">Fun</span>
             </div>
-            <div className="flex items-center justify-center flex-1">
-              <div className="flex items-center space-x-4">
-                <EcoMascot size="large" plantStage={plantStage} />
-                <div>
-                  <h1 className="text-xl sm:text-2xl font-bold">¡Hola, EcoExploradorx!</h1>
-                  <p className="text-green-100 text-sm sm:text-base">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
-                </div>
+          </div>
+          
+          {/* Plant Info - Center */}
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex items-center space-x-3">
+              <EcoMascot size="large" plantStage={plantStage} />
+              <div className="text-center">
+                <h1 className="text-lg sm:text-xl font-bold">¡Hola, EcoExploradorx!</h1>
+                <p className="text-green-100 text-sm">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
               </div>
             </div>
           </div>
-          <div className="relative">
+          
+          {/* Menu - Right */}
+          <div className="flex-shrink-0 relative">
             <Button
               variant="ghost"
               size="icon"
@@ -489,46 +492,42 @@ const Index = () => {
       <main className="flex-1">
         <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-8">
           {/* Daily Tip */}
-          <div className="flex justify-center">
-            <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300 hover:border-yellow-400 hover:shadow-lg transition-all duration-300 w-full max-w-6xl">
-              <CardContent className="p-4 sm:p-6">
-                <div className="flex items-center space-x-3">
-                  <Lightbulb className="text-yellow-600 w-6 h-6 flex-shrink-0" />
-                  <div className="min-w-0">
-                    <h3 className="font-bold text-yellow-800 mb-1 text-lg">Consejo del Día</h3>
-                    <p className="text-yellow-700 text-sm sm:text-base">{todaysTip}</p>
-                  </div>
+          <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300 shadow-lg">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center space-x-3">
+                <Lightbulb className="text-yellow-600 w-6 h-6 flex-shrink-0" />
+                <div className="min-w-0">
+                  <h3 className="font-bold text-yellow-800 mb-1 text-lg">Consejo del Día</h3>
+                  <p className="text-yellow-700 text-sm sm:text-base">{todaysTip}</p>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Progress Bar */}
-          <div className="flex justify-center">
-            <Card className="bg-white/80 backdrop-blur-sm border-2 border-green-200 hover:border-green-300 hover:shadow-lg transition-all duration-300 w-full max-w-6xl">
-              <CardContent className="p-4 sm:p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-lg sm:text-xl font-semibold text-green-700">Progreso de tu Planta</span>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-2xl sm:text-3xl">{plantStages[plantStage].emoji}</span>
-                    <span className="text-sm sm:text-base text-green-600 font-medium">{plantStages[plantStage].name}</span>
-                  </div>
+          <Card className="bg-white/80 backdrop-blur-sm border-2 border-green-200 shadow-lg">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-lg sm:text-xl font-semibold text-green-700">Progreso de tu Planta</span>
+                <div className="flex items-center space-x-2">
+                  <span className="text-2xl sm:text-3xl">{plantStages[plantStage].emoji}</span>
+                  <span className="text-sm sm:text-base text-green-600 font-medium">{plantStages[plantStage].name}</span>
                 </div>
-                <Progress 
-                  value={plantStage < plantStages.length - 1 
-                    ? ((points - plantStages[plantStage].minPoints) / (plantStages[plantStage + 1].minPoints - plantStages[plantStage].minPoints)) * 100
-                    : 100
-                  } 
-                  className="h-4" 
-                />
-                {plantStage < plantStages.length - 1 && (
-                  <p className="text-xs sm:text-sm text-gray-500 mt-2 text-center">
-                    {plantStages[plantStage + 1].minPoints - points} puntos para {plantStages[plantStage + 1].name}
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+              <Progress 
+                value={plantStage < plantStages.length - 1 
+                  ? ((points - plantStages[plantStage].minPoints) / (plantStages[plantStage + 1].minPoints - plantStages[plantStage].minPoints)) * 100
+                  : 100
+                } 
+                className="h-4" 
+              />
+              {plantStage < plantStages.length - 1 && (
+                <p className="text-xs sm:text-sm text-gray-500 mt-2 text-center">
+                  {plantStages[plantStage + 1].minPoints - points} puntos para {plantStages[plantStage + 1].name}
+                </p>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Weekly Challenges */}
           <div>
@@ -536,7 +535,7 @@ const Index = () => {
               <CirclePlus className="mr-2" />
               Retos de la Semana
             </h2>
-            <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+            <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {weeklyAchievements.map((challenge) => (
                 <Card 
                   key={challenge.id} 
@@ -584,7 +583,7 @@ const Index = () => {
               <Gamepad className="mr-2" />
               Juegos Ecológicos
             </h2>
-            <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+            <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {games.map((game) => (
                 <Card 
                   key={game.id}
@@ -607,15 +606,13 @@ const Index = () => {
           </div>
 
           {/* Motivational Message */}
-          <div className="flex justify-center">
-            <Card className="bg-gradient-to-r from-purple-400 to-pink-400 text-white border-none shadow-xl hover:shadow-2xl hover:scale-102 transition-all duration-300 w-full max-w-4xl">
-              <CardContent className="p-4 sm:p-8 text-center">
-                <div className="text-3xl sm:text-4xl mb-3">🌟</div>
-                <h3 className="text-lg sm:text-xl font-bold mb-2">¡Eres un verdaderx EcoExploradorx!</h3>
-                <p className="text-purple-100 text-sm sm:text-base">Cada acción cuenta para cuidar nuestro planeta. ¡Sigue así!</p>
-              </CardContent>
-            </Card>
-          </div>
+          <Card className="bg-gradient-to-r from-purple-400 to-pink-400 text-white border-none shadow-xl">
+            <CardContent className="p-4 sm:p-8 text-center">
+              <div className="text-3xl sm:text-4xl mb-3">🌟</div>
+              <h3 className="text-lg sm:text-xl font-bold mb-2">¡Eres un verdaderx EcoExploradorx!</h3>
+              <p className="text-purple-100 text-sm sm:text-base">Cada acción cuenta para cuidar nuestro planeta. ¡Sigue así!</p>
+            </CardContent>
+          </Card>
         </div>
       </main>
 
