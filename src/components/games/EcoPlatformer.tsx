@@ -63,7 +63,7 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
   const [timeLeft, setTimeLeft] = useState(60);
-  const [gameLoopId, setGameLoopId] = useState<number | null>(null);
+  const [gameLoopId, setGameLoopId] = useState<NodeJS.Timeout | null>(null);
   const gameAreaRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
