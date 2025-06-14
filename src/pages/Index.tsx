@@ -231,11 +231,20 @@ const Index = () => {
     }
   }
 
+  const handleOnboardingClose = () => {
+    setShowOnboarding(false);
+  };
+
+  const handleOnboardingSkip = () => {
+    setShowOnboarding(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-cyan-50">
       <OnboardingModal 
         isOpen={showOnboarding} 
-        onClose={() => setShowOnboarding(false)} 
+        onClose={handleOnboardingClose}
+        onSkip={handleOnboardingSkip}
       />
 
       {/* Header */}
