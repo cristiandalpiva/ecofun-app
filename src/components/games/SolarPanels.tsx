@@ -30,17 +30,17 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
   const [panels, setPanels] = useState<Panel[]>([]);
   const [totalPower, setTotalPower] = useState(0);
   const [gameWon, setGameWon] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(90);
+  const [timeLeft, setTimeLeft] = useState(120); // Increased time
   const [selectedPanel, setSelectedPanel] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const gameAreaRef = useRef<HTMLDivElement>(null);
 
   const appliances: Appliance[] = [
-    { name: "Luces", power: 200, icon: "💡", active: false },
-    { name: "Refrigerador", power: 800, icon: "🧊", active: false },
-    { name: "TV", power: 300, icon: "📺", active: false },
-    { name: "Computadora", power: 400, icon: "💻", active: false },
-    { name: "Lavadora", power: 1200, icon: "👕", active: false }
+    { name: "Luces", power: 150, icon: "💡", active: false }, // Reduced power requirements
+    { name: "Refrigerador", power: 500, icon: "🧊", active: false },
+    { name: "TV", power: 200, icon: "📺", active: false },
+    { name: "Computadora", power: 250, icon: "💻", active: false },
+    { name: "Lavadora", power: 600, icon: "👕", active: false }
   ];
 
   const requiredPower = appliances.reduce((sum, app) => sum + app.power, 0);
@@ -58,7 +58,7 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
   }, [timeLeft, gameWon]);
 
   useEffect(() => {
-    const power = panels.reduce((sum, panel) => sum + (panel.efficiency * 300), 0);
+    const power = panels.reduce((sum, panel) => sum + (panel.efficiency * 400), 0); // Increased power per panel
     setTotalPower(power);
     
     if (power >= requiredPower && !gameWon) {
@@ -71,11 +71,11 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
   }, [panels, requiredPower, gameWon]);
 
   const addPanel = (x: number, y: number) => {
-    if (panels.length >= 8) return;
+    if (panels.length >= 6) return; // Reduced max panels
     
-    const sunlightFactor = Math.max(0.3, 1 - (y / 300));
+    const sunlightFactor = Math.max(0.5, 1 - (y / 400)); // Better minimum efficiency
     const spacingFactor = panels.length === 0 ? 1 : 
-      Math.min(...panels.map(p => Math.sqrt((p.x - x) ** 2 + (p.y - y) ** 2))) > 60 ? 1 : 0.7;
+      Math.min(...panels.map(p => Math.sqrt((p.x - x) ** 2 + (p.y - y) ** 2))) > 40 ? 1 : 0.8; // Reduced spacing requirement
     
     const newPanel: Panel = {
       id: Date.now(),
@@ -112,7 +112,6 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
       const newX = e.clientX - gameAreaRect.left - dragOffset.x;
       const newY = e.clientY - gameAreaRect.top - dragOffset.y;
 
-      // Constrain to game area
       const constrainedX = Math.max(20, Math.min(newX, gameAreaRect.width - 20));
       const constrainedY = Math.max(10, Math.min(newY, gameAreaRect.height - 10));
 
@@ -122,10 +121,10 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
               ...p, 
               x: constrainedX, 
               y: constrainedY,
-              efficiency: Math.round((Math.max(0.3, 1 - (constrainedY / 300)) * 
+              efficiency: Math.round((Math.max(0.5, 1 - (constrainedY / 400)) * 
                          (prev.length === 1 ? 1 : 
                           Math.min(...prev.filter(panel => panel.id !== panelId)
-                            .map(panel => Math.sqrt((panel.x - constrainedX) ** 2 + (panel.y - constrainedY) ** 2))) > 60 ? 1 : 0.7)) * 100) / 100
+                            .map(panel => Math.sqrt((panel.x - constrainedX) ** 2 + (panel.y - constrainedY) ** 2))) > 40 ? 1 : 0.8)) * 100) / 100
             }
           : p
       ));
@@ -177,10 +176,10 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
               ...p, 
               x: constrainedX, 
               y: constrainedY,
-              efficiency: Math.round((Math.max(0.3, 1 - (constrainedY / 300)) * 
+              efficiency: Math.round((Math.max(0.5, 1 - (constrainedY / 400)) * 
                          (prev.length === 1 ? 1 : 
                           Math.min(...prev.filter(panel => panel.id !== panelId)
-                            .map(panel => Math.sqrt((panel.x - constrainedX) ** 2 + (panel.y - constrainedY) ** 2))) > 60 ? 1 : 0.7)) * 100) / 100
+                            .map(panel => Math.sqrt((panel.x - constrainedX) ** 2 + (panel.y - constrainedY) ** 2))) > 40 ? 1 : 0.8)) * 100) / 100
             }
           : p
       ));
@@ -213,14 +212,14 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
     setPanels([]);
     setTotalPower(0);
     setGameWon(false);
-    setTimeLeft(90);
+    setTimeLeft(120);
     setSelectedPanel(null);
   };
 
   const handleComplete = () => {
-    const timeBonus = Math.floor(timeLeft / 10);
-    const efficiencyBonus = totalPower > requiredPower * 1.2 ? 20 : 0;
-    const points = 80 + timeBonus + efficiencyBonus;
+    const timeBonus = Math.floor(timeLeft / 15); // Better time bonus
+    const efficiencyBonus = totalPower > requiredPower * 1.2 ? 30 : 0;
+    const points = 100 + timeBonus + efficiencyBonus;
     onComplete(points);
   };
 
@@ -267,7 +266,7 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                     onClick={handleComplete}
                     className="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white font-semibold px-6 py-2 rounded-full"
                   >
-                    ¡Completar! (+{80 + Math.floor(timeLeft / 10) + (totalPower > requiredPower * 1.2 ? 20 : 0)} pts)
+                    ¡Completar! (+{100 + Math.floor(timeLeft / 15) + (totalPower > requiredPower * 1.2 ? 30 : 0)} pts)
                   </Button>
                 </CardContent>
               </Card>
@@ -280,7 +279,7 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-bold text-blue-800">Área de Instalación</h3>
-                      <p className="text-sm text-blue-600">{panels.length}/8 paneles</p>
+                      <p className="text-sm text-blue-600">{panels.length}/6 paneles</p>
                     </div>
                     <div 
                       ref={gameAreaRef}
@@ -298,6 +297,11 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                       {/* Casa */}
                       <div className="absolute bottom-4 left-4">
                         <Home className="w-16 h-16 text-amber-600" />
+                      </div>
+                      
+                      {/* Efficiency indicator */}
+                      <div className="absolute top-4 left-4 text-xs text-blue-700 bg-white/80 p-2 rounded">
+                        💡 Coloca paneles arriba para mejor eficiencia
                       </div>
                       
                       {/* Paneles */}
@@ -398,15 +402,16 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                   </CardContent>
                 </Card>
 
-                {/* Consejos */}
+                {/* Consejos mejorados */}
                 <Card className="bg-blue-50 border-2 border-blue-300">
                   <CardContent className="p-4">
                     <h4 className="font-bold text-blue-700 mb-2">💡 Consejos</h4>
                     <ul className="text-xs text-blue-600 space-y-1">
-                      <li>• Arrastra paneles para ubicarlos mejor</li>
+                      <li>• Solo necesitas {Math.ceil(requiredPower / 400)} paneles bien ubicados</li>
                       <li>• Coloca paneles en la parte superior</li>
-                      <li>• Separa los paneles para mejor rendimiento</li>
+                      <li>• Separa los paneles un poco</li>
                       <li>• Doble clic para rotar hacia el sol</li>
+                      <li>• Cada panel genera hasta 400W</li>
                     </ul>
                   </CardContent>
                 </Card>

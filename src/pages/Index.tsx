@@ -33,6 +33,8 @@ import SolarPanels from "@/components/games/SolarPanels";
 import PlantQuiz from "@/components/games/PlantQuiz";
 import AnimalQuiz from "@/components/games/AnimalQuiz";
 import EcoPlatformer from "@/components/games/EcoPlatformer";
+import EcoTetris from "@/components/games/EcoTetris";
+import RecycleBench from "@/components/games/RecycleBench";
 import OnboardingModal from "@/components/OnboardingModal";
 import SuggestionForm from "@/components/SuggestionForm";
 import Footer from "@/components/Footer";
@@ -158,7 +160,7 @@ const Index = () => {
   const games = [
     { id: "quiz", title: "EcoQuiz", description: "Responde preguntas ecológicas", icon: "🧠", color: "bg-emerald-400" },
     { id: "puzzle", title: "Puzzle Verde", description: "Arma paisajes naturales", icon: "🧩", color: "bg-emerald-500" },
-    { id: "memory", title: "Memoria Reciclaje", description: "Encuentra pares de basura iguales", icon: "♻️", color: "bg-emerald-600" },
+    { id: "memory", title: "Memoria Reciclaje", description: "3 niveles de dificultad con diferentes temas", icon: "♻️", color: "bg-emerald-600" },
     { id: "tap", title: "Cierra las Llaves", description: "Apaga las llaves que desperdician agua", icon: "💧", color: "bg-cyan-400" },
     { id: "trash", title: "Atrapa la Basura", description: "Recoge la basura que cae del cielo", icon: "🗑️", color: "bg-amber-400" },
     { id: "plant", title: "Jardín de Sombra", description: "Cuida plantas para dar sombra", icon: "🌱", color: "bg-green-400" },
@@ -166,6 +168,8 @@ const Index = () => {
     { id: "plant-quiz", title: "Adivina la Planta", description: "Identifica diferentes especies vegetales", icon: "🌿", color: "bg-lime-400" },
     { id: "animal-quiz", title: "Safari Animal", description: "Reconoce animales de todo el mundo", icon: "🦁", color: "bg-orange-400" },
     { id: "platformer", title: "EcoAventuras", description: "Plataformas ecológicas con 3 niveles", icon: "🎮", color: "bg-purple-400" },
+    { id: "tetris", title: "EcoTetris", description: "Tetris con elementos de la naturaleza", icon: "🧱", color: "bg-indigo-400" },
+    { id: "bench", title: "Banco Ecológico", description: "Construye un banco con materiales reciclados", icon: "🪑", color: "bg-pink-400" },
   ];
 
   const menuItems = [
@@ -483,6 +487,14 @@ const Index = () => {
 
   if (currentGame === "platformer") {
     return <EcoPlatformer onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
+  }
+
+  if (currentGame === "tetris") {
+    return <EcoTetris onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
+  }
+
+  if (currentGame === "bench") {
+    return <RecycleBench onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
   }
 
   return (
