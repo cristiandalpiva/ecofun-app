@@ -29,6 +29,9 @@ import RecycleMemory from "@/components/games/RecycleMemory";
 import TapGame from "@/components/games/TapGame";
 import TrashCatcher from "@/components/games/TrashCatcher";
 import PlantCare from "@/components/games/PlantCare";
+import SolarPanels from "@/components/games/SolarPanels";
+import PlantQuiz from "@/components/games/PlantQuiz";
+import AnimalQuiz from "@/components/games/AnimalQuiz";
 import OnboardingModal from "@/components/OnboardingModal";
 import SuggestionForm from "@/components/SuggestionForm";
 import Footer from "@/components/Footer";
@@ -158,6 +161,9 @@ const Index = () => {
     { id: "tap", title: "Cierra las Llaves", description: "Apaga las llaves que desperdician agua", icon: "💧", color: "bg-cyan-400" },
     { id: "trash", title: "Atrapa la Basura", description: "Recoge la basura que cae del cielo", icon: "🗑️", color: "bg-amber-400" },
     { id: "plant", title: "Jardín de Sombra", description: "Cuida plantas para dar sombra", icon: "🌱", color: "bg-green-400" },
+    { id: "solar", title: "Paneles Solares", description: "Instala paneles para energizar tu casa", icon: "☀️", color: "bg-yellow-400" },
+    { id: "plant-quiz", title: "Adivina la Planta", description: "Identifica diferentes especies vegetales", icon: "🌿", color: "bg-lime-400" },
+    { id: "animal-quiz", title: "Safari Animal", description: "Reconoce animales de todo el mundo", icon: "🦁", color: "bg-orange-400" },
   ];
 
   const menuItems = [
@@ -459,6 +465,18 @@ const Index = () => {
 
   if (currentGame === "plant") {
     return <PlantCare onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
+  }
+
+  if (currentGame === "solar") {
+    return <SolarPanels onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
+  }
+
+  if (currentGame === "plant-quiz") {
+    return <PlantQuiz onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
+  }
+
+  if (currentGame === "animal-quiz") {
+    return <AnimalQuiz onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
   }
 
   return (
