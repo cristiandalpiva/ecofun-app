@@ -34,6 +34,7 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
   const [selectedPanel, setSelectedPanel] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const gameAreaRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const appliances: Appliance[] = [
     { name: "Luces", power: 150, icon: "💡", active: false }, // Reduced power requirements
@@ -44,6 +45,15 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
   ];
 
   const requiredPower = appliances.reduce((sum, app) => sum + app.power, 0);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (timeLeft > 0 && !gameWon) {
@@ -231,21 +241,22 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-orange-50 to-blue-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-orange-50 to-blue-100 p-2 sm:p-4">
       <div className="max-w-6xl mx-auto">
         <Card className="bg-white/90 backdrop-blur-sm border-2 border-orange-200 shadow-xl">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <Button variant="outline" onClick={onBack}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Volver
+          <CardContent className="p-3 sm:p-6">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <Button variant="outline" onClick={onBack} size={isMobile ? "sm" : "default"}>
+                <ArrowLeft className="w-4 h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Volver</span>
               </Button>
-              <h1 className="text-2xl font-bold text-orange-700 flex items-center">
+              <h1 className="text-lg sm:text-2xl font-bold text-orange-700 flex items-center">
                 <Sun className="mr-2" />
-                Instalación Solar
+                <span className="hidden sm:inline">Instalación Solar</span>
+                <span className="sm:hidden">Solar</span>
               </h1>
               <div className="text-right">
-                <p className="text-lg font-bold text-orange-600">⏰ {timeLeft}s</p>
+                <p className="text-sm sm:text-lg font-bold text-orange-600">⏰ {timeLeft}s</p>
                 <Button variant="outline" size="sm" onClick={resetGame}>
                   <RotateCcw className="w-4 h-4" />
                 </Button>
@@ -253,10 +264,10 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
             </div>
 
             {gameWon && (
-              <Card className="bg-green-100 border-2 border-green-300 mb-6">
-                <CardContent className="p-4 text-center">
-                  <h3 className="text-xl font-bold text-green-800 mb-2">🎉 ¡Casa Energizada!</h3>
-                  <p className="text-green-700 mb-4">
+              <Card className="bg-green-100 border-2 border-green-300 mb-4 sm:mb-6">
+                <CardContent className="p-3 sm:p-4 text-center">
+                  <h3 className="text-lg sm:text-xl font-bold text-green-800 mb-2">🎉 ¡Casa Energizada!</h3>
+                  <p className="text-xs sm:text-sm text-green-700 mb-3 sm:mb-4">
                     Los paneles solares son fundamentales para un futuro sostenible. Capturan la energía del sol, 
                     una fuente limpia e inagotable, reduciendo nuestra dependencia de combustibles fósiles. 
                     Una instalación solar doméstica puede reducir las emisiones de CO₂ en 3-4 toneladas al año, 
@@ -264,7 +275,7 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                   </p>
                   <Button 
                     onClick={handleComplete}
-                    className="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white font-semibold px-6 py-2 rounded-full"
+                    className="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white font-semibold px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base"
                   >
                     ¡Completar! (+{100 + Math.floor(timeLeft / 15) + (totalPower > requiredPower * 1.2 ? 30 : 0)} pts)
                   </Button>
@@ -272,18 +283,19 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
               </Card>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
               {/* Área de instalación */}
               <div className="lg:col-span-2">
                 <Card className="bg-gradient-to-b from-sky-200 to-green-200 border-2 border-blue-300">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-bold text-blue-800">Área de Instalación</h3>
-                      <p className="text-sm text-blue-600">{panels.length}/6 paneles</p>
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                      <h3 className="text-sm sm:text-base font-bold text-blue-800">Área de Instalación</h3>
+                      <p className="text-xs sm:text-sm text-blue-600">{panels.length}/6 paneles</p>
                     </div>
                     <div 
                       ref={gameAreaRef}
-                      className="relative w-full h-80 bg-gradient-to-b from-blue-100 to-green-100 border-2 border-dashed border-blue-400 rounded-lg overflow-hidden cursor-crosshair"
+                      className="relative w-full bg-gradient-to-b from-blue-100 to-green-100 border-2 border-dashed border-blue-400 rounded-lg overflow-hidden cursor-crosshair"
+                      style={{ height: isMobile ? '250px' : '320px' }}
                       onClick={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
                         const x = e.clientX - rect.left;
@@ -292,16 +304,17 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                       }}
                     >
                       {/* Sol */}
-                      <div className="absolute top-4 right-4 text-4xl animate-pulse">☀️</div>
+                      <div className="absolute top-2 sm:top-4 right-2 sm:right-4 text-2xl sm:text-4xl animate-pulse">☀️</div>
                       
                       {/* Casa */}
-                      <div className="absolute bottom-4 left-4">
-                        <Home className="w-16 h-16 text-amber-600" />
+                      <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4">
+                        <Home className="w-8 h-8 sm:w-16 sm:h-16 text-amber-600" />
                       </div>
                       
                       {/* Efficiency indicator */}
-                      <div className="absolute top-4 left-4 text-xs text-blue-700 bg-white/80 p-2 rounded">
-                        💡 Coloca paneles arriba para mejor eficiencia
+                      <div className="absolute top-2 sm:top-4 left-2 sm:left-4 text-xs text-blue-700 bg-white/80 p-1 sm:p-2 rounded">
+                        💡 <span className="hidden sm:inline">Coloca paneles arriba para mejor eficiencia</span>
+                        <span className="sm:hidden">Arriba = mejor</span>
                       </div>
                       
                       {/* Paneles */}
@@ -310,8 +323,8 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                           key={panel.id}
                           className={`absolute cursor-move touch-none ${panel.isDragging ? 'z-50' : 'z-10'}`}
                           style={{
-                            left: panel.x - 20,
-                            top: panel.y - 10,
+                            left: panel.x - (isMobile ? 15 : 20),
+                            top: panel.y - (isMobile ? 8 : 10),
                             transform: `rotate(${panel.rotation}deg)`,
                             transition: panel.isDragging ? 'none' : 'all 0.2s ease'
                           }}
@@ -323,9 +336,13 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                             rotatePanel(panel.id);
                           }}
                         >
-                          <div className={`w-10 h-6 bg-gradient-to-r from-blue-800 to-blue-900 border-2 rounded-sm shadow-lg ${
+                          <div className={`bg-gradient-to-r from-blue-800 to-blue-900 border-2 rounded-sm shadow-lg ${
                             selectedPanel === panel.id ? 'border-yellow-400 shadow-yellow-300' : 'border-gray-400'
-                          } ${panel.isDragging ? 'scale-110 shadow-2xl' : ''}`}>
+                          } ${panel.isDragging ? 'scale-110 shadow-2xl' : ''}`}
+                          style={{
+                            width: isMobile ? '30px' : '40px',
+                            height: isMobile ? '18px' : '24px'
+                          }}>
                             <div className="grid grid-cols-3 grid-rows-2 h-full p-0.5">
                               {[...Array(6)].map((_, i) => (
                                 <div key={i} className="bg-blue-700 rounded-xs"></div>
@@ -338,8 +355,9 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                         </div>
                       ))}
                       
-                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-blue-600 text-center">
-                        Haz clic para agregar • Arrastra para mover • Doble clic para rotar
+                      <div className="absolute bottom-1 sm:bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-blue-600 text-center">
+                        <span className="hidden sm:inline">Haz clic para agregar • Arrastra para mover • Doble clic para rotar</span>
+                        <span className="sm:hidden">Toca para agregar • Arrastra para mover</span>
                       </div>
                     </div>
                   </CardContent>
@@ -347,20 +365,23 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
               </div>
 
               {/* Panel de control */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {/* Medidor de energía */}
                 <Card className="bg-yellow-50 border-2 border-yellow-300">
-                  <CardContent className="p-4">
+                  <CardContent className="p-3 sm:p-4">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-bold text-yellow-700">Energía Generada</h4>
-                      <Zap className="text-yellow-600" />
+                      <h4 className="text-sm sm:text-base font-bold text-yellow-700">
+                        <span className="hidden sm:inline">Energía Generada</span>
+                        <span className="sm:hidden">Energía</span>
+                      </h4>
+                      <Zap className="text-yellow-600 w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
-                    <div className="text-2xl font-bold text-yellow-800 mb-2">
+                    <div className="text-lg sm:text-2xl font-bold text-yellow-800 mb-2">
                       {Math.round(totalPower)}W
                     </div>
                     <Progress 
                       value={(totalPower / requiredPower) * 100} 
-                      className="h-3" 
+                      className="h-2 sm:h-3" 
                     />
                     <p className="text-xs text-yellow-600 mt-1">
                       Necesitas: {requiredPower}W
@@ -370,21 +391,21 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
 
                 {/* Electrodomésticos */}
                 <Card className="bg-amber-50 border-2 border-amber-300">
-                  <CardContent className="p-4">
-                    <h4 className="font-bold text-amber-700 mb-3">Electrodomésticos</h4>
-                    <div className="space-y-2">
+                  <CardContent className="p-3 sm:p-4">
+                    <h4 className="text-sm sm:text-base font-bold text-amber-700 mb-2 sm:mb-3">Electrodomésticos</h4>
+                    <div className="space-y-1 sm:space-y-2">
                       {getActiveAppliances().map((appliance, index) => (
                         <div 
                           key={index}
-                          className={`flex items-center justify-between p-2 rounded-lg transition-all ${
+                          className={`flex items-center justify-between p-1 sm:p-2 rounded-lg transition-all ${
                             appliance.active 
                               ? 'bg-green-100 border border-green-300' 
                               : 'bg-gray-100 border border-gray-300'
                           }`}
                         >
-                          <div className="flex items-center space-x-2">
-                            <span className="text-lg">{appliance.icon}</span>
-                            <span className={`text-sm font-medium ${
+                          <div className="flex items-center space-x-1 sm:space-x-2">
+                            <span className="text-sm sm:text-lg">{appliance.icon}</span>
+                            <span className={`text-xs sm:text-sm font-medium ${
                               appliance.active ? 'text-green-700' : 'text-gray-500'
                             }`}>
                               {appliance.name}
@@ -404,13 +425,13 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
 
                 {/* Consejos mejorados */}
                 <Card className="bg-blue-50 border-2 border-blue-300">
-                  <CardContent className="p-4">
-                    <h4 className="font-bold text-blue-700 mb-2">💡 Consejos</h4>
+                  <CardContent className="p-3 sm:p-4">
+                    <h4 className="text-sm sm:text-base font-bold text-blue-700 mb-2">💡 Consejos</h4>
                     <ul className="text-xs text-blue-600 space-y-1">
                       <li>• Solo necesitas {Math.ceil(requiredPower / 400)} paneles bien ubicados</li>
                       <li>• Coloca paneles en la parte superior</li>
                       <li>• Separa los paneles un poco</li>
-                      <li>• Doble clic para rotar hacia el sol</li>
+                      {!isMobile && <li>• Doble clic para rotar hacia el sol</li>}
                       <li>• Cada panel genera hasta 400W</li>
                     </ul>
                   </CardContent>

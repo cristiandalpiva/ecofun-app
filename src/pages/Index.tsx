@@ -53,6 +53,7 @@ const Index = () => {
   const [isReading, setIsReading] = useState(false);
   const [speechSynthesis, setSpeechSynthesis] = useState<SpeechSynthesis | null>(null);
   const [showSuggestionForm, setShowSuggestionForm] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const plantStages = [
     { name: "Semilla", emoji: "🌰", minPoints: 0 },
@@ -506,67 +507,120 @@ const Index = () => {
       />
       {showSuggestionForm && <SuggestionForm onClose={() => setShowSuggestionForm(false)} />}
       
-      {/* Header */}
-      <header className="bg-gradient-to-r from-emerald-400 to-cyan-400 text-white p-4 shadow-lg">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          {/* Logo - Left */}
-          <div className="flex-shrink-0">
-            <div className="text-2xl sm:text-3xl font-bold text-white bg-white/20 px-3 py-2 rounded-full border-2 border-white/30 shadow-lg backdrop-blur-sm">
-              <span className="text-amber-300">Eco</span><span className="text-emerald-200">Fun</span>
-            </div>
-          </div>
-          
-          {/* Plant Info - Center */}
-          <div className="flex-1 flex items-center justify-center px-4">
-            <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
-              <EcoMascot size="large" plantStage={plantStage} />
-              <div className="text-center">
-                <h1 className="text-lg sm:text-xl font-bold">¡Hola, EcoExploradorx!</h1>
-                <p className="text-emerald-100 text-sm">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
-              </div>
-            </div>
-          </div>
-          
-          {/* Menu - Right */}
-          <div className="flex-shrink-0 relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowMenu(!showMenu)}
-              className="text-white hover:bg-white/20"
-            >
-              {showMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </Button>
-            
-            {/* Dropdown Menu */}
-            {showMenu && (
-              <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 min-w-[220px] max-w-[280px] z-50 transform -translate-x-2 sm:translate-x-0">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={item.action}
-                    className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-emerald-50 transition-colors text-left"
+      {/* Header - Mobile Optimized */}
+      <header className="bg-gradient-to-r from-emerald-400 to-cyan-400 text-white p-3 sm:p-4 shadow-lg">
+        <div className="max-w-6xl mx-auto">
+          {/* Mobile Layout */}
+          {isMobile ? (
+            <>
+              {/* Top row: Logo and Menu */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-xl font-bold text-white bg-white/20 px-2 py-1 rounded-full border border-white/30 shadow-lg backdrop-blur-sm">
+                  <span className="text-amber-300">Eco</span><span className="text-emerald-200">Fun</span>
+                </div>
+                
+                <div className="relative">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setShowMenu(!showMenu)}
+                    className="text-white hover:bg-white/20"
                   >
-                    <item.icon className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-                    <span className="text-sm font-medium">{item.title}</span>
-                  </button>
-                ))}
+                    {showMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                  </Button>
+                  
+                  {/* Mobile Dropdown Menu */}
+                  {showMenu && (
+                    <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 min-w-[200px] z-50">
+                      {menuItems.map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={item.action}
+                          className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-emerald-50 transition-colors text-left"
+                        >
+                          <item.icon className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                          <span className="text-sm font-medium">{item.title}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
+              
+              {/* Bottom row: Plant Info */}
+              <div className="flex items-center justify-center">
+                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/20">
+                  <EcoMascot size="small" plantStage={plantStage} />
+                  <div className="text-center">
+                    <h1 className="text-sm font-bold">¡Hola, EcoExploradorx!</h1>
+                    <p className="text-emerald-100 text-xs">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} pts</p>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            /* Desktop Layout */
+            <div className="flex items-center justify-between">
+              {/* Logo - Left */}
+              <div className="flex-shrink-0">
+                <div className="text-2xl sm:text-3xl font-bold text-white bg-white/20 px-3 py-2 rounded-full border-2 border-white/30 shadow-lg backdrop-blur-sm">
+                  <span className="text-amber-300">Eco</span><span className="text-emerald-200">Fun</span>
+                </div>
+              </div>
+              
+              {/* Plant Info - Center */}
+              <div className="flex-1 flex items-center justify-center px-4">
+                <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
+                  <EcoMascot size="large" plantStage={plantStage} />
+                  <div className="text-center">
+                    <h1 className="text-lg sm:text-xl font-bold">¡Hola, EcoExploradorx!</h1>
+                    <p className="text-emerald-100 text-sm">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Menu - Right */}
+              <div className="flex-shrink-0 relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowMenu(!showMenu)}
+                  className="text-white hover:bg-white/20"
+                >
+                  {showMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </Button>
+                
+                {/* Desktop Dropdown Menu */}
+                {showMenu && (
+                  <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 min-w-[220px] max-w-[280px] z-50 transform -translate-x-2 sm:translate-x-0">
+                    {menuItems.map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={item.action}
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-emerald-50 transition-colors text-left"
+                      >
+                        <item.icon className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                        <span className="text-sm font-medium">{item.title}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
       <main className="flex-1">
-        <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-8">
+        <div className="max-w-6xl mx-auto p-3 sm:p-4 lg:p-6 space-y-6 sm:space-y-8">
           {/* Daily Tip */}
           <Card className="bg-gradient-to-r from-amber-100 to-orange-100 border-2 border-amber-300 shadow-lg">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center space-x-3">
-                <Lightbulb className="text-amber-600 w-6 h-6 flex-shrink-0" />
+            <CardContent className="p-3 sm:p-4 lg:p-6">
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <Lightbulb className="text-amber-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
                 <div className="min-w-0">
-                  <h3 className="font-bold text-amber-800 mb-1 text-lg">Consejo del Día</h3>
-                  <p className="text-amber-700 text-sm sm:text-base">{todaysTip}</p>
+                  <h3 className="font-bold text-amber-800 mb-1 text-sm sm:text-lg">Consejo del Día</h3>
+                  <p className="text-amber-700 text-xs sm:text-sm lg:text-base">{todaysTip}</p>
                 </div>
               </div>
             </CardContent>
@@ -574,12 +628,12 @@ const Index = () => {
 
           {/* Progress Bar */}
           <Card className="bg-white/80 backdrop-blur-sm border-2 border-emerald-200 shadow-lg">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-lg sm:text-xl font-semibold text-emerald-700">Progreso de tu Planta</span>
-                <div className="flex items-center space-x-2">
-                  <span className="text-2xl sm:text-3xl">{plantStages[plantStage].emoji}</span>
-                  <span className="text-sm sm:text-base text-emerald-600 font-medium">{plantStages[plantStage].name}</span>
+            <CardContent className="p-3 sm:p-4 lg:p-6">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <span className="text-sm sm:text-lg lg:text-xl font-semibold text-emerald-700">Progreso de tu Planta</span>
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <span className="text-xl sm:text-2xl lg:text-3xl">{plantStages[plantStage].emoji}</span>
+                  <span className="text-xs sm:text-sm lg:text-base text-emerald-600 font-medium">{plantStages[plantStage].name}</span>
                 </div>
               </div>
               <Progress 
@@ -587,7 +641,7 @@ const Index = () => {
                   ? ((points - plantStages[plantStage].minPoints) / (plantStages[plantStage + 1].minPoints - plantStages[plantStage].minPoints)) * 100
                   : 100
                 } 
-                className="h-4" 
+                className="h-3 sm:h-4" 
               />
               {plantStage < plantStages.length - 1 && (
                 <p className="text-xs sm:text-sm text-gray-500 mt-2 text-center">
@@ -599,11 +653,11 @@ const Index = () => {
 
           {/* Weekly Challenges */}
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-emerald-700 mb-6 flex items-center justify-center">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-700 mb-4 sm:mb-6 flex items-center justify-center">
               <CirclePlus className="mr-2" />
               Retos de la Semana
             </h2>
-            <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 lg:gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {weeklyAchievements.map((challenge) => (
                 <Card 
                   key={challenge.id} 
@@ -617,11 +671,11 @@ const Index = () => {
                     : completeChallenge(challenge.id)
                   }
                 >
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-2">
-                        {challenge.id === 5 && <BookOpen className="w-4 h-4 text-emerald-600" />}
-                        <h3 className={`font-bold text-sm sm:text-base transition-colors duration-200 ${
+                  <CardContent className="p-3 sm:p-4 lg:p-6">
+                    <div className="flex items-center justify-between mb-2 sm:mb-3">
+                      <div className="flex items-center space-x-1 sm:space-x-2">
+                        {challenge.id === 5 && <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-600" />}
+                        <h3 className={`font-bold text-xs sm:text-sm lg:text-base transition-colors duration-200 ${
                           completedChallenges.includes(challenge.id) 
                             ? 'text-emerald-800' 
                             : 'text-gray-800 group-hover:text-emerald-700'
@@ -630,13 +684,13 @@ const Index = () => {
                         </h3>
                       </div>
                       {completedChallenges.includes(challenge.id) ? (
-                        <CircleCheck className="text-emerald-500 w-6 h-6 flex-shrink-0" />
+                        <CircleCheck className="text-emerald-500 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
                       ) : (
-                        <div className="w-6 h-6 border-2 border-gray-300 rounded-full flex-shrink-0 group-hover:border-emerald-400 transition-colors duration-200"></div>
+                        <div className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-gray-300 rounded-full flex-shrink-0 group-hover:border-emerald-400 transition-colors duration-200"></div>
                       )}
                     </div>
-                    <p className="text-xs sm:text-sm text-gray-600 mb-4">{challenge.description}</p>
-                    <Badge variant="secondary" className="bg-amber-100 text-amber-800 border border-amber-300">
+                    <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">{challenge.description}</p>
+                    <Badge variant="secondary" className="bg-amber-100 text-amber-800 border border-amber-300 text-xs">
                       +{challenge.points} puntos
                     </Badge>
                   </CardContent>
@@ -647,24 +701,24 @@ const Index = () => {
 
           {/* Games Section */}
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-emerald-700 mb-6 flex items-center justify-center">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-700 mb-4 sm:mb-6 flex items-center justify-center">
               <Gamepad className="mr-2" />
               Juegos Ecológicos
             </h2>
-            <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 lg:gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {games.map((game) => (
                 <Card 
                   key={game.id}
                   className="transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-gray-200 hover:border-emerald-400 shadow-lg bg-white/90 backdrop-blur-sm hover:bg-white hover:shadow-2xl group"
                   onClick={() => playGame(game.id)}
                 >
-                  <CardContent className="p-4 sm:p-6 text-center">
-                    <div className={`w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 ${game.color} rounded-full flex items-center justify-center text-xl sm:text-2xl shadow-lg group-hover:scale-110 group-hover:shadow-xl transition-all duration-300`}>
+                  <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+                    <div className={`w-8 h-8 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mx-auto mb-3 sm:mb-4 ${game.color} rounded-full flex items-center justify-center text-sm sm:text-xl lg:text-2xl shadow-lg group-hover:scale-110 group-hover:shadow-xl transition-all duration-300`}>
                       {game.icon}
                     </div>
-                    <h3 className="font-bold text-base sm:text-lg text-gray-800 mb-2 group-hover:text-emerald-700 transition-colors duration-200">{game.title}</h3>
-                    <p className="text-xs sm:text-sm text-gray-600 mb-4">{game.description}</p>
-                    <Button className="bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-500 hover:to-cyan-500 text-white font-semibold px-4 sm:px-6 py-2 rounded-full shadow-lg transition-all duration-300 text-sm sm:text-base hover:scale-105 hover:shadow-xl">
+                    <h3 className="font-bold text-sm sm:text-base lg:text-lg text-gray-800 mb-1 sm:mb-2 group-hover:text-emerald-700 transition-colors duration-200">{game.title}</h3>
+                    <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">{game.description}</p>
+                    <Button className="bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-500 hover:to-cyan-500 text-white font-semibold px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-full shadow-lg transition-all duration-300 text-xs sm:text-sm lg:text-base hover:scale-105 hover:shadow-xl">
                       ¡Jugar!
                     </Button>
                   </CardContent>
@@ -675,10 +729,10 @@ const Index = () => {
 
           {/* Motivational Message */}
           <Card className="bg-gradient-to-r from-purple-400 to-pink-400 text-white border-none shadow-xl">
-            <CardContent className="p-4 sm:p-8 text-center">
-              <div className="text-3xl sm:text-4xl mb-3">🌟</div>
-              <h3 className="text-lg sm:text-xl font-bold mb-2">¡Eres un verdaderx EcoExploradorx!</h3>
-              <p className="text-purple-100 text-sm sm:text-base">Cada acción cuenta para cuidar nuestro planeta. ¡Sigue así!</p>
+            <CardContent className="p-4 sm:p-6 lg:p-8 text-center">
+              <div className="text-2xl sm:text-3xl lg:text-4xl mb-2 sm:mb-3">🌟</div>
+              <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-1 sm:mb-2">¡Eres un verdaderx EcoExploradorx!</h3>
+              <p className="text-purple-100 text-xs sm:text-sm lg:text-base">Cada acción cuenta para cuidar nuestro planeta. ¡Sigue así!</p>
             </CardContent>
           </Card>
         </div>
