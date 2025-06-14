@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,12 @@ import {
   Puzzle, 
   CirclePlus,
   Lightbulb,
-  BookOpen
+  BookOpen,
+  Menu,
+  X,
+  HelpCircle,
+  Users,
+  MessageSquare
 } from "lucide-react";
 import EcoMascot from "@/components/EcoMascot";
 import EcoQuiz from "@/components/games/EcoQuiz";
@@ -27,6 +33,7 @@ const Index = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showEducationalContent, setShowEducationalContent] = useState(false);
   const [currentEducationalTopic, setCurrentEducationalTopic] = useState(0);
+  const [showMenu, setShowMenu] = useState(false);
 
   const plantStages = [
     { name: "Semilla", emoji: "🌰", minPoints: 0 },
@@ -41,14 +48,14 @@ const Index = () => {
       id: 0,
       title: "Cuidado del Agua",
       icon: "💧",
-      content: "El agua es muy importante para todos los seres vivos. ¡Imagínate que eres un detective del agua! Tu misión es encontrar todas las formas de no desperdiciarla. Puedes cerrar la llave mientras te lavas los dientes, tomar duchas más cortas, y usar el agua de lluvia para regar las plantas. ¡Cada gota cuenta para nuestro planeta!",
+      content: "El agua es muy importante para todos los seres vivos. ¡Imagínate que eres detective del agua! Tu misión es encontrar todas las formas de no desperdiciarla. Puedes cerrar la llave mientras te lavas los dientes, tomar duchas más cortas, y usar el agua de lluvia para regar las plantas. ¡Cada gota cuenta para nuestro planeta!",
       tip: "¿Sabías que una llave que gotea puede desperdiciar hasta 15 litros de agua al día? ¡Eso es como llenar 15 botellas de agua!"
     },
     {
       id: 1,
       title: "Protección de Animales",
       icon: "🐘",
-      content: "Los animales son nuestros amigos del planeta y necesitan nuestra ayuda. Algunos animales como los elefantes, pandas y tortugas marinas están en peligro. Podemos ayudarlos no tirando basura en la naturaleza, respetando sus hogares y aprendiendo sobre ellos. ¡Tú puedes ser un guardián de los animales!",
+      content: "Los animales son nuestros amigos del planeta y necesitan nuestra ayuda. Algunos animales como los elefantes, pandas y tortugas marinas están en peligro. Podemos ayudarlos no tirando basura en la naturaleza, respetando sus hogares y aprendiendo sobre ellos. ¡Puedes ser guardianes de los animales!",
       tip: "Las tortugas marinas confunden las bolsas de plástico con medusas y se las comen. ¡Por eso es importante reciclar el plástico!"
     },
     {
@@ -71,6 +78,108 @@ const Index = () => {
       icon: "💡",
       content: "La energía es como la comida de nuestras casas. Podemos ser detectives de la energía apagando las luces que no usamos, desconectando aparatos que no necesitamos, y usando la luz del sol siempre que podamos. ¡Ahorrar energía es como darle un abrazo al planeta!",
       tip: "Dejar un televisor encendido toda la noche gasta la misma energía que 100 focos LED. ¡Recuerda apagarlo antes de dormir!"
+    }
+  ];
+
+  const dailyTips = [
+    "💡 ¿Sabías que reciclar una lata de aluminio puede ahorrar energía para encender una TV por 3 horas?",
+    "🌊 Una ducha de 5 minutos usa menos agua que llenar la bañera. ¡Pídele a un adulto que te ayude a medir el tiempo!",
+    "🌱 Las plantas son como pequeñas fábricas que limpian el aire. ¡Cuida las que tienes en casa!",
+    "⚡ Apagar las luces que no usas es como darle un descanso al planeta. ¡Pregunta a un adulto cuáles puedes apagar!",
+    "♻️ Separar la basura ayuda a que los materiales tengan una segunda vida. ¡Es como magia para el planeta!",
+    "🚶‍♀️ Caminar es genial para tu salud y para el aire que respiramos. ¡Siempre acompañado de un adulto!",
+    "📄 Usar ambos lados del papel es como duplicar los árboles. ¡Cada hoja cuenta!"
+  ];
+
+  const [todaysTip] = useState(dailyTips[new Date().getDay()]);
+
+  const weeklyAchievements = [
+    { 
+      id: 0, 
+      title: "Apaga 3 luces que no uses", 
+      description: "Durante la semana, apaga 3 veces las luces de habitaciones vacías (pregúntale a un adulto si tienes dudas)", 
+      points: 50, 
+      completed: true 
+    },
+    { 
+      id: 1, 
+      title: "Reutiliza papel 2 veces", 
+      description: "Usa el otro lado de 2 hojas de papel para dibujar, hacer aviones o practicar escritura", 
+      points: 30, 
+      completed: false 
+    },
+    { 
+      id: 2, 
+      title: "Cuida una planta por 3 días", 
+      description: "Riégala o ayuda a sembrar una semilla durante 3 días seguidos con ayuda de un adulto", 
+      points: 40, 
+      completed: true 
+    },
+    { 
+      id: 3, 
+      title: "Separa 5 residuos correctamente", 
+      description: "Pon 5 cosas diferentes en su lugar correcto: papel, plástico, orgánico (pide ayuda si no sabes)", 
+      points: 60, 
+      completed: false 
+    },
+    { 
+      id: 4, 
+      title: "Camina 2 veces en la semana", 
+      description: "Ve caminando a 2 lugares cercanos acompañado de mamá, papá o un adulto de confianza", 
+      points: 35, 
+      completed: false 
+    },
+    {
+      id: 5,
+      title: "Lee o escucha contenido educativo",
+      description: "Explora y aprende sobre un tema ambiental con ayuda de un adulto. ¡Descubre datos increíbles!",
+      points: 45,
+      completed: false
+    },
+  ];
+
+  const games = [
+    { id: "quiz", title: "EcoQuiz", description: "Responde preguntas ecológicas", icon: "🧠", color: "bg-green-400" },
+    { id: "puzzle", title: "Puzzle Verde", description: "Arma paisajes naturales", icon: "🧩", color: "bg-blue-400" },
+    { id: "memory", title: "Memoria Reciclaje", description: "Encuentra pares de basura iguales", icon: "♻️", color: "bg-yellow-400" },
+  ];
+
+  const menuItems = [
+    { 
+      id: "about", 
+      title: "Acerca de Nosotros", 
+      icon: Users, 
+      action: () => {
+        toast({
+          title: "Acerca de EcoFun",
+          description: "Somos una plataforma educativa que enseña a cuidar el planeta de forma divertida.",
+        });
+        setShowMenu(false);
+      }
+    },
+    { 
+      id: "help", 
+      title: "Ayuda", 
+      icon: HelpCircle, 
+      action: () => {
+        toast({
+          title: "¿Necesitas ayuda?",
+          description: "Completa los retos semanales y juega para ganar puntos. ¡Pide ayuda a un adulto si tienes dudas!",
+        });
+        setShowMenu(false);
+      }
+    },
+    { 
+      id: "suggestion", 
+      title: "Enviar Sugerencia", 
+      icon: MessageSquare, 
+      action: () => {
+        toast({
+          title: "¡Gracias por tu interés!",
+          description: "Pronto podrás enviar tus sugerencias. ¡Seguimos mejorando EcoFun para ti!",
+        });
+        setShowMenu(false);
+      }
     }
   ];
 
@@ -336,12 +445,31 @@ const Index = () => {
               <p className="text-green-100 text-sm sm:text-base">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
             </div>
           </div>
-          <div className="flex space-x-2">
-            {badges.map((badge, index) => (
-              <div key={index} className="text-2xl sm:text-3xl animate-bounce" style={{ animationDelay: `${index * 0.2}s` }}>
-                {badge}
+          <div className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowMenu(!showMenu)}
+              className="text-white hover:bg-white/20"
+            >
+              {showMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </Button>
+            
+            {/* Dropdown Menu */}
+            {showMenu && (
+              <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 min-w-[200px] z-50">
+                {menuItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={item.action}
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <item.icon className="w-5 h-5 text-green-600" />
+                    <span className="text-sm font-medium">{item.title}</span>
+                  </button>
+                ))}
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 
 {
-  "name": "EcoHéroes - Cuidemos el Planeta",
-  "short_name": "EcoHéroes",
+  "name": "EcoFun - Cuidemos el Planeta",
+  "short_name": "EcoFun",
   "description": "Juegos y retos ecológicos para niños",
   "start_url": "/",
   "display": "standalone",
