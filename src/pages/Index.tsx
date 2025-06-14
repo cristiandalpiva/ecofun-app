@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -181,69 +180,6 @@ const Index = () => {
         setShowMenu(false);
       }
     }
-  ];
-
-  const dailyTips = [
-    "💡 ¿Sabías que reciclar una lata de aluminio puede ahorrar energía para encender una TV por 3 horas?",
-    "🌊 Una ducha de 5 minutos usa menos agua que llenar la bañera. ¡Pídele a un adulto que te ayude a medir el tiempo!",
-    "🌱 Las plantas son como pequeñas fábricas que limpian el aire. ¡Cuida las que tienes en casa!",
-    "⚡ Apagar las luces que no usas es como darle un descanso al planeta. ¡Pregunta a un adulto cuáles puedes apagar!",
-    "♻️ Separar la basura ayuda a que los materiales tengan una segunda vida. ¡Es como magia para el planeta!",
-    "🚶‍♀️ Caminar es genial para tu salud y para el aire que respiramos. ¡Siempre acompañado de un adulto!",
-    "📄 Usar ambos lados del papel es como duplicar los árboles. ¡Cada hoja cuenta!"
-  ];
-
-  const [todaysTip] = useState(dailyTips[new Date().getDay()]);
-
-  const weeklyAchievements = [
-    { 
-      id: 0, 
-      title: "Apaga 3 luces que no uses", 
-      description: "Durante la semana, apaga 3 veces las luces de habitaciones vacías (pregúntale a un adulto si tienes dudas)", 
-      points: 50, 
-      completed: true 
-    },
-    { 
-      id: 1, 
-      title: "Reutiliza papel 2 veces", 
-      description: "Usa el otro lado de 2 hojas de papel para dibujar, hacer aviones o practicar escritura", 
-      points: 30, 
-      completed: false 
-    },
-    { 
-      id: 2, 
-      title: "Cuida una planta por 3 días", 
-      description: "Riégala o ayuda a sembrar una semilla durante 3 días seguidos con ayuda de un adulto", 
-      points: 40, 
-      completed: true 
-    },
-    { 
-      id: 3, 
-      title: "Separa 5 residuos correctamente", 
-      description: "Pon 5 cosas diferentes en su lugar correcto: papel, plástico, orgánico (pide ayuda si no sabes)", 
-      points: 60, 
-      completed: false 
-    },
-    { 
-      id: 4, 
-      title: "Camina 2 veces en la semana", 
-      description: "Ve caminando a 2 lugares cercanos acompañado de mamá, papá o un adulto de confianza", 
-      points: 35, 
-      completed: false 
-    },
-    {
-      id: 5,
-      title: "Lee o escucha contenido educativo",
-      description: "Explora y aprende sobre un tema ambiental con ayuda de un adulto. ¡Descubre datos increíbles!",
-      points: 45,
-      completed: false
-    },
-  ];
-
-  const games = [
-    { id: "quiz", title: "EcoQuiz", description: "Responde preguntas ecológicas", icon: "🧠", color: "bg-green-400" },
-    { id: "puzzle", title: "Puzzle Verde", description: "Arma paisajes naturales", icon: "🧩", color: "bg-blue-400" },
-    { id: "memory", title: "Memoria Reciclaje", description: "Encuentra pares de basura iguales", icon: "♻️", color: "bg-yellow-400" },
   ];
 
   // Check if first visit
