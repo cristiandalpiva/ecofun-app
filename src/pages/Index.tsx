@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,14 +15,16 @@ import EcoMascot from "@/components/EcoMascot";
 import EcoQuiz from "@/components/games/EcoQuiz";
 import EcoPuzzle from "@/components/games/EcoPuzzle";
 import RecycleMemory from "@/components/games/RecycleMemory";
+import OnboardingModal from "@/components/OnboardingModal";
 import { toast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [currentGame, setCurrentGame] = useState<string | null>(null);
   const [points, setPoints] = useState(150);
-  const [plantStage, setPlantStage] = useState(1); // 0: semilla, 1: brote, 2: plantita, 3: planta, 4: árbol
+  const [plantStage, setPlantStage] = useState(1);
   const [completedChallenges, setCompletedChallenges] = useState([0, 2]);
   const [badges, setBadges] = useState(["🌱", "💡"]);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   const plantStages = [
     { name: "Semilla", emoji: "🌰", minPoints: 0 },
@@ -46,36 +49,36 @@ const Index = () => {
   const weeklyAchievements = [
     { 
       id: 0, 
-      title: "Apaga luces que no uses", 
-      description: "Cuando salgas de tu cuarto o no las necesites (pregúntale a un adulto si tienes dudas)", 
+      title: "Apaga 3 luces que no uses", 
+      description: "Durante la semana, apaga 3 veces las luces de habitaciones vacías (pregúntale a un adulto si tienes dudas)", 
       points: 50, 
       completed: true 
     },
     { 
       id: 1, 
-      title: "Reutiliza papel usado", 
-      description: "Usa el otro lado para dibujar, hacer aviones de papel o practicar escritura", 
+      title: "Reutiliza papel 2 veces", 
+      description: "Usa el otro lado de 2 hojas de papel para dibujar, hacer aviones o practicar escritura", 
       points: 30, 
       completed: false 
     },
     { 
       id: 2, 
-      title: "Cuida una planta", 
-      description: "Riégala con ayuda de un adulto o ayuda a sembrar una semillita", 
+      title: "Cuida una planta por 3 días", 
+      description: "Riégala o ayuda a sembrar una semilla durante 3 días seguidos con ayuda de un adulto", 
       points: 40, 
       completed: true 
     },
     { 
       id: 3, 
-      title: "Separa los residuos", 
-      description: "Pon cada cosa en su lugar: papel, plástico, orgánico (pide ayuda si no sabes)", 
+      title: "Separa 5 residuos correctamente", 
+      description: "Pon 5 cosas diferentes en su lugar correcto: papel, plástico, orgánico (pide ayuda si no sabes)", 
       points: 60, 
       completed: false 
     },
     { 
       id: 4, 
-      title: "Camina con un adulto", 
-      description: "Ve caminando a lugares cercanos acompañado de mamá, papá o un adulto de confianza", 
+      title: "Camina 2 veces en la semana", 
+      description: "Ve caminando a 2 lugares cercanos acompañado de mamá, papá o un adulto de confianza", 
       points: 35, 
       completed: false 
     },
@@ -86,6 +89,19 @@ const Index = () => {
     { id: "puzzle", title: "Puzzle Verde", description: "Arma paisajes naturales", icon: "🧩", color: "bg-blue-400" },
     { id: "memory", title: "Memoria Reciclaje", description: "Encuentra pares de basura iguales", icon: "♻️", color: "bg-yellow-400" },
   ];
+
+  // Check if first visit
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('ecoheroes-onboarding-complete');
+    if (!hasVisited) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  const handleOnboardingClose = () => {
+    setShowOnboarding(false);
+    localStorage.setItem('ecoheroes-onboarding-complete', 'true');
+  };
 
   // Update plant stage based on points
   useEffect(() => {
@@ -124,6 +140,20 @@ const Index = () => {
     }
   };
 
+  const uncompleteChallenge = (challengeId: number) => {
+    if (completedChallenges.includes(challengeId)) {
+      setCompletedChallenges(completedChallenges.filter(id => id !== challengeId));
+      const challenge = weeklyAchievements.find(c => c.id === challengeId);
+      if (challenge) {
+        setPoints(Math.max(0, points - challenge.points));
+        toast({
+          title: "Reto desmarcado",
+          description: `${challenge.title} fue desmarcado. -${challenge.points} puntos`,
+        });
+      }
+    }
+  };
+
   const playGame = (gameId: string) => {
     setCurrentGame(gameId);
   };
@@ -151,19 +181,21 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-50 to-yellow-100">
+      <OnboardingModal isOpen={showOnboarding} onClose={handleOnboardingClose} />
+      
       {/* Header */}
       <div className="bg-gradient-to-r from-green-400 to-blue-400 text-white p-4 shadow-lg">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <EcoMascot size="large" />
             <div>
-              <h1 className="text-2xl font-bold">¡Hola, EcoHéroe!</h1>
-              <p className="text-green-100">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
+              <h1 className="text-xl sm:text-2xl font-bold">¡Hola, EcoHéroe!</h1>
+              <p className="text-green-100 text-sm sm:text-base">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
             </div>
           </div>
           <div className="flex space-x-2">
             {badges.map((badge, index) => (
-              <div key={index} className="text-3xl animate-bounce" style={{ animationDelay: `${index * 0.2}s` }}>
+              <div key={index} className="text-2xl sm:text-3xl animate-bounce" style={{ animationDelay: `${index * 0.2}s` }}>
                 {badge}
               </div>
             ))}
@@ -176,8 +208,8 @@ const Index = () => {
         <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
-              <Lightbulb className="text-yellow-600 w-6 h-6" />
-              <div>
+              <Lightbulb className="text-yellow-600 w-6 h-6 flex-shrink-0" />
+              <div className="min-w-0">
                 <h3 className="font-bold text-yellow-800 mb-1">Consejo del Día</h3>
                 <p className="text-yellow-700 text-sm">{todaysTip}</p>
               </div>
@@ -212,11 +244,11 @@ const Index = () => {
 
         {/* Weekly Challenges */}
         <div>
-          <h2 className="text-2xl font-bold text-green-700 mb-4 flex items-center">
+          <h2 className="text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center">
             <CirclePlus className="mr-2" />
             Retos de la Semana
           </h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {weeklyAchievements.map((challenge) => (
               <Card 
                 key={challenge.id} 
@@ -225,18 +257,21 @@ const Index = () => {
                     ? 'bg-green-100 border-green-300 shadow-green-200' 
                     : 'bg-white border-gray-200 hover:border-green-300'
                 } shadow-lg`}
-                onClick={() => completeChallenge(challenge.id)}
+                onClick={() => completedChallenges.includes(challenge.id) 
+                  ? uncompleteChallenge(challenge.id) 
+                  : completeChallenge(challenge.id)
+                }
               >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-bold text-gray-800">{challenge.title}</h3>
+                    <h3 className="font-bold text-gray-800 text-sm sm:text-base">{challenge.title}</h3>
                     {completedChallenges.includes(challenge.id) ? (
-                      <CircleCheck className="text-green-500 w-6 h-6" />
+                      <CircleCheck className="text-green-500 w-6 h-6 flex-shrink-0" />
                     ) : (
-                      <div className="w-6 h-6 border-2 border-gray-300 rounded-full"></div>
+                      <div className="w-6 h-6 border-2 border-gray-300 rounded-full flex-shrink-0"></div>
                     )}
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">{challenge.description}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 mb-3">{challenge.description}</p>
                   <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
                     +{challenge.points} puntos
                   </Badge>
@@ -248,24 +283,24 @@ const Index = () => {
 
         {/* Games Section */}
         <div>
-          <h2 className="text-2xl font-bold text-blue-700 mb-4 flex items-center">
+          <h2 className="text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center">
             <Gamepad className="mr-2" />
             Juegos Ecológicos
           </h2>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {games.map((game) => (
               <Card 
                 key={game.id}
                 className="transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-gray-200 hover:border-blue-300 shadow-lg bg-white/90 backdrop-blur-sm"
                 onClick={() => playGame(game.id)}
               >
-                <CardContent className="p-6 text-center">
-                  <div className={`w-16 h-16 mx-auto mb-4 ${game.color} rounded-full flex items-center justify-center text-2xl shadow-lg`}>
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className={`w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 ${game.color} rounded-full flex items-center justify-center text-xl sm:text-2xl shadow-lg`}>
                     {game.icon}
                   </div>
-                  <h3 className="font-bold text-lg text-gray-800 mb-2">{game.title}</h3>
-                  <p className="text-sm text-gray-600 mb-4">{game.description}</p>
-                  <Button className="bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-500 hover:to-blue-500 text-white font-semibold px-6 py-2 rounded-full shadow-lg transition-all duration-300">
+                  <h3 className="font-bold text-base sm:text-lg text-gray-800 mb-2">{game.title}</h3>
+                  <p className="text-xs sm:text-sm text-gray-600 mb-4">{game.description}</p>
+                  <Button className="bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-500 hover:to-blue-500 text-white font-semibold px-4 sm:px-6 py-2 rounded-full shadow-lg transition-all duration-300 text-sm sm:text-base">
                     ¡Jugar!
                   </Button>
                 </CardContent>
@@ -276,10 +311,10 @@ const Index = () => {
 
         {/* Motivational Message */}
         <Card className="bg-gradient-to-r from-purple-400 to-pink-400 text-white border-none shadow-xl">
-          <CardContent className="p-6 text-center">
-            <div className="text-4xl mb-3">🌟</div>
-            <h3 className="text-xl font-bold mb-2">¡Eres un verdadero EcoHéroe!</h3>
-            <p className="text-purple-100">Cada acción cuenta para cuidar nuestro planeta. ¡Sigue así!</p>
+          <CardContent className="p-4 sm:p-6 text-center">
+            <div className="text-3xl sm:text-4xl mb-3">🌟</div>
+            <h3 className="text-lg sm:text-xl font-bold mb-2">¡Eres un verdadero EcoHéroe!</h3>
+            <p className="text-purple-100 text-sm sm:text-base">Cada acción cuenta para cuidar nuestro planeta. ¡Sigue así!</p>
           </CardContent>
         </Card>
       </div>
