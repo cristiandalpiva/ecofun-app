@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,7 +15,10 @@ import {
   HelpCircle,
   Users,
   MessageSquare,
-  Volume2
+  Volume2,
+  VolumeX,
+  Play,
+  Pause
 } from "lucide-react";
 import EcoMascot from "@/components/EcoMascot";
 import EcoQuiz from "@/components/games/EcoQuiz";
@@ -36,6 +38,8 @@ const Index = () => {
   const [showEducationalContent, setShowEducationalContent] = useState(false);
   const [currentEducationalTopic, setCurrentEducationalTopic] = useState(0);
   const [showMenu, setShowMenu] = useState(false);
+  const [isReading, setIsReading] = useState(false);
+  const [speechSynthesis, setSpeechSynthesis] = useState<SpeechSynthesis | null>(null);
 
   const plantStages = [
     { name: "Semilla", emoji: "🌰", minPoints: 0 },
@@ -133,7 +137,7 @@ const Index = () => {
     },
     {
       id: 5,
-      title: "Lee o escucha contenido educativo",
+      title: "Lee y escucha contenido educativo",
       description: "Explora y aprende sobre un tema ambiental con ayuda de un adulto. ¡Descubre datos increíbles!",
       points: 45,
       completed: false
@@ -185,6 +189,13 @@ const Index = () => {
     }
   ];
 
+  // Initialize speech synthesis
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      setSpeechSynthesis(window.speechSynthesis);
+    }
+  }, []);
+
   // Check if first visit
   useEffect(() => {
     const hasVisited = localStorage.getItem('ecoheroes-onboarding-complete');
@@ -211,6 +222,39 @@ const Index = () => {
       }
     }
   }, [points]);
+
+  const readText = (text: string) => {
+    if (!speechSynthesis) {
+      toast({
+        title: "Audio no disponible",
+        description: "Tu navegador no soporta la función de lectura de texto.",
+      });
+      return;
+    }
+
+    if (isReading) {
+      speechSynthesis.cancel();
+      setIsReading(false);
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'es-ES';
+    utterance.rate = 0.9;
+    utterance.pitch = 1.1;
+    
+    utterance.onstart = () => setIsReading(true);
+    utterance.onend = () => setIsReading(false);
+    utterance.onerror = () => {
+      setIsReading(false);
+      toast({
+        title: "Error de audio",
+        description: "No se pudo reproducir el audio. Intenta de nuevo.",
+      });
+    };
+
+    speechSynthesis.speak(utterance);
+  };
 
   const completeChallenge = (challengeId: number) => {
     if (!completedChallenges.includes(challengeId)) {
@@ -305,14 +349,34 @@ const Index = () => {
               </div>
               
               <div className="space-y-4">
-                <div className="bg-gradient-to-r from-green-100 to-blue-100 p-4 rounded-lg">
-                  <p className="text-gray-700 leading-relaxed">{topic.content}</p>
+                <div className="bg-gradient-to-r from-green-100 to-blue-100 p-4 rounded-lg relative">
+                  <div className="flex items-start justify-between">
+                    <p className="text-gray-700 leading-relaxed pr-4">{topic.content}</p>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => readText(topic.content)}
+                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 flex-shrink-0"
+                      title="Escuchar contenido"
+                    >
+                      {isReading ? <Pause className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                    </Button>
+                  </div>
                 </div>
                 
-                <div className="bg-yellow-100 p-4 rounded-lg border-2 border-yellow-300">
+                <div className="bg-yellow-100 p-4 rounded-lg border-2 border-yellow-300 relative">
                   <div className="flex items-center space-x-2 mb-2">
                     <Lightbulb className="text-yellow-600 w-5 h-5" />
                     <span className="font-semibold text-yellow-800">Dato Curioso</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => readText(topic.tip)}
+                      className="text-yellow-600 hover:text-yellow-800 hover:bg-yellow-200 ml-auto"
+                      title="Escuchar dato curioso"
+                    >
+                      {isReading ? <Pause className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                    </Button>
                   </div>
                   <p className="text-yellow-700 text-sm">{topic.tip}</p>
                 </div>
@@ -383,11 +447,13 @@ const Index = () => {
                 <span className="text-yellow-300">Eco</span><span className="text-green-200">Fun</span>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <EcoMascot size="large" plantStage={plantStage} />
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold">¡Hola, EcoExploradorx!</h1>
-                <p className="text-green-100 text-sm sm:text-base">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
+            <div className="flex items-center justify-center flex-1">
+              <div className="flex items-center space-x-4">
+                <EcoMascot size="large" plantStage={plantStage} />
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold">¡Hola, EcoExploradorx!</h1>
+                  <p className="text-green-100 text-sm sm:text-base">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
+                </div>
               </div>
             </div>
           </div>
@@ -424,7 +490,7 @@ const Index = () => {
         <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-8">
           {/* Daily Tip */}
           <div className="flex justify-center">
-            <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300 hover:border-yellow-400 hover:shadow-lg transition-all duration-300 w-full max-w-4xl">
+            <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300 hover:border-yellow-400 hover:shadow-lg transition-all duration-300 w-full max-w-6xl">
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center space-x-3">
                   <Lightbulb className="text-yellow-600 w-6 h-6 flex-shrink-0" />
@@ -439,7 +505,7 @@ const Index = () => {
 
           {/* Progress Bar */}
           <div className="flex justify-center">
-            <Card className="bg-white/80 backdrop-blur-sm border-2 border-green-200 hover:border-green-300 hover:shadow-lg transition-all duration-300 w-full max-w-4xl">
+            <Card className="bg-white/80 backdrop-blur-sm border-2 border-green-200 hover:border-green-300 hover:shadow-lg transition-all duration-300 w-full max-w-6xl">
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-lg sm:text-xl font-semibold text-green-700">Progreso de tu Planta</span>
