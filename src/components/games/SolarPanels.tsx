@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -17,6 +16,7 @@ interface Panel {
   y: number;
   rotation: number;
   efficiency: number;
+  isDragging: boolean;
 }
 
 interface Appliance {
@@ -32,6 +32,8 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
   const [gameWon, setGameWon] = useState(false);
   const [timeLeft, setTimeLeft] = useState(90);
   const [selectedPanel, setSelectedPanel] = useState<number | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const gameAreaRef = useRef<HTMLDivElement>(null);
 
   const appliances: Appliance[] = [
     { name: "Luces", power: 200, icon: "💡", active: false },
@@ -71,7 +73,7 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
   const addPanel = (x: number, y: number) => {
     if (panels.length >= 8) return;
     
-    const sunlightFactor = Math.max(0.3, 1 - (y / 300)); // Más eficiencia arriba
+    const sunlightFactor = Math.max(0.3, 1 - (y / 300));
     const spacingFactor = panels.length === 0 ? 1 : 
       Math.min(...panels.map(p => Math.sqrt((p.x - x) ** 2 + (p.y - y) ** 2))) > 60 ? 1 : 0.7;
     
@@ -80,10 +82,119 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
       x,
       y,
       rotation: 0,
-      efficiency: Math.round((sunlightFactor * spacingFactor) * 100) / 100
+      efficiency: Math.round((sunlightFactor * spacingFactor) * 100) / 100,
+      isDragging: false
     };
     
     setPanels([...panels, newPanel]);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent, panelId: number) => {
+    e.stopPropagation();
+    const panel = panels.find(p => p.id === panelId);
+    if (!panel) return;
+
+    setSelectedPanel(panelId);
+    setPanels(prev => prev.map(p => 
+      p.id === panelId ? { ...p, isDragging: true } : p
+    ));
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!gameAreaRef.current) return;
+      
+      const gameAreaRect = gameAreaRef.current.getBoundingClientRect();
+      const newX = e.clientX - gameAreaRect.left - dragOffset.x;
+      const newY = e.clientY - gameAreaRect.top - dragOffset.y;
+
+      // Constrain to game area
+      const constrainedX = Math.max(20, Math.min(newX, gameAreaRect.width - 20));
+      const constrainedY = Math.max(10, Math.min(newY, gameAreaRect.height - 10));
+
+      setPanels(prev => prev.map(p => 
+        p.id === panelId 
+          ? { 
+              ...p, 
+              x: constrainedX, 
+              y: constrainedY,
+              efficiency: Math.round((Math.max(0.3, 1 - (constrainedY / 300)) * 
+                         (prev.length === 1 ? 1 : 
+                          Math.min(...prev.filter(panel => panel.id !== panelId)
+                            .map(panel => Math.sqrt((panel.x - constrainedX) ** 2 + (panel.y - constrainedY) ** 2))) > 60 ? 1 : 0.7)) * 100) / 100
+            }
+          : p
+      ));
+    };
+
+    const handleMouseUp = () => {
+      setPanels(prev => prev.map(p => ({ ...p, isDragging: false })));
+      setSelectedPanel(null);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent, panelId: number) => {
+    e.stopPropagation();
+    const touch = e.touches[0];
+    const panel = panels.find(p => p.id === panelId);
+    if (!panel) return;
+
+    setSelectedPanel(panelId);
+    setPanels(prev => prev.map(p => 
+      p.id === panelId ? { ...p, isDragging: true } : p
+    ));
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDragOffset({
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top
+    });
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      if (!gameAreaRef.current) return;
+      
+      const touch = e.touches[0];
+      const gameAreaRect = gameAreaRef.current.getBoundingClientRect();
+      const newX = touch.clientX - gameAreaRect.left - dragOffset.x;
+      const newY = touch.clientY - gameAreaRect.top - dragOffset.y;
+
+      const constrainedX = Math.max(20, Math.min(newX, gameAreaRect.width - 20));
+      const constrainedY = Math.max(10, Math.min(newY, gameAreaRect.height - 10));
+
+      setPanels(prev => prev.map(p => 
+        p.id === panelId 
+          ? { 
+              ...p, 
+              x: constrainedX, 
+              y: constrainedY,
+              efficiency: Math.round((Math.max(0.3, 1 - (constrainedY / 300)) * 
+                         (prev.length === 1 ? 1 : 
+                          Math.min(...prev.filter(panel => panel.id !== panelId)
+                            .map(panel => Math.sqrt((panel.x - constrainedX) ** 2 + (panel.y - constrainedY) ** 2))) > 60 ? 1 : 0.7)) * 100) / 100
+            }
+          : p
+      ));
+    };
+
+    const handleTouchEnd = () => {
+      setPanels(prev => prev.map(p => ({ ...p, isDragging: false })));
+      setSelectedPanel(null);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd);
   };
 
   const rotatePanel = (id: number) => {
@@ -172,6 +283,7 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                       <p className="text-sm text-blue-600">{panels.length}/8 paneles</p>
                     </div>
                     <div 
+                      ref={gameAreaRef}
                       className="relative w-full h-80 bg-gradient-to-b from-blue-100 to-green-100 border-2 border-dashed border-blue-400 rounded-lg overflow-hidden cursor-crosshair"
                       onClick={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
@@ -192,21 +304,16 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                       {panels.map((panel) => (
                         <div
                           key={panel.id}
-                          className="absolute cursor-pointer"
+                          className={`absolute cursor-move touch-none ${panel.isDragging ? 'z-50' : 'z-10'}`}
                           style={{
                             left: panel.x - 20,
                             top: panel.y - 10,
-                            transform: `rotate(${panel.rotation}deg)`
+                            transform: `rotate(${panel.rotation}deg)`,
+                            transition: panel.isDragging ? 'none' : 'all 0.2s ease'
                           }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (selectedPanel === panel.id) {
-                              removePanel(panel.id);
-                              setSelectedPanel(null);
-                            } else {
-                              setSelectedPanel(panel.id);
-                            }
-                          }}
+                          onMouseDown={(e) => handleMouseDown(e, panel.id)}
+                          onTouchStart={(e) => handleTouchStart(e, panel.id)}
+                          onClick={(e) => e.stopPropagation()}
                           onDoubleClick={(e) => {
                             e.stopPropagation();
                             rotatePanel(panel.id);
@@ -214,7 +321,7 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                         >
                           <div className={`w-10 h-6 bg-gradient-to-r from-blue-800 to-blue-900 border-2 rounded-sm shadow-lg ${
                             selectedPanel === panel.id ? 'border-yellow-400 shadow-yellow-300' : 'border-gray-400'
-                          }`}>
+                          } ${panel.isDragging ? 'scale-110 shadow-2xl' : ''}`}>
                             <div className="grid grid-cols-3 grid-rows-2 h-full p-0.5">
                               {[...Array(6)].map((_, i) => (
                                 <div key={i} className="bg-blue-700 rounded-xs"></div>
@@ -228,7 +335,7 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                       ))}
                       
                       <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-blue-600 text-center">
-                        Haz clic para colocar paneles • Doble clic para rotar • Clic para seleccionar/quitar
+                        Haz clic para agregar • Arrastra para mover • Doble clic para rotar
                       </div>
                     </div>
                   </CardContent>
@@ -296,10 +403,10 @@ const SolarPanels: React.FC<SolarPanelsProps> = ({ onComplete, onBack }) => {
                   <CardContent className="p-4">
                     <h4 className="font-bold text-blue-700 mb-2">💡 Consejos</h4>
                     <ul className="text-xs text-blue-600 space-y-1">
+                      <li>• Arrastra paneles para ubicarlos mejor</li>
                       <li>• Coloca paneles en la parte superior</li>
                       <li>• Separa los paneles para mejor rendimiento</li>
-                      <li>• Rota los paneles hacia el sol</li>
-                      <li>• Usa máximo 8 paneles eficientemente</li>
+                      <li>• Doble clic para rotar hacia el sol</li>
                     </ul>
                   </CardContent>
                 </Card>

@@ -32,6 +32,7 @@ import PlantCare from "@/components/games/PlantCare";
 import SolarPanels from "@/components/games/SolarPanels";
 import PlantQuiz from "@/components/games/PlantQuiz";
 import AnimalQuiz from "@/components/games/AnimalQuiz";
+import EcoPlatformer from "@/components/games/EcoPlatformer";
 import OnboardingModal from "@/components/OnboardingModal";
 import SuggestionForm from "@/components/SuggestionForm";
 import Footer from "@/components/Footer";
@@ -164,6 +165,7 @@ const Index = () => {
     { id: "solar", title: "Paneles Solares", description: "Instala paneles para energizar tu casa", icon: "☀️", color: "bg-yellow-400" },
     { id: "plant-quiz", title: "Adivina la Planta", description: "Identifica diferentes especies vegetales", icon: "🌿", color: "bg-lime-400" },
     { id: "animal-quiz", title: "Safari Animal", description: "Reconoce animales de todo el mundo", icon: "🦁", color: "bg-orange-400" },
+    { id: "platformer", title: "EcoAventuras", description: "Plataformas ecológicas con 3 niveles", icon: "🎮", color: "bg-purple-400" },
   ];
 
   const menuItems = [
@@ -477,6 +479,10 @@ const Index = () => {
 
   if (currentGame === "animal-quiz") {
     return <AnimalQuiz onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
+  }
+
+  if (currentGame === "platformer") {
+    return <EcoPlatformer onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
   }
 
   return (
