@@ -25,6 +25,7 @@ import EcoQuiz from "@/components/games/EcoQuiz";
 import EcoPuzzle from "@/components/games/EcoPuzzle";
 import RecycleMemory from "@/components/games/RecycleMemory";
 import OnboardingModal from "@/components/OnboardingModal";
+import SuggestionForm from "@/components/SuggestionForm";
 import Footer from "@/components/Footer";
 import { toast } from "@/hooks/use-toast";
 
@@ -40,6 +41,7 @@ const Index = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [isReading, setIsReading] = useState(false);
   const [speechSynthesis, setSpeechSynthesis] = useState<SpeechSynthesis | null>(null);
+  const [showSuggestionForm, setShowSuggestionForm] = useState(false);
 
   const plantStages = [
     { name: "Semilla", emoji: "🌰", minPoints: 0 },
@@ -157,8 +159,9 @@ const Index = () => {
       icon: Users, 
       action: () => {
         toast({
-          title: "Acerca de EcoFun",
-          description: "Somos una plataforma educativa que enseña a cuidar el planeta de forma divertida.",
+          title: "Acerca de EcoFun 🌱",
+          description: "EcoFun es una plataforma educativa diseñada especialmente para niños y familias que quieren aprender sobre el cuidado del medio ambiente de manera divertida y segura. Creamos contenido interactivo, juegos educativos y retos semanales que enseñan valores ecológicos importantes como el reciclaje, ahorro de energía, cuidado del agua y protección de la naturaleza. Nuestro objetivo es formar pequeños guardianes del planeta que crezcan con conciencia ambiental y amor por la naturaleza.",
+          className: "max-w-md",
         });
         setShowMenu(false);
       }
@@ -169,8 +172,9 @@ const Index = () => {
       icon: HelpCircle, 
       action: () => {
         toast({
-          title: "¿Necesitas ayuda?",
-          description: "Completa los retos semanales y juega para ganar puntos. ¡Pide ayuda a un adulto si tienes dudas!",
+          title: "Guía de EcoFun 📚",
+          description: "🌱 RETOS SEMANALES: Completa actividades ecológicas para ganar puntos y hacer crecer tu planta. 🎮 JUEGOS: Aprende jugando con EcoQuiz (preguntas), Puzzle Verde (rompecabezas) y Memoria Reciclaje. 📖 CONTENIDO EDUCATIVO: Explora temas sobre agua, animales, contaminación y más. Usa el botón de audio para escuchar. 🏆 PUNTOS Y BADGES: Gana puntos completando retos y desbloquea insignias especiales. ¡Siempre pide ayuda a un adulto cuando lo necesites!",
+          className: "max-w-md",
         });
         setShowMenu(false);
       }
@@ -180,10 +184,7 @@ const Index = () => {
       title: "Enviar Sugerencia", 
       icon: MessageSquare, 
       action: () => {
-        toast({
-          title: "¡Gracias por tu interés!",
-          description: "Pronto podrás enviar tus sugerencias. ¡Seguimos mejorando EcoFun para ti!",
-        });
+        setShowSuggestionForm(true);
         setShowMenu(false);
       }
     }
@@ -437,6 +438,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-50 to-yellow-100 flex flex-col">
       <OnboardingModal isOpen={showOnboarding} onClose={handleOnboardingClose} />
+      {showSuggestionForm && <SuggestionForm onClose={() => setShowSuggestionForm(false)} />}
       
       {/* Header */}
       <header className="bg-gradient-to-r from-green-400 to-blue-400 text-white p-4 shadow-lg">
@@ -449,8 +451,8 @@ const Index = () => {
           </div>
           
           {/* Plant Info - Center */}
-          <div className="flex-1 flex items-center justify-center">
-            <div className="flex items-center space-x-3">
+          <div className="flex-1 flex items-center justify-center px-4">
+            <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
               <EcoMascot size="large" plantStage={plantStage} />
               <div className="text-center">
                 <h1 className="text-lg sm:text-xl font-bold">¡Hola, EcoExploradorx!</h1>
@@ -470,16 +472,16 @@ const Index = () => {
               {showMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>
             
-            {/* Dropdown Menu */}
+            {/* Dropdown Menu - Fixed positioning for mobile */}
             {showMenu && (
-              <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 min-w-[200px] z-50">
+              <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 min-w-[220px] max-w-[280px] z-50 transform -translate-x-2 sm:translate-x-0">
                 {menuItems.map((item) => (
                   <button
                     key={item.id}
                     onClick={item.action}
-                    className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors"
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors text-left"
                   >
-                    <item.icon className="w-5 h-5 text-green-600" />
+                    <item.icon className="w-5 h-5 text-green-600 flex-shrink-0" />
                     <span className="text-sm font-medium">{item.title}</span>
                   </button>
                 ))}
@@ -539,10 +541,10 @@ const Index = () => {
               {weeklyAchievements.map((challenge) => (
                 <Card 
                   key={challenge.id} 
-                  className={`transition-all duration-300 hover:scale-105 cursor-pointer border-2 shadow-lg group ${
+                  className={`transition-all duration-300 cursor-pointer border-2 shadow-lg group ${
                     completedChallenges.includes(challenge.id) 
-                      ? 'bg-green-100 border-green-300 shadow-green-200 hover:bg-green-200 hover:border-green-400 hover:shadow-green-300' 
-                      : 'bg-white border-gray-200 hover:border-green-400 hover:bg-green-50 hover:shadow-xl'
+                      ? 'bg-green-100 border-green-300 shadow-green-200' 
+                      : 'bg-white border-gray-200 hover:border-green-400 hover:bg-green-50 hover:shadow-xl hover:scale-105'
                   }`}
                   onClick={() => completedChallenges.includes(challenge.id) 
                     ? uncompleteChallenge(challenge.id) 
@@ -555,20 +557,20 @@ const Index = () => {
                         {challenge.id === 5 && <BookOpen className="w-4 h-4 text-blue-600" />}
                         <h3 className={`font-bold text-sm sm:text-base transition-colors duration-200 ${
                           completedChallenges.includes(challenge.id) 
-                            ? 'text-green-800 group-hover:text-green-900' 
+                            ? 'text-green-800' 
                             : 'text-gray-800 group-hover:text-green-700'
                         }`}>
                           {challenge.title}
                         </h3>
                       </div>
                       {completedChallenges.includes(challenge.id) ? (
-                        <CircleCheck className="text-green-500 w-6 h-6 flex-shrink-0 group-hover:text-green-600" />
+                        <CircleCheck className="text-green-500 w-6 h-6 flex-shrink-0" />
                       ) : (
                         <div className="w-6 h-6 border-2 border-gray-300 rounded-full flex-shrink-0 group-hover:border-green-400 transition-colors duration-200"></div>
                       )}
                     </div>
-                    <p className="text-xs sm:text-sm text-gray-600 mb-4 group-hover:text-gray-700">{challenge.description}</p>
-                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border border-yellow-300 group-hover:bg-yellow-200 transition-colors duration-200">
+                    <p className="text-xs sm:text-sm text-gray-600 mb-4">{challenge.description}</p>
+                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border border-yellow-300">
                       +{challenge.points} puntos
                     </Badge>
                   </CardContent>
@@ -595,7 +597,7 @@ const Index = () => {
                       {game.icon}
                     </div>
                     <h3 className="font-bold text-base sm:text-lg text-gray-800 mb-2 group-hover:text-blue-700 transition-colors duration-200">{game.title}</h3>
-                    <p className="text-xs sm:text-sm text-gray-600 mb-4 group-hover:text-gray-700">{game.description}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 mb-4">{game.description}</p>
                     <Button className="bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-500 hover:to-blue-500 text-white font-semibold px-4 sm:px-6 py-2 rounded-full shadow-lg transition-all duration-300 text-sm sm:text-base hover:scale-105 hover:shadow-xl">
                       ¡Jugar!
                     </Button>
