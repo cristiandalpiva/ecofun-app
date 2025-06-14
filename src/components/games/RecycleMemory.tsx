@@ -12,8 +12,7 @@ interface RecycleMemoryProps {
 interface CardType {
   id: number;
   content: string;
-  type: 'waste' | 'bin';
-  pair: number;
+  wasteType: string;
   flipped: boolean;
   matched: boolean;
 }
@@ -26,13 +25,15 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
   const [gameComplete, setGameComplete] = useState(false);
   const [startTime, setStartTime] = useState(Date.now());
 
-  const cardPairs = [
-    { waste: '🍎', bin: '🟢', type: 'Orgánico' },
-    { waste: '📄', bin: '🔵', type: 'Papel' },
-    { waste: '🥤', bin: '🟡', type: 'Plástico' },
-    { waste: '🥫', bin: '⚪', type: 'Metal' },
-    { waste: '🍌', bin: '🟢', type: 'Orgánico' },
-    { waste: '📦', bin: '🔵', type: 'Cartón' },
+  const wasteTypes = [
+    { content: '🍎', type: 'organico', name: 'Manzana' },
+    { content: '🍌', type: 'organico', name: 'Banana' },
+    { content: '📄', type: 'papel', name: 'Papel' },
+    { content: '📦', type: 'papel', name: 'Cartón' },
+    { content: '🥤', type: 'plastico', name: 'Botella plástica' },
+    { content: '🍾', type: 'vidrio', name: 'Botella de vidrio' },
+    { content: '🥫', type: 'metal', name: 'Lata' },
+    { content: '🔋', type: 'especial', name: 'Batería' },
   ];
 
   useEffect(() => {
@@ -40,21 +41,21 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
   }, []);
 
   const initializeGame = () => {
+    // Create pairs of identical waste items
     const gameCards: CardType[] = [];
-    cardPairs.forEach((pair, index) => {
+    wasteTypes.forEach((waste, index) => {
+      // Add two identical cards for each waste type
       gameCards.push({
         id: index * 2,
-        content: pair.waste,
-        type: 'waste',
-        pair: index * 2 + 1,
+        content: waste.content,
+        wasteType: waste.type,
         flipped: false,
         matched: false,
       });
       gameCards.push({
         id: index * 2 + 1,
-        content: pair.bin,
-        type: 'bin',
-        pair: index * 2,
+        content: waste.content,
+        wasteType: waste.type,
         flipped: false,
         matched: false,
       });
@@ -90,7 +91,7 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
       const firstCard = newCards.find(c => c.id === firstId);
       const secondCard = newCards.find(c => c.id === secondId);
 
-      if (firstCard && secondCard && firstCard.pair === secondId) {
+      if (firstCard && secondCard && firstCard.content === secondCard.content) {
         // Match found
         setTimeout(() => {
           setCards(prev => prev.map(c => 
@@ -101,7 +102,7 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
           setMatches(matches + 1);
           setFlippedCards([]);
           
-          if (matches + 1 === cardPairs.length) {
+          if (matches + 1 === wasteTypes.length) {
             setGameComplete(true);
           }
         }, 1000);
@@ -122,7 +123,7 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
   const handleComplete = () => {
     const timeBonus = Math.max(0, 120 - Math.floor((Date.now() - startTime) / 1000));
     const moveBonus = Math.max(0, 30 - moves);
-    const totalPoints = 80 + timeBonus + moveBonus;
+    const totalPoints = 100 + timeBonus + moveBonus;
     onComplete(totalPoints);
   };
 
@@ -134,6 +135,18 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
     initializeGame();
   };
 
+  const getWasteColor = (wasteType: string) => {
+    switch (wasteType) {
+      case 'organico': return 'from-green-300 to-green-400';
+      case 'papel': return 'from-blue-300 to-blue-400';
+      case 'plastico': return 'from-yellow-300 to-yellow-400';
+      case 'vidrio': return 'from-teal-300 to-teal-400';
+      case 'metal': return 'from-gray-300 to-gray-400';
+      case 'especial': return 'from-red-300 to-red-400';
+      default: return 'from-gray-200 to-gray-300';
+    }
+  };
+
   if (gameComplete) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-4">
@@ -143,10 +156,10 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
               <div className="mb-6">
                 <EcoMascot size="large" mood="excited" />
               </div>
-              <h2 className="text-3xl font-bold text-green-700 mb-4">¡Reciclaje Perfecto!</h2>
+              <h2 className="text-3xl font-bold text-green-700 mb-4">¡Excelente Memoria!</h2>
               <div className="text-6xl mb-4">♻️</div>
               <p className="text-xl text-gray-700 mb-2">
-                ¡Separaste toda la basura correctamente!
+                ¡Encontraste todos los pares de basura iguales!
               </p>
               <p className="text-lg text-blue-600 mb-2">
                 Intentos: {moves}
@@ -154,6 +167,11 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
               <p className="text-lg text-green-600 mb-6">
                 Tiempo: {Math.floor((Date.now() - startTime) / 1000)} segundos
               </p>
+              <div className="bg-yellow-100 p-4 rounded-lg mb-6">
+                <p className="text-yellow-800 font-semibold">
+                  💡 ¡Aprendiste sobre separación de residuos! Cada tipo de basura tiene su lugar especial.
+                </p>
+              </div>
               <div className="space-y-3">
                 <Button 
                   onClick={handleComplete}
@@ -206,7 +224,7 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
           <CardContent className="p-4">
             <div className="flex justify-between items-center">
               <span className="text-sm font-semibold text-gray-600">
-                Pares encontrados: {matches}/{cardPairs.length}
+                Pares encontrados: {matches}/{wasteTypes.length}
               </span>
               <span className="text-sm font-semibold text-blue-600">
                 Intentos: {moves}
@@ -219,7 +237,7 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
         <Card className="mb-6 bg-yellow-50 border-2 border-yellow-200">
           <CardContent className="p-4">
             <p className="text-center text-yellow-800 font-semibold">
-              💡 Encuentra las parejas: cada residuo con su contenedor correcto
+              🔍 Encuentra los pares iguales de basura que hay que separar correctamente
             </p>
           </CardContent>
         </Card>
@@ -235,9 +253,9 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
                   className={`
                     aspect-square flex items-center justify-center text-3xl font-bold rounded-lg shadow-md cursor-pointer transition-all duration-300
                     ${card.matched 
-                      ? 'bg-green-200 border-2 border-green-400 scale-95' 
+                      ? `bg-gradient-to-br ${getWasteColor(card.wasteType)} border-2 border-green-400 scale-95` 
                       : card.flipped
-                      ? 'bg-white border-2 border-blue-400'
+                      ? `bg-gradient-to-br ${getWasteColor(card.wasteType)} border-2 border-blue-400`
                       : 'bg-gradient-to-br from-gray-200 to-gray-300 border-2 border-gray-400 hover:from-gray-300 hover:to-gray-400 hover:scale-105'
                     }
                   `}

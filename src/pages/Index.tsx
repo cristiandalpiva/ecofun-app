@@ -7,7 +7,8 @@ import {
   CircleCheck, 
   Gamepad, 
   Puzzle, 
-  CirclePlus 
+  CirclePlus,
+  Lightbulb
 } from "lucide-react";
 import EcoMascot from "@/components/EcoMascot";
 import EcoQuiz from "@/components/games/EcoQuiz";
@@ -18,9 +19,29 @@ import { toast } from "@/hooks/use-toast";
 const Index = () => {
   const [currentGame, setCurrentGame] = useState<string | null>(null);
   const [points, setPoints] = useState(150);
-  const [level, setLevel] = useState(2);
+  const [plantStage, setPlantStage] = useState(1); // 0: semilla, 1: brote, 2: plantita, 3: planta, 4: árbol
   const [completedChallenges, setCompletedChallenges] = useState([0, 2]);
   const [badges, setBadges] = useState(["🌱", "💡"]);
+
+  const plantStages = [
+    { name: "Semilla", emoji: "🌰", minPoints: 0 },
+    { name: "Brote", emoji: "🌱", minPoints: 100 },
+    { name: "Plantita", emoji: "🌿", minPoints: 300 },
+    { name: "Planta", emoji: "🪴", minPoints: 600 },
+    { name: "Árbol", emoji: "🌳", minPoints: 1000 }
+  ];
+
+  const dailyTips = [
+    "💡 ¿Sabías que reciclar una lata de aluminio puede ahorrar energía para encender una TV por 3 horas?",
+    "🌊 Una ducha de 5 minutos usa menos agua que llenar la bañera. ¡Pídele a un adulto que te ayude a medir el tiempo!",
+    "🌱 Las plantas son como pequeñas fábricas que limpian el aire. ¡Cuida las que tienes en casa!",
+    "⚡ Apagar las luces que no usas es como darle un descanso al planeta. ¡Pregunta a un adulto cuáles puedes apagar!",
+    "♻️ Separar la basura ayuda a que los materiales tengan una segunda vida. ¡Es como magia para el planeta!",
+    "🚶‍♀️ Caminar es genial para tu salud y para el aire que respiramos. ¡Siempre acompañado de un adulto!",
+    "📄 Usar ambos lados del papel es como duplicar los árboles. ¡Cada hoja cuenta!"
+  ];
+
+  const [todaysTip] = useState(dailyTips[new Date().getDay()]);
 
   const weeklyAchievements = [
     { 
@@ -63,8 +84,22 @@ const Index = () => {
   const games = [
     { id: "quiz", title: "EcoQuiz", description: "Responde preguntas ecológicas", icon: "🧠", color: "bg-green-400" },
     { id: "puzzle", title: "Puzzle Verde", description: "Arma paisajes naturales", icon: "🧩", color: "bg-blue-400" },
-    { id: "memory", title: "Memoria Reciclaje", description: "Basura en su lugar", icon: "♻️", color: "bg-yellow-400" },
+    { id: "memory", title: "Memoria Reciclaje", description: "Encuentra pares de basura iguales", icon: "♻️", color: "bg-yellow-400" },
   ];
+
+  // Update plant stage based on points
+  useEffect(() => {
+    const newStage = plantStages.findIndex(stage => points >= stage.minPoints && points < (plantStages[plantStages.findIndex(s => s === stage) + 1]?.minPoints || Infinity));
+    if (newStage !== -1 && newStage !== plantStage) {
+      setPlantStage(newStage);
+      if (newStage > plantStage) {
+        toast({
+          title: "¡Tu planta creció! 🌱",
+          description: `Ahora tienes ${plantStages[newStage].name} ${plantStages[newStage].emoji}`,
+        });
+      }
+    }
+  }, [points]);
 
   const completeChallenge = (challengeId: number) => {
     if (!completedChallenges.includes(challengeId)) {
@@ -123,7 +158,7 @@ const Index = () => {
             <EcoMascot size="large" />
             <div>
               <h1 className="text-2xl font-bold">¡Hola, EcoHéroe!</h1>
-              <p className="text-green-100">Nivel {level} • {points} puntos</p>
+              <p className="text-green-100">{plantStages[plantStage].name} {plantStages[plantStage].emoji} • {points} puntos</p>
             </div>
           </div>
           <div className="flex space-x-2">
@@ -137,14 +172,41 @@ const Index = () => {
       </div>
 
       <div className="max-w-4xl mx-auto p-4 space-y-6">
+        {/* Daily Tip */}
+        <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-3">
+              <Lightbulb className="text-yellow-600 w-6 h-6" />
+              <div>
+                <h3 className="font-bold text-yellow-800 mb-1">Consejo del Día</h3>
+                <p className="text-yellow-700 text-sm">{todaysTip}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Progress Bar */}
         <Card className="bg-white/80 backdrop-blur-sm border-2 border-green-200">
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-lg font-semibold text-green-700">Progreso Semanal</span>
-              <span className="text-sm text-green-600">{completedChallenges.length}/5 retos</span>
+              <span className="text-lg font-semibold text-green-700">Progreso de tu Planta</span>
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl">{plantStages[plantStage].emoji}</span>
+                <span className="text-sm text-green-600">{plantStages[plantStage].name}</span>
+              </div>
             </div>
-            <Progress value={(completedChallenges.length / 5) * 100} className="h-3" />
+            <Progress 
+              value={plantStage < plantStages.length - 1 
+                ? ((points - plantStages[plantStage].minPoints) / (plantStages[plantStage + 1].minPoints - plantStages[plantStage].minPoints)) * 100
+                : 100
+              } 
+              className="h-3" 
+            />
+            {plantStage < plantStages.length - 1 && (
+              <p className="text-xs text-gray-500 mt-1">
+                {plantStages[plantStage + 1].minPoints - points} puntos para {plantStages[plantStage + 1].name}
+              </p>
+            )}
           </CardContent>
         </Card>
 
