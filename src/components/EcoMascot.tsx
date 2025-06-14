@@ -23,18 +23,47 @@ const EcoMascot = ({ size = "medium", mood = "happy" }: EcoMascotProps) => {
     large: "w-20 h-20"
   };
 
-  const expressions = {
-    happy: "😊",
-    excited: "🤩",
-    thinking: "🤔"
+  const getMascotVariation = () => {
+    switch (mood) {
+      case 'thinking':
+        return {
+          seedColor: 'from-amber-600 to-amber-800',
+          leafColor: 'text-green-300',
+          leafRotation: '-rotate-6',
+          bounce: false
+        };
+      case 'happy':
+        return {
+          seedColor: 'from-amber-700 to-amber-900',
+          leafColor: 'text-green-400',
+          leafRotation: '-rotate-12',
+          bounce: true
+        };
+      case 'excited':
+        return {
+          seedColor: 'from-yellow-600 to-amber-800',
+          leafColor: 'text-green-500',
+          leafRotation: '-rotate-20',
+          bounce: true
+        };
+      default:
+        return {
+          seedColor: 'from-amber-700 to-amber-900',
+          leafColor: 'text-green-400',
+          leafRotation: '-rotate-12',
+          bounce: true
+        };
+    }
   };
+
+  const variation = getMascotVariation();
 
   return (
     <div className={`${sizeClasses[size]} relative`}>
       {/* Semilla/base del personaje */}
       <div 
-        className={`w-full h-full bg-gradient-to-br from-amber-700 to-amber-900 rounded-full shadow-lg flex items-center justify-center border-2 border-amber-800 transition-all duration-300 ${
-          isAnimating ? 'animate-bounce scale-110' : ''
+        className={`w-full h-full bg-gradient-to-br ${variation.seedColor} rounded-full shadow-lg flex items-center justify-center border-2 border-amber-800 transition-all duration-300 ${
+          isAnimating && variation.bounce ? 'animate-bounce scale-110' : ''
         }`}
       >
         {/* Cara de la semilla */}
@@ -56,20 +85,17 @@ const EcoMascot = ({ size = "medium", mood = "happy" }: EcoMascotProps) => {
           <div className="w-1 h-4 bg-green-500 rounded-full"></div>
           {/* Hojas */}
           <div className="relative">
-            <div className="text-green-400 text-lg transform -rotate-12">🌿</div>
+            <div className={`${variation.leafColor} text-lg transform ${variation.leafRotation} transition-all duration-300`}>
+              {mood === 'excited' ? '🌿🌿' : '🌿'}
+            </div>
           </div>
         </div>
-      </div>
-      
-      {/* Expresión */}
-      <div className="absolute -top-1 -right-1 text-lg">
-        {expressions[mood]}
       </div>
       
       {/* Mensaje animado */}
       {isAnimating && (
         <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white rounded-lg px-2 py-1 text-xs font-semibold text-green-600 shadow-lg animate-fade-in">
-          ¡Hola!
+          {mood === 'thinking' ? '🤔' : mood === 'excited' ? '¡Genial!' : '¡Hola!'}
         </div>
       )}
     </div>

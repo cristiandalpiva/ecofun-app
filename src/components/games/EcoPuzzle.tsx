@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { HelpCircle } from "lucide-react";
 import EcoMascot from "@/components/EcoMascot";
 
 interface EcoPuzzleProps {
@@ -19,12 +20,21 @@ interface PuzzleOption {
   pieceCount: number;
 }
 
+interface PuzzlePiece {
+  id: number;
+  position: number;
+  isPlaced: boolean;
+}
+
 const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const [selectedPuzzle, setSelectedPuzzle] = useState<PuzzleOption | null>(null);
-  const [puzzle, setPuzzle] = useState<number[]>([]);
+  const [pieces, setPieces] = useState<PuzzlePiece[]>([]);
+  const [placedPieces, setPlacedPieces] = useState<{ [key: number]: number }>({});
   const [solved, setSolved] = useState(false);
   const [moves, setMoves] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
+  const [draggedPiece, setDraggedPiece] = useState<number | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   const puzzleOptions: PuzzleOption[] = [
     {
@@ -66,114 +76,61 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       imageUrl: 'https://images.unsplash.com/photo-1432889490240-84df33d47091?w=400&h=400&fit=crop&crop=center',
       difficulty: 'hard',
       pieceCount: 25
-    },
-    {
-      id: 'wildlife',
-      title: 'Vida Silvestre',
-      description: 'Conoce a los animales en su hábitat',
-      imageUrl: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=400&h=400&fit=crop&crop=center',
-      difficulty: 'medium',
-      pieceCount: 16
-    },
-    {
-      id: 'farm',
-      title: 'Granja Ecológica',
-      description: 'Descubre una granja que cuida el ambiente',
-      imageUrl: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=400&h=400&fit=crop&crop=center',
-      difficulty: 'easy',
-      pieceCount: 9
-    },
-    {
-      id: 'solar',
-      title: 'Energía Solar',
-      description: 'Aprende sobre energía limpia del sol',
-      imageUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=400&fit=crop&crop=center',
-      difficulty: 'medium',
-      pieceCount: 16
-    },
-    {
-      id: 'recycling',
-      title: 'Centro de Reciclaje',
-      description: 'Organiza el reciclaje para cuidar el planeta',
-      imageUrl: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&h=400&fit=crop&crop=center',
-      difficulty: 'hard',
-      pieceCount: 25
-    },
-    {
-      id: 'polar',
-      title: 'Glaciar Ártico',
-      description: 'Protege el hogar de los osos polares',
-      imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop&crop=center',
-      difficulty: 'hard',
-      pieceCount: 25
     }
   ];
 
   const initializePuzzle = (puzzleOption: PuzzleOption) => {
-    // Crear array ordenado de números (0 será el espacio vacío)
-    const orderedPieces = Array.from({ length: puzzleOption.pieceCount }, (_, i) => i + 1);
-    orderedPieces.push(0); // Agregar espacio vacío
+    const newPieces = Array.from({ length: puzzleOption.pieceCount }, (_, i) => ({
+      id: i,
+      position: i,
+      isPlaced: false
+    }));
     
-    // Desordenar las piezas
-    const shuffled = shufflePuzzle([...orderedPieces], puzzleOption.pieceCount);
-    setPuzzle(shuffled);
+    // Shuffle pieces
+    const shuffledPieces = [...newPieces].sort(() => Math.random() - 0.5);
+    
+    setPieces(shuffledPieces);
+    setPlacedPieces({});
     setStartTime(Date.now());
     setMoves(0);
     setSolved(false);
   };
 
-  const shufflePuzzle = (arr: number[], totalPieces: number) => {
-    const newArr = [...arr];
-    const gridSize = Math.sqrt(totalPieces + 1);
-    
-    // Hacer movimientos válidos aleatorios para asegurar que el puzzle sea resoluble
-    for (let i = 0; i < 200; i++) {
-      const emptyIndex = newArr.indexOf(0);
-      const possibleMoves = getPossibleMoves(emptyIndex, gridSize);
-      if (possibleMoves.length > 0) {
-        const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-        [newArr[emptyIndex], newArr[randomMove]] = [newArr[randomMove], newArr[emptyIndex]];
-      }
-    }
-    return newArr;
+  const handleDragStart = (e: React.DragEvent, pieceId: number) => {
+    setDraggedPiece(pieceId);
+    e.dataTransfer.effectAllowed = 'move';
   };
 
-  const getPossibleMoves = (emptyIndex: number, gridSize: number) => {
-    const moves = [];
-    const row = Math.floor(emptyIndex / gridSize);
-    const col = emptyIndex % gridSize;
-
-    if (row > 0) moves.push(emptyIndex - gridSize); // Arriba
-    if (row < gridSize - 1) moves.push(emptyIndex + gridSize); // Abajo
-    if (col > 0) moves.push(emptyIndex - 1); // Izquierda
-    if (col < gridSize - 1) moves.push(emptyIndex + 1); // Derecha
-
-    return moves;
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
   };
 
-  const movePiece = (index: number) => {
-    if (!selectedPuzzle) return;
+  const handleDrop = (e: React.DragEvent, targetPosition: number) => {
+    e.preventDefault();
     
-    const emptyIndex = puzzle.indexOf(0);
-    const gridSize = Math.sqrt(selectedPuzzle.pieceCount + 1);
-    const possibleMoves = getPossibleMoves(emptyIndex, gridSize);
-
-    if (possibleMoves.includes(index)) {
-      const newPuzzle = [...puzzle];
-      [newPuzzle[emptyIndex], newPuzzle[index]] = [newPuzzle[index], newPuzzle[emptyIndex]];
-      setPuzzle(newPuzzle);
-      setMoves(moves + 1);
-
-      // Verificar si está resuelto
-      const isComplete = newPuzzle.every((piece, idx) => {
-        if (idx === newPuzzle.length - 1) return piece === 0; // Último debe ser espacio vacío
-        return piece === idx + 1;
-      });
+    if (draggedPiece === null) return;
+    
+    // Check if the piece belongs to this position
+    if (draggedPiece === targetPosition) {
+      const newPlacedPieces = { ...placedPieces };
+      newPlacedPieces[targetPosition] = draggedPiece;
+      setPlacedPieces(newPlacedPieces);
       
-      if (isComplete) {
+      // Update pieces to mark as placed
+      setPieces(prev => prev.map(piece => 
+        piece.id === draggedPiece ? { ...piece, isPlaced: true } : piece
+      ));
+      
+      setMoves(moves + 1);
+      
+      // Check if puzzle is complete
+      if (Object.keys(newPlacedPieces).length === selectedPuzzle?.pieceCount) {
         setSolved(true);
       }
     }
+    
+    setDraggedPiece(null);
   };
 
   const handleComplete = () => {
@@ -199,6 +156,19 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       case 'hard': return 'bg-red-100 text-red-800 border-red-300';
       default: return 'bg-gray-100 text-gray-800 border-gray-300';
     }
+  };
+
+  const getProgress = () => {
+    if (!selectedPuzzle) return 0;
+    return (Object.keys(placedPieces).length / selectedPuzzle.pieceCount) * 100;
+  };
+
+  const getMascotMood = () => {
+    const progress = getProgress();
+    if (progress === 0) return 'thinking';
+    if (progress < 50) return 'happy';
+    if (progress < 100) return 'excited';
+    return 'excited';
   };
 
   // Pantalla de selección de puzzle
@@ -325,11 +295,11 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   }
 
   // Pantalla del juego
-  const gridSize = Math.sqrt(selectedPuzzle.pieceCount + 1);
+  const gridSize = Math.sqrt(selectedPuzzle.pieceCount);
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <Button 
             onClick={() => setSelectedPuzzle(null)}
@@ -338,68 +308,91 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
           >
             ← Cambiar puzzle
           </Button>
-          <div className="flex items-center space-x-2">
-            <EcoMascot size="small" mood="thinking" />
-            <span className="font-semibold text-green-700">{selectedPuzzle.title}</span>
+          <div className="flex items-center space-x-4">
+            <EcoMascot size="medium" mood={getMascotMood()} />
+            <div className="text-center">
+              <h3 className="font-bold text-green-700">{selectedPuzzle.title}</h3>
+              <p className="text-sm text-blue-600">{Math.round(getProgress())}% completado</p>
+            </div>
           </div>
+          <Button 
+            onClick={() => setShowHelp(!showHelp)}
+            variant="outline"
+            className="border-2 border-blue-400 text-blue-600 hover:bg-blue-100 hover:border-blue-500 transition-all duration-200"
+          >
+            <HelpCircle className="w-4 h-4 mr-2" />
+            Ayuda
+          </Button>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
-          {/* Imagen de referencia */}
-          <Card className="bg-white/90 backdrop-blur-sm border-2 border-blue-200 shadow-lg">
+        <div className="grid lg:grid-cols-4 gap-6">
+          {/* Piezas disponibles */}
+          <Card className="lg:col-span-1 bg-white/90 backdrop-blur-sm border-2 border-purple-200 shadow-lg">
             <CardContent className="p-4">
-              <h3 className="font-bold text-center mb-3 text-blue-700">Imagen completa</h3>
-              <div className="w-full aspect-square rounded-lg overflow-hidden shadow-md">
-                <img 
-                  src={selectedPuzzle.imageUrl} 
-                  alt={selectedPuzzle.title}
-                  className="w-full h-full object-cover"
-                />
+              <h3 className="font-bold text-center mb-4 text-purple-700">Piezas Disponibles</h3>
+              <div className="grid grid-cols-2 gap-2">
+                {pieces.filter(piece => !piece.isPlaced).map((piece) => (
+                  <div
+                    key={piece.id}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, piece.id)}
+                    className="aspect-square bg-white border-2 border-gray-300 rounded-lg cursor-move hover:border-blue-400 hover:shadow-lg transition-all duration-200 overflow-hidden"
+                    style={{
+                      backgroundImage: `url(${selectedPuzzle.imageUrl})`,
+                      backgroundSize: `${gridSize * 100}% ${gridSize * 100}%`,
+                      backgroundPosition: `${(piece.id % gridSize) * (100 / (gridSize - 1))}% ${Math.floor(piece.id / gridSize) * (100 / (gridSize - 1))}%`
+                    }}
+                  >
+                    <div className="w-full h-full bg-black bg-opacity-20 flex items-center justify-center">
+                      <span className="text-white font-bold text-xs">{piece.id + 1}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
 
-          {/* Puzzle jugable */}
-          <Card className="bg-white/90 backdrop-blur-sm border-2 border-green-200 shadow-lg">
+          {/* Área de construcción del puzzle */}
+          <Card className="lg:col-span-2 bg-white/90 backdrop-blur-sm border-2 border-green-200 shadow-lg">
             <CardContent className="p-4">
               <div className="flex justify-between items-center mb-4">
-                <span className="text-sm font-semibold text-gray-600">
-                  Movimientos: {moves}
-                </span>
-                <span className="text-sm font-semibold text-blue-600">
-                  Tiempo: {Math.floor((Date.now() - startTime) / 1000)}s
-                </span>
+                <h3 className="font-bold text-green-700">Área de Construcción</h3>
+                <div className="flex space-x-4 text-sm">
+                  <span className="text-gray-600">Movimientos: {moves}</span>
+                  <span className="text-blue-600">
+                    Tiempo: {Math.floor((Date.now() - startTime) / 1000)}s
+                  </span>
+                </div>
               </div>
               
               <div 
-                className="grid gap-1 w-full aspect-square mx-auto mb-4"
+                className="grid gap-1 w-full max-w-md mx-auto aspect-square"
                 style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }}
               >
-                {puzzle.map((piece, index) => (
+                {Array.from({ length: selectedPuzzle.pieceCount }, (_, index) => (
                   <div
                     key={index}
-                    onClick={() => movePiece(index)}
-                    className={`
-                      aspect-square flex items-center justify-center font-bold rounded cursor-pointer transition-all duration-200 border-2
-                      ${piece === 0 
-                        ? 'bg-gray-100 border-dashed border-gray-400' 
-                        : 'bg-white border-green-300 hover:border-green-500 hover:scale-105 hover:shadow-lg hover:bg-green-50'
-                      }
-                    `}
-                    style={{
-                      backgroundImage: piece === 0 ? 'none' : `url(${selectedPuzzle.imageUrl})`,
-                      backgroundSize: `${gridSize * 100}% ${gridSize * 100}%`,
-                      backgroundPosition: piece === 0 ? '0 0' : `${((piece - 1) % gridSize) * (100 / (gridSize - 1))}% ${Math.floor((piece - 1) / gridSize) * (100 / (gridSize - 1))}%`
-                    }}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, index)}
+                    className="aspect-square border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors overflow-hidden"
                   >
-                    {piece === 0 && (
-                      <div className="text-gray-400 text-xs">Vacío</div>
+                    {placedPieces[index] !== undefined ? (
+                      <div 
+                        className="w-full h-full"
+                        style={{
+                          backgroundImage: `url(${selectedPuzzle.imageUrl})`,
+                          backgroundSize: `${gridSize * 100}% ${gridSize * 100}%`,
+                          backgroundPosition: `${(index % gridSize) * (100 / (gridSize - 1))}% ${Math.floor(index / gridSize) * (100 / (gridSize - 1))}%`
+                        }}
+                      />
+                    ) : (
+                      <span className="text-gray-400 text-xs">{index + 1}</span>
                     )}
                   </div>
                 ))}
               </div>
 
-              <div className="text-center">
+              <div className="text-center mt-4">
                 <Button
                   onClick={resetPuzzle}
                   variant="outline"
@@ -408,6 +401,23 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                   Reiniciar
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Imagen de ayuda */}
+          <Card className={`lg:col-span-1 bg-white/90 backdrop-blur-sm border-2 border-yellow-200 shadow-lg transition-all duration-300 ${showHelp ? 'opacity-100' : 'opacity-50'}`}>
+            <CardContent className="p-4">
+              <h3 className="font-bold text-center mb-3 text-yellow-700">Imagen Completa</h3>
+              <div className="w-full aspect-square rounded-lg overflow-hidden shadow-md">
+                <img 
+                  src={selectedPuzzle.imageUrl} 
+                  alt={selectedPuzzle.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-xs text-gray-600 text-center mt-2">
+                Arrastra las piezas al área de construcción
+              </p>
             </CardContent>
           </Card>
         </div>
