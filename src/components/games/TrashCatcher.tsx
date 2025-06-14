@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,6 +32,7 @@ const TrashCatcher = ({ onComplete, onBack }: TrashCatcherProps) => {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [itemsCaught, setItemsCaught] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const trashTypes = [
     { type: "plastic", emoji: "🥤", points: 10, color: "text-blue-500" },
@@ -71,6 +71,32 @@ const TrashCatcher = ({ onComplete, onBack }: TrashCatcherProps) => {
       x: Math.max(6, Math.min(94 - prev.width, prev.x + (direction === 'left' ? -8 : 8)))
     }));
   }, []);
+
+  // Touch controls for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStartX || !gameStarted || gameEnded) return;
+    
+    const touchCurrentX = e.touches[0].clientX;
+    const diff = touchCurrentX - touchStartX;
+    
+    // Only move if significant swipe
+    if (Math.abs(diff) > 30) {
+      if (diff > 0) {
+        moveBasket('right');
+      } else {
+        moveBasket('left');
+      }
+      setTouchStartX(touchCurrentX);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setTouchStartX(null);
+  };
 
   // Keyboard controls
   useEffect(() => {
@@ -182,7 +208,8 @@ const TrashCatcher = ({ onComplete, onBack }: TrashCatcherProps) => {
               <div className="bg-amber-100 p-4 rounded-lg mb-6">
                 <h3 className="font-bold text-amber-800 mb-2">Instrucciones:</h3>
                 <ul className="text-amber-700 text-sm space-y-1">
-                  <li>• Usa las flechas ← → o las teclas A/D para moverte</li>
+                  <li>• En computadora: Usa las flechas ← → o las teclas A/D</li>
+                  <li>• En móvil: Desliza tu dedo izquierda/derecha en la pantalla</li>
                   <li>• Cada tipo de basura da diferentes puntos</li>
                   <li>• Si se te cae basura, pierdes una vida ❤️</li>
                   <li>• ¡Tienes 60 segundos y 3 vidas!</li>
@@ -286,7 +313,12 @@ const TrashCatcher = ({ onComplete, onBack }: TrashCatcherProps) => {
         </div>
 
         {/* Game area */}
-        <Card className="bg-gradient-to-br from-sky-50 to-blue-50 border-2 border-amber-200 shadow-xl h-96 relative overflow-hidden">
+        <Card 
+          className="bg-gradient-to-br from-sky-50 to-blue-50 border-2 border-amber-200 shadow-xl h-96 relative overflow-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <CardContent className="p-0 h-full relative">
             {/* Background */}
             <div className="absolute inset-0 bg-gradient-to-b from-sky-200 to-green-200 opacity-30"></div>
@@ -306,9 +338,9 @@ const TrashCatcher = ({ onComplete, onBack }: TrashCatcherProps) => {
               </div>
             ))}
             
-            {/* Basket */}
+            {/* Realistic Basket */}
             <div
-              className="absolute bottom-4 bg-amber-600 rounded-t-lg border-2 border-amber-700 transition-all duration-200"
+              className="absolute bottom-4 transition-all duration-200"
               style={{ 
                 left: `${basket.x}%`, 
                 width: `${basket.width}%`,
@@ -316,8 +348,26 @@ const TrashCatcher = ({ onComplete, onBack }: TrashCatcherProps) => {
                 transform: 'translateX(-50%)'
               }}
             >
-              <div className="flex items-center justify-center h-full">
-                <span className="text-white font-bold text-lg">🗑️</span>
+              {/* Basket body */}
+              <div className="relative w-full h-full">
+                {/* Basket rim */}
+                <div className="absolute top-0 w-full h-2 bg-amber-800 rounded-full shadow-md"></div>
+                {/* Basket main body */}
+                <div className="absolute top-1 w-full h-full bg-gradient-to-b from-amber-600 to-amber-700 rounded-b-2xl shadow-lg border-2 border-amber-800">
+                  {/* Basket weave pattern */}
+                  <div className="absolute inset-2 opacity-30">
+                    <div className="grid grid-cols-4 gap-1 h-full">
+                      {[...Array(8)].map((_, i) => (
+                        <div key={i} className="bg-amber-900 rounded-sm"></div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Basket handles */}
+                  <div className="absolute -left-2 top-2 w-2 h-4 bg-amber-800 rounded-full"></div>
+                  <div className="absolute -right-2 top-2 w-2 h-4 bg-amber-800 rounded-full"></div>
+                </div>
+                {/* Basket shadow */}
+                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3/4 h-2 bg-black/20 rounded-full blur-sm"></div>
               </div>
             </div>
           </CardContent>
@@ -325,7 +375,7 @@ const TrashCatcher = ({ onComplete, onBack }: TrashCatcherProps) => {
         
         <div className="mt-4 text-center space-y-2">
           <p className="text-amber-700 font-medium">
-            ¡Usa las flechas ← → o A/D para mover tu canasta!
+            💻 Usa las flechas ← → o A/D • 📱 Desliza izquierda/derecha
           </p>
           <div className="flex justify-center space-x-4 text-sm">
             <span className="bg-white/80 px-2 py-1 rounded">🥤 = 10pts</span>

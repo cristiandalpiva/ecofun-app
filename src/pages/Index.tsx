@@ -28,6 +28,7 @@ import EcoPuzzle from "@/components/games/EcoPuzzle";
 import RecycleMemory from "@/components/games/RecycleMemory";
 import TapGame from "@/components/games/TapGame";
 import TrashCatcher from "@/components/games/TrashCatcher";
+import PlantCare from "@/components/games/PlantCare";
 import OnboardingModal from "@/components/OnboardingModal";
 import SuggestionForm from "@/components/SuggestionForm";
 import Footer from "@/components/Footer";
@@ -156,6 +157,7 @@ const Index = () => {
     { id: "memory", title: "Memoria Reciclaje", description: "Encuentra pares de basura iguales", icon: "♻️", color: "bg-emerald-600" },
     { id: "tap", title: "Cierra las Llaves", description: "Apaga las llaves que desperdician agua", icon: "💧", color: "bg-cyan-400" },
     { id: "trash", title: "Atrapa la Basura", description: "Recoge la basura que cae del cielo", icon: "🗑️", color: "bg-amber-400" },
+    { id: "plant", title: "Jardín de Sombra", description: "Cuida plantas para dar sombra", icon: "🌱", color: "bg-green-400" },
   ];
 
   const menuItems = [
@@ -453,6 +455,10 @@ const Index = () => {
 
   if (currentGame === "trash") {
     return <TrashCatcher onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
+  }
+
+  if (currentGame === "plant") {
+    return <PlantCare onComplete={onGameComplete} onBack={() => setCurrentGame(null)} />;
   }
 
   return (
