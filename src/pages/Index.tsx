@@ -15,7 +15,8 @@ import {
   X,
   HelpCircle,
   Users,
-  MessageSquare
+  MessageSquare,
+  Volume2
 } from "lucide-react";
 import EcoMascot from "@/components/EcoMascot";
 import EcoQuiz from "@/components/games/EcoQuiz";
