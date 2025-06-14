@@ -229,7 +229,13 @@ const RecycleBench: React.FC<RecycleBenchProps> = ({ onComplete, onBack }) => {
   };
 
   const getCompletedParts = () => {
+    // Safety check to ensure benchParts is initialized and has the same length as benchComponents
+    if (!benchParts || benchParts.length !== benchComponents.length) {
+      return 0;
+    }
+    
     return benchComponents.filter((_, index) => 
+      benchParts[index] && // Additional safety check
       !benchParts[index].completed && 
       benchComponents[index].requiredItems.every(req => 
         (inventory[req.type] || 0) < req.quantity
