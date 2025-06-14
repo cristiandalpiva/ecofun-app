@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, Lock } from "lucide-react";
 import EcoMascot from "@/components/EcoMascot";
 
 interface EcoPuzzleProps {
@@ -18,6 +18,8 @@ interface PuzzleOption {
   imageUrl: string;
   difficulty: 'easy' | 'medium' | 'hard';
   pieceCount: number;
+  educationalMessage: string;
+  requiredPuzzles: string[];
 }
 
 interface PuzzlePiece {
@@ -35,49 +37,98 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const [startTime, setStartTime] = useState(Date.now());
   const [draggedPiece, setDraggedPiece] = useState<number | null>(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [completedPuzzles, setCompletedPuzzles] = useState<string[]>(() => {
+    const saved = localStorage.getItem('completed-puzzles');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const puzzleOptions: PuzzleOption[] = [
     {
-      id: 'forest',
-      title: 'Bosque Tropical',
-      description: 'Arma este hermoso bosque lleno de vida',
-      imageUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=400&fit=crop&crop=center',
+      id: 'solar-panels',
+      title: 'Energía Solar',
+      description: 'Paneles solares generando energía limpia',
+      imageUrl: 'https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?w=400&h=400&fit=crop&crop=center',
       difficulty: 'easy',
-      pieceCount: 9
+      pieceCount: 9,
+      educationalMessage: '¡Increíble! Los paneles solares convierten la luz del sol en electricidad limpia. Una sola hora de sol puede generar energía para todo un año en la Tierra. ¡El sol es nuestro amigo más poderoso!',
+      requiredPuzzles: []
     },
     {
-      id: 'ocean',
-      title: 'Océano Cristalino',
-      description: 'Descubre las maravillas del mar limpio',
-      imageUrl: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=400&fit=crop&crop=center',
-      difficulty: 'medium',
-      pieceCount: 16
+      id: 'recycling',
+      title: 'Reciclaje en Acción',
+      description: 'Personas separando residuos correctamente',
+      imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop&crop=center',
+      difficulty: 'easy',
+      pieceCount: 9,
+      educationalMessage: '¡Excelente! Separar correctamente los residuos ayuda a que los materiales tengan una segunda vida. Cada botella reciclada puede convertirse en ropa, alfombras o incluso nuevas botellas. ¡Tú puedes ser parte del cambio!',
+      requiredPuzzles: []
     },
     {
-      id: 'mountains',
-      title: 'Montañas Verdes',
-      description: 'Explora paisajes montañosos preservados',
+      id: 'clean-water',
+      title: 'Agua Limpia',
+      description: 'Lago cristalino rodeado de naturaleza',
       imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&crop=center',
-      difficulty: 'easy',
-      pieceCount: 9
-    },
-    {
-      id: 'garden',
-      title: 'Jardín de Flores',
-      description: 'Crea tu propio jardín lleno de colores',
-      imageUrl: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=400&fit=crop&crop=center',
       difficulty: 'medium',
-      pieceCount: 16
+      pieceCount: 16,
+      educationalMessage: '¡Fantástico! El agua limpia es esencial para toda la vida en la Tierra. Cada gota cuenta: cerrar el grifo mientras te cepillas los dientes puede ahorrar hasta 8 litros de agua. ¡Seamos guardianes del agua!',
+      requiredPuzzles: ['solar-panels']
     },
     {
-      id: 'waterfall',
-      title: 'Cascada Natural',
-      description: 'Arma esta hermosa cascada en la naturaleza',
-      imageUrl: 'https://images.unsplash.com/photo-1432889490240-84df33d47091?w=400&h=400&fit=crop&crop=center',
+      id: 'forest-protection',
+      title: 'Bosque Protegido',
+      description: 'Bosque verde con luz solar filtrándose',
+      imageUrl: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=400&h=400&fit=crop&crop=center',
+      difficulty: 'medium',
+      pieceCount: 16,
+      educationalMessage: '¡Maravilloso! Los bosques son los pulmones de nuestro planeta. Un solo árbol puede producir oxígeno para dos personas durante un día completo. ¡Cuidar los árboles es cuidar nuestra respiración!',
+      requiredPuzzles: ['recycling']
+    },
+    {
+      id: 'organic-garden',
+      title: 'Huerto Orgánico',
+      description: 'Jardín con vegetales cultivados sin químicos',
+      imageUrl: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=400&fit=crop&crop=center',
       difficulty: 'hard',
-      pieceCount: 25
+      pieceCount: 25,
+      educationalMessage: '¡Espectacular! Los huertos orgánicos no usan químicos dañinos y producen alimentos más saludables. Cultivar tus propias verduras reduce la contaminación del transporte y te conecta con la naturaleza. ¡Cada semilla es una esperanza!',
+      requiredPuzzles: ['clean-water', 'forest-protection']
+    },
+    {
+      id: 'renewable-energy',
+      title: 'Energías Renovables',
+      description: 'Molinos de viento generando energía limpia',
+      imageUrl: 'https://images.unsplash.com/photo-1500673922987-e212871fec22?w=400&h=400&fit=crop&crop=center',
+      difficulty: 'hard',
+      pieceCount: 25,
+      educationalMessage: '¡Extraordinario! Los molinos de viento convierten la fuerza del aire en electricidad sin contaminar. El viento es infinito y gratuito. ¡Aprovechemos la fuerza de la naturaleza para cuidar nuestro hogar!',
+      requiredPuzzles: ['solar-panels', 'clean-water']
+    },
+    {
+      id: 'electric-transport',
+      title: 'Transporte Ecológico',
+      description: 'Bicicletas y transporte sostenible',
+      imageUrl: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=400&h=400&fit=crop&crop=center',
+      difficulty: 'medium',
+      pieceCount: 16,
+      educationalMessage: '¡Genial! Usar bicicleta o caminar no solo cuida el planeta, también te mantiene saludable. Por cada kilómetro en bicicleta en vez de auto, evitas contaminar el aire que respiramos. ¡Pedalear es poder!',
+      requiredPuzzles: ['recycling', 'forest-protection']
+    },
+    {
+      id: 'wildlife-conservation',
+      title: 'Conservación Animal',
+      description: 'Animales en su hábitat natural protegido',
+      imageUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=400&fit=crop&crop=center',
+      difficulty: 'hard',
+      pieceCount: 25,
+      educationalMessage: '¡Impresionante! Proteger los animales y sus hogares es esencial para la vida en la Tierra. Cada especie tiene un papel importante en la naturaleza. ¡Todos los seres vivos merecemos un hogar seguro!',
+      requiredPuzzles: ['organic-garden', 'electric-transport']
     }
   ];
+
+  // Save completed puzzles to localStorage
+  useEffect(() => {
+    localStorage.setItem('completed-puzzles', JSON.stringify(completedPuzzles));
+  }, [completedPuzzles]);
 
   const initializePuzzle = (puzzleOption: PuzzleOption) => {
     const newPieces = Array.from({ length: puzzleOption.pieceCount }, (_, i) => ({
@@ -127,6 +178,10 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       // Check if puzzle is complete
       if (Object.keys(newPlacedPieces).length === selectedPuzzle?.pieceCount) {
         setSolved(true);
+        // Mark puzzle as completed
+        if (selectedPuzzle && !completedPuzzles.includes(selectedPuzzle.id)) {
+          setCompletedPuzzles([...completedPuzzles, selectedPuzzle.id]);
+        }
       }
     }
     
@@ -171,6 +226,10 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     return 'excited';
   };
 
+  const isPuzzleUnlocked = (puzzle: PuzzleOption) => {
+    return puzzle.requiredPuzzles.every(reqId => completedPuzzles.includes(reqId));
+  };
+
   // Pantalla de selección de puzzle
   if (!selectedPuzzle) {
     return (
@@ -192,44 +251,81 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
 
           <Card className="bg-white/90 backdrop-blur-sm border-2 border-green-200 shadow-xl mb-6">
             <CardContent className="p-6 text-center">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">🧩 Puzzle Fotográfico 🧩</h2>
-              <p className="text-gray-600">Elige una imagen de la naturaleza para armar</p>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">🧩 Puzzle Ecológico 🧩</h2>
+              <p className="text-gray-600">Completa puzzles para desbloquear nuevos desafíos</p>
+              <p className="text-sm text-blue-600 mt-2">Completados: {completedPuzzles.length}/{puzzleOptions.length}</p>
             </CardContent>
           </Card>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {puzzleOptions.map((option) => (
-              <Card 
-                key={option.id}
-                className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-gray-200 hover:border-green-400 shadow-lg bg-white/95 hover:bg-white group"
-                onClick={() => {
-                  setSelectedPuzzle(option);
-                  initializePuzzle(option);
-                }}
-              >
-                <CardContent className="p-4 text-center">
-                  <div className="w-full h-32 mb-4 rounded-lg overflow-hidden shadow-md group-hover:shadow-lg transition-shadow duration-300">
-                    <img 
-                      src={option.imageUrl} 
-                      alt={option.title}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                  </div>
-                  <h3 className="font-bold text-lg text-gray-800 mb-2 group-hover:text-green-700 transition-colors">
-                    {option.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-3">{option.description}</p>
-                  <div className="flex justify-center space-x-2">
-                    <Badge className={`${getDifficultyColor(option.difficulty)} border`}>
-                      {option.pieceCount} piezas
-                    </Badge>
-                    <Badge variant="outline" className="border-blue-300 text-blue-700">
-                      {option.difficulty === 'easy' ? 'Fácil' : option.difficulty === 'medium' ? 'Medio' : 'Difícil'}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {puzzleOptions.map((option) => {
+              const isUnlocked = isPuzzleUnlocked(option);
+              const isCompleted = completedPuzzles.includes(option.id);
+              
+              return (
+                <Card 
+                  key={option.id}
+                  className={`transition-all duration-300 border-2 shadow-lg ${
+                    isUnlocked 
+                      ? `cursor-pointer hover:scale-105 hover:shadow-2xl border-gray-200 hover:border-green-400 bg-white/95 hover:bg-white group ${isCompleted ? 'ring-2 ring-green-400' : ''}` 
+                      : 'cursor-not-allowed bg-gray-100 border-gray-300 opacity-60'
+                  }`}
+                  onClick={() => {
+                    if (isUnlocked) {
+                      setSelectedPuzzle(option);
+                      initializePuzzle(option);
+                    }
+                  }}
+                >
+                  <CardContent className="p-4 text-center relative">
+                    {!isUnlocked && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
+                        <Lock className="w-8 h-8 text-gray-600" />
+                      </div>
+                    )}
+                    {isCompleted && (
+                      <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                        ✓
+                      </div>
+                    )}
+                    <div className="w-full h-32 mb-4 rounded-lg overflow-hidden shadow-md group-hover:shadow-lg transition-shadow duration-300">
+                      <img 
+                        src={option.imageUrl} 
+                        alt={option.title}
+                        className={`w-full h-full object-cover transition-transform duration-300 ${isUnlocked ? 'group-hover:scale-110' : ''}`}
+                      />
+                    </div>
+                    <h3 className={`font-bold text-lg mb-2 transition-colors ${
+                      isUnlocked 
+                        ? `text-gray-800 group-hover:text-green-700 ${isCompleted ? 'text-green-700' : ''}` 
+                        : 'text-gray-500'
+                    }`}>
+                      {option.title}
+                    </h3>
+                    <p className={`text-sm mb-3 ${isUnlocked ? 'text-gray-600' : 'text-gray-400'}`}>
+                      {option.description}
+                    </p>
+                    <div className="flex flex-col space-y-2">
+                      <div className="flex justify-center space-x-2">
+                        <Badge className={`${getDifficultyColor(option.difficulty)} border`}>
+                          {option.pieceCount} piezas
+                        </Badge>
+                        <Badge variant="outline" className="border-blue-300 text-blue-700">
+                          {option.difficulty === 'easy' ? 'Fácil' : option.difficulty === 'medium' ? 'Medio' : 'Difícil'}
+                        </Badge>
+                      </div>
+                      {!isUnlocked && option.requiredPuzzles.length > 0 && (
+                        <p className="text-xs text-gray-500 mt-2">
+                          Completa: {option.requiredPuzzles.map(id => 
+                            puzzleOptions.find(p => p.id === id)?.title
+                          ).join(', ')}
+                        </p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -240,35 +336,66 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   if (solved) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-4">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <Card className="bg-white/95 backdrop-blur-sm border-2 border-green-300 shadow-2xl">
             <CardContent className="p-8 text-center">
               <div className="mb-6">
                 <EcoMascot size="large" mood="excited" />
               </div>
-              <h2 className="text-3xl font-bold text-green-700 mb-4">¡Puzzle Completado!</h2>
-              <div className="w-48 h-48 mx-auto mb-4 rounded-lg overflow-hidden shadow-lg">
+              <h2 className="text-3xl font-bold text-green-700 mb-4">¡Puzzle Completado! 🎉</h2>
+              <div className="w-48 h-48 mx-auto mb-6 rounded-lg overflow-hidden shadow-lg">
                 <img 
                   src={selectedPuzzle.imageUrl} 
                   alt={selectedPuzzle.title}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <p className="text-xl text-gray-700 mb-2">
-                ¡Armaste {selectedPuzzle.title}!
-              </p>
-              <p className="text-lg text-blue-600 mb-2">
-                Movimientos: {moves}
-              </p>
-              <p className="text-lg text-green-600 mb-6">
-                Tiempo: {Math.floor((Date.now() - startTime) / 1000)} segundos
-              </p>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">
+                {selectedPuzzle.title}
+              </h3>
+              
+              {/* Educational Message */}
+              <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg border-2 border-green-200 mb-6">
+                <div className="text-2xl mb-3">🌱</div>
+                <p className="text-gray-700 text-lg leading-relaxed">
+                  {selectedPuzzle.educationalMessage}
+                </p>
+              </div>
+
+              <div className="flex justify-center space-x-4 text-sm text-gray-600 mb-6">
+                <span>Movimientos: {moves}</span>
+                <span>•</span>
+                <span>Tiempo: {Math.floor((Date.now() - startTime) / 1000)}s</span>
+              </div>
+
+              {/* Check if new puzzles were unlocked */}
+              {(() => {
+                const newlyUnlocked = puzzleOptions.filter(puzzle => 
+                  puzzle.requiredPuzzles.includes(selectedPuzzle.id) && 
+                  isPuzzleUnlocked(puzzle) &&
+                  !completedPuzzles.includes(puzzle.id)
+                );
+                
+                return newlyUnlocked.length > 0 && (
+                  <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 mb-6">
+                    <h4 className="text-lg font-bold text-yellow-800 mb-2">🔓 ¡Nuevos Puzzles Desbloqueados!</h4>
+                    <div className="space-y-1">
+                      {newlyUnlocked.map(puzzle => (
+                        <p key={puzzle.id} className="text-yellow-700 font-semibold">
+                          • {puzzle.title}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
               <div className="space-y-3">
                 <Button 
                   onClick={handleComplete}
                   className="bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-500 hover:to-blue-500 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all duration-200"
                 >
-                  ¡Genial!
+                  ¡Continuar!
                 </Button>
                 <div className="space-x-4">
                   <Button 
@@ -283,7 +410,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                     variant="outline"
                     className="border-2 border-purple-400 text-purple-600 hover:bg-purple-100 hover:border-purple-500 font-semibold py-3 px-8 rounded-full transition-all duration-200"
                   >
-                    Otro puzzle
+                    Elegir otro puzzle
                   </Button>
                 </div>
               </div>
