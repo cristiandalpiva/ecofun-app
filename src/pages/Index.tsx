@@ -416,17 +416,10 @@ const Index = () => {
               </Link>
             </nav>
 
-            {/* User Level */}
-            <div className="hidden sm:flex items-center space-x-4 flex-shrink-0">
-              <div className="text-right min-w-0">
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">{plantLevel.emoji}</span>
-                  <div className="min-w-0">
-                    <p className="font-bold text-emerald-700 text-sm truncate">{plantLevel.stage}</p>
-                    <p className="text-xs text-emerald-600 truncate">{userPoints} puntos</p>
-                  </div>
-                </div>
-              </div>
+            {/* User Level (sólo emoji y puntos; en una línea y centrado verticalmente) */}
+            <div className="hidden md:flex items-center space-x-2 flex-shrink-0">
+              <span className="text-2xl">{plantLevel.emoji}</span>
+              <span className="font-bold text-emerald-700 text-sm">{userPoints} pts</span>
             </div>
 
             {/* Mobile Menu Button */}
