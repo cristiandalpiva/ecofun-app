@@ -7,7 +7,6 @@ import { Menu, TreePine, Leaf, Award, Users, BookOpen, Heart } from "lucide-reac
 import { toast } from "@/hooks/use-toast";
 import { Link } from 'react-router-dom';
 
-// ... keep existing code (game imports)
 import AnimalQuiz from "@/components/games/AnimalQuiz";
 import EcoQuiz from "@/components/games/EcoQuiz";
 import EcoTetris from "@/components/games/EcoTetris";
@@ -350,25 +349,12 @@ const Index = () => {
       <header className="bg-white/90 backdrop-blur-md border-b-2 border-emerald-200 sticky top-0 z-50 shadow-lg">
         {/* MOBILE HEADER */}
         <div className="md:hidden flex items-center justify-between px-3 py-2">
-          {/* SVG logo (a la izquierda) */}
+          {/* SVG logo eliminado */}
           <div className="flex-shrink-0 flex items-center">
             <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 via-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
-              {/* Icono SVG, ejemplo: semilla/árbol. Puedes cambiarlo por otro svg si tienes uno específico */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={28}
-                height={28}
-                viewBox="0 0 24 24"
-                fill="none"
-                className="text-white"
-              >
-                <circle cx="12" cy="12" r="10" fill="#16a34a" />
-                <path d="M14 10c1.5-2.5 1-6-2-7.5C7.5 4.5 7 8 8.5 10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
-                <ellipse cx="12" cy="16" rx="5" ry="3" fill="#fff" opacity="0.15"/>
-              </svg>
+              {/* SVG eliminado */}
             </div>
           </div>
-
           {/* Texto centrado */}
           <div className="flex-1 flex flex-col items-center justify-center px-2">
             <h1 className="text-xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight leading-none">
@@ -378,7 +364,6 @@ const Index = () => {
               Aprende Jugando
             </p>
           </div>
-          
           {/* Botón menú hamburguesa a la derecha */}
           <div className="flex-shrink-0 flex items-center">
             <Button
@@ -397,27 +382,12 @@ const Index = () => {
             <div className="flex items-center justify-between">
               {/* Logo EcoFun mejorado */}
               <Link to="/" className="flex items-center space-x-3">
+                {/* Eliminamos todo el bloque SVG/logo */}
                 <div className="relative">
                   <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-400 via-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={34}
-                      height={34}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="text-white"
-                    >
-                      <circle cx="12" cy="12" r="10" fill="#16a34a" />
-                      <path d="M14 10c1.5-2.5 1-6-2-7.5C7.5 4.5 7 8 8.5 10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
-                      <ellipse cx="12" cy="16" rx="5" ry="3" fill="#fff" opacity="0.15"/>
-                    </svg>
+                    {/* SVG eliminado */}
                   </div>
-                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg">
-                    {/* Hoja decorativa */}
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M6 1C8.21 1 10 2.79 10 5C10 7.21 8.21 9 6 9C3.79 9 2 7.21 2 5C2 2.79 3.79 1 6 1Z" fill="white" />
-                    </svg>
-                  </div>
+                  {/* Hoja decorativa eliminada */}
                 </div>
                 <div className="flex flex-col">
                   <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight">
