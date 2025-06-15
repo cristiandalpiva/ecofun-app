@@ -374,55 +374,78 @@ const Index = () => {
 
         {/* DESKTOP HEADER */}
         <div className="hidden md:block">
-          <div className="container mx-auto px-4 py-3 sm:py-4">
-            <div className="flex items-center justify-between">
-              {/* Logo EcoFun mejorado */}
-              <Link to="/" className="flex items-center space-x-3">
-                {/* Bloque del logo/el fondo colorido eliminado */}
-                {/* Solo queda el texto */}
-                <div className="flex flex-col">
-                  <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight">
-                    EcoFun
-                  </h1>
-                  <p className="text-xs sm:text-sm text-emerald-600 font-semibold -mt-1">
-                    Aprende Jugando
-                  </p>
-                </div>
+          <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between gap-4">
+            {/* Logo EcoFun */}
+            <Link to="/" className="flex items-center space-x-3 flex-shrink-0 min-w-0">
+              {/* Solo texto, logo SVG eliminado */}
+              <div className="flex flex-col min-w-0">
+                <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight truncate">
+                  EcoFun
+                </h1>
+                <p className="text-xs sm:text-sm text-emerald-600 font-semibold -mt-1 truncate">
+                  Aprende Jugando
+                </p>
+              </div>
+            </Link>
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-6 flex-shrink min-w-0">
+              <Link to="/games">
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  Juegos
+                </Button>
               </Link>
-              {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center space-x-6">
-                <Link to="/games">
-                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    Juegos
-                  </Button>
-                </Link>
-                <Link to="/achievements">
-                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                    <Award className="w-4 h-4 mr-2" />
-                    Logros
-                  </Button>
-                </Link>
-                <Link to="/community">
-                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                    <Users className="w-4 h-4 mr-2" />
-                    Comunidad
-                  </Button>
-                </Link>
-                <Link to="/suggestions">
-                  <Button 
-                    variant="ghost" 
-                    className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold"
-                  >
-                    <Heart className="w-4 h-4 mr-2" />
-                    Sugerencias
-                  </Button>
-                </Link>
-              </nav>
+              <Link to="/achievements">
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
+                  <Award className="w-4 h-4 mr-2" />
+                  Logros
+                </Button>
+              </Link>
+              <Link to="/community">
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
+                  <Users className="w-4 h-4 mr-2" />
+                  Comunidad
+                </Button>
+              </Link>
+              <Link to="/suggestions">
+                <Button 
+                  variant="ghost" 
+                  className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold"
+                >
+                  <Heart className="w-4 h-4 mr-2" />
+                  Sugerencias
+                </Button>
+              </Link>
+            </nav>
 
-              {/* User Level */}
-              <div className="hidden sm:flex items-center space-x-4">
-                <div className="text-right">
+            {/* User Level */}
+            <div className="hidden sm:flex items-center space-x-4 flex-shrink-0">
+              <div className="text-right min-w-0">
+                <div className="flex items-center space-x-2">
+                  <span className="text-lg">{plantLevel.emoji}</span>
+                  <div className="min-w-0">
+                    <p className="font-bold text-emerald-700 text-sm truncate">{plantLevel.stage}</p>
+                    <p className="text-xs text-emerald-600 truncate">{userPoints} puntos</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              className="md:hidden p-3 hover:bg-emerald-100"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              <Menu className="h-8 w-8 text-emerald-700" />
+            </Button>
+          </div>
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden mt-4 py-4 border-t border-emerald-200 bg-white/95 rounded-b-lg">
+              <div className="flex flex-col space-y-3">
+                <div className="px-4 py-2 border-b border-emerald-100">
                   <div className="flex items-center space-x-2">
                     <span className="text-lg">{plantLevel.emoji}</span>
                     <div>
@@ -431,62 +454,36 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
+                <Link to="/games" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Juegos
+                  </Button>
+                </Link>
+                <Link to="/achievements" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
+                    <Award className="w-4 h-4 mr-2" />
+                    Logros
+                  </Button>
+                </Link>
+                <Link to="/community" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
+                    <Users className="w-4 h-4 mr-2" />
+                    Comunidad
+                  </Button>
+                </Link>
+                <Link to="/suggestions" onClick={() => setMobileMenuOpen(false)}>
+                  <Button 
+                    variant="ghost" 
+                    className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full"
+                  >
+                    <Heart className="w-4 h-4 mr-2" />
+                    Sugerencias
+                  </Button>
+                </Link>
               </div>
-
-              {/* Mobile Menu Button */}
-              <Button
-                variant="ghost"
-                className="md:hidden p-3 hover:bg-emerald-100"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                <Menu className="h-8 w-8 text-emerald-700" />
-              </Button>
             </div>
-
-            {/* Mobile Menu */}
-            {mobileMenuOpen && (
-              <div className="md:hidden mt-4 py-4 border-t border-emerald-200 bg-white/95 rounded-b-lg">
-                <div className="flex flex-col space-y-3">
-                  <div className="px-4 py-2 border-b border-emerald-100">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-lg">{plantLevel.emoji}</span>
-                      <div>
-                        <p className="font-bold text-emerald-700 text-sm">{plantLevel.stage}</p>
-                        <p className="text-xs text-emerald-600">{userPoints} puntos</p>
-                      </div>
-                    </div>
-                  </div>
-                  <Link to="/games" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
-                      <BookOpen className="w-4 h-4 mr-2" />
-                      Juegos
-                    </Button>
-                  </Link>
-                  <Link to="/achievements" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
-                      <Award className="w-4 h-4 mr-2" />
-                      Logros
-                    </Button>
-                  </Link>
-                  <Link to="/community" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
-                      <Users className="w-4 h-4 mr-2" />
-                      Comunidad
-                    </Button>
-                  </Link>
-                  <Link to="/suggestions" onClick={() => setMobileMenuOpen(false)}>
-                    <Button 
-                      variant="ghost" 
-                      className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full"
-                    >
-                      <Heart className="w-4 h-4 mr-2" />
-                      Sugerencias
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </header>
 
