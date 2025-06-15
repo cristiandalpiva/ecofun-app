@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -47,8 +48,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const [gameStarted, setGameStarted] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [correctPlacement, setCorrectPlacement] = useState<string | null>(null);
-  const [isTouching, setIsTouching] = useState(false);
-  const [draggedPiece, setDraggedPiece] = useState<PuzzlePiece | null>(null);
 
   // Text-to-speech function
   const readText = (text: string) => {
@@ -122,7 +121,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       id: 'deer',
       name: 'Ciervos del Bosque',
       description: 'Dos ciervos junto a árboles y montañas',
-      url: 'https://images.unsplash.com/photo-1472396961366-2d5fba72006d?w=480&h=600&fit=crop',
+      url: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=480&h=600&fit=crop',
       aspectRatio: '4:5',
       educationalTopic: 'Los ciervos viven en bosques y se alimentan de plantas'
     },
@@ -266,29 +265,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     }, 100);
   };
 
-  const handlePieceTouchStart = (piece: PuzzlePiece) => {
-    if (piece.isLocked || isComplete) return;
-    setIsTouching(true);
-    setDraggedPiece(piece);
-  };
-
-  const handleSlotTouchEnd = (slotId: string) => {
-    if (!draggedPiece || isComplete) return;
-    if (slotId !== draggedPiece.id) {
-      setDraggedPiece(null);
-      setIsTouching(false);
-      return;
-    }
-    setPieces(prev => prev.map(p =>
-      p.id === draggedPiece.id ? { ...p, isLocked: true } : p
-    ));
-    setCorrectPlacement(draggedPiece.id);
-    setMoves(prev => prev + 1);
-    setIsTouching(false);
-    setDraggedPiece(null);
-    setTimeout(checkCompletion, 200);
-  };
-
   const getPieceStyle = (piece: PuzzlePiece, size: number) => {
     if (!selectedLevel) return {};
     
@@ -319,11 +295,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     setShowCelebration(false);
     setCorrectPlacement(null);
   };
-
-  // NUEVO: Mensaje educativo para mostrar al completar
-  const educationalMessage = selectedImage
-    ? `🎓 ${selectedImage.educationalTopic}`
-    : "";
 
   // Level selection screen
   if (!selectedLevel) {
@@ -509,27 +480,26 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
         </div>
 
         {/* Celebration */}
-        {
-          showCelebration && (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-              <Card className="bg-white border-4 border-emerald-400 shadow-2xl animate-scale-in max-w-sm w-full">
-                <CardContent className="p-6 sm:p-8 text-center">
-                  <div className="text-4xl mb-4 animate-bounce">🎉</div>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-emerald-700 mb-2">
-                    ¡Felicitaciones!
-                  </h2>
-                  <p className="text-lg text-gray-700 mb-2">
-                    Completaste el rompecabezas en {formatTime(timeElapsed)} con {moves} movimientos.
-                  </p>
-                  <p className="text-emerald-700 font-semibold mb-2">
-                    +{selectedLevel?.points ?? 0} puntos
-                  </p>
-                  <p className="text-blue-700 text-sm mt-2">{educationalMessage}</p>
-                </CardContent>
-              </Card>
-            </div>
-          )
-        }
+        {showCelebration && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <Card className="bg-white border-4 border-emerald-400 shadow-2xl animate-scale-in max-w-sm w-full">
+              <CardContent className="p-6 sm:p-8 text-center">
+                <div className="text-4xl sm:text-6xl mb-4 animate-bounce">🎉</div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-emerald-700 mb-2">
+                  ¡Felicitaciones!
+                </h2>
+                <p className="text-sm sm:text-lg text-gray-600 mb-4">
+                  Completaste el rompecabezas en {formatTime(timeElapsed)} con {moves} movimientos
+                </p>
+                <div className="flex items-center justify-center space-x-2 text-lg sm:text-2xl">
+                  <Trophy className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500" />
+                  <span className="font-bold text-emerald-600">+{selectedLevel.points} puntos</span>
+                  <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-400" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Game Layout - Responsive */}
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-8 items-center lg:items-start justify-center">
@@ -543,9 +513,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                 <div
                   key={`piece-${piece.id}`}
                   draggable={!piece.isLocked}
-                  onTouchStart={() => handlePieceTouchStart(piece)}
-                  onTouchEnd={() => setDraggedPiece(null)}
-                  onDragStart={e => handleDragStart(e, piece)}
+                  onDragStart={(e) => handleDragStart(e, piece)}
                   className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 cursor-move transition-all duration-200 hover:scale-110 border-2 border-emerald-300 rounded-md overflow-hidden shadow-lg hover:shadow-xl"
                   style={{
                     aspectRatio: selectedLevel.level === 'hard' ? '4/5' : '1'
@@ -597,7 +565,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                   <div
                     key={`slot-${slotIndex}`}
                     data-target={expectedId}
-                    onTouchEnd={() => handleSlotTouchEnd(expectedId)}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, expectedId)}
                     className={`relative transition-all duration-200 overflow-hidden rounded-md ${

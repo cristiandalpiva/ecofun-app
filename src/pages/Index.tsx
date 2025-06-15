@@ -7,6 +7,7 @@ import { Menu, TreePine, Leaf, Award, Users, BookOpen, Heart } from "lucide-reac
 import { toast } from "@/hooks/use-toast";
 import { Link } from 'react-router-dom';
 
+// ... keep existing code (game imports)
 import AnimalQuiz from "@/components/games/AnimalQuiz";
 import EcoQuiz from "@/components/games/EcoQuiz";
 import EcoTetris from "@/components/games/EcoTetris";
@@ -347,46 +348,30 @@ const Index = () => {
 
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-md border-b-2 border-emerald-200 sticky top-0 z-50 shadow-lg">
-        {/* MOBILE HEADER */}
-        <div className="md:hidden flex items-center justify-between px-3 py-2">
-          {/* SVG logo eliminado */}
-          {/* El div contenedor y fondo colorido eliminado */}
-          {/* Texto centrado */}
-          <div className="flex-1 flex flex-col items-center justify-center px-2">
-            <h1 className="text-xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight leading-none">
-              EcoFun
-            </h1>
-            <p className="text-xs text-emerald-600 font-semibold leading-none">
-              Aprende Jugando
-            </p>
-          </div>
-          {/* Botón menú hamburguesa a la derecha */}
-          <div className="flex-shrink-0 flex items-center">
-            <Button
-              variant="ghost"
-              className="p-2"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              <Menu className="h-8 w-8 text-emerald-700" />
-            </Button>
-          </div>
-        </div>
-
-        {/* DESKTOP HEADER */}
-        <div className="hidden md:block">
-          <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between gap-4">
-            {/* Logo EcoFun */}
-            <Link to="/" className="flex items-center space-x-3 flex-shrink-0 min-w-0">
-              {/* Logo en horizontal, solo EcoFun */}
-              <div className="flex flex-row items-center min-w-0 space-x-2">
-                <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight truncate">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo EcoFun mejorado */}
+            <Link to="/" className="flex items-center space-x-3">
+              <div className="relative">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-400 via-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
+                  <TreePine className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg">
+                  <Leaf className="w-3 h-3 text-white" />
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight">
                   EcoFun
                 </h1>
+                <p className="text-xs sm:text-sm text-emerald-600 font-semibold -mt-1">
+                  Aprende Jugando
+                </p>
               </div>
             </Link>
-            
+
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-6 flex-shrink min-w-0">
+            <nav className="hidden md:flex items-center space-x-6">
               <Link to="/games">
                 <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
                   <BookOpen className="w-4 h-4 mr-2" />
@@ -416,10 +401,17 @@ const Index = () => {
               </Link>
             </nav>
 
-            {/* User Level (sólo emoji y puntos; en una línea y centrado verticalmente) */}
-            <div className="hidden md:flex items-center space-x-2 flex-shrink-0">
-              <span className="text-2xl">{plantLevel.emoji}</span>
-              <span className="font-bold text-emerald-700 text-sm">{userPoints} pts</span>
+            {/* User Level */}
+            <div className="hidden sm:flex items-center space-x-4">
+              <div className="text-right">
+                <div className="flex items-center space-x-2">
+                  <span className="text-lg">{plantLevel.emoji}</span>
+                  <div>
+                    <p className="font-bold text-emerald-700 text-sm">{plantLevel.stage}</p>
+                    <p className="text-xs text-emerald-600">{userPoints} puntos</p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Mobile Menu Button */}
@@ -431,6 +423,7 @@ const Index = () => {
               <Menu className="h-8 w-8 text-emerald-700" />
             </Button>
           </div>
+
           {/* Mobile Menu */}
           {mobileMenuOpen && (
             <div className="md:hidden mt-4 py-4 border-t border-emerald-200 bg-white/95 rounded-b-lg">
@@ -489,52 +482,38 @@ const Index = () => {
           
           {/* Plant Progress */}
           <Card className="bg-white/80 backdrop-blur-sm border-2 border-emerald-200 shadow-xl mb-8 sm:mb-12">
-            <CardContent className="p-2 sm:p-6 w-full">
-              <div className="flex flex-col sm:flex-row items-center justify-between sm:space-x-6 gap-4 sm:gap-0 flex-wrap max-w-full">
-                {/* Semilla + etapa */}
-                <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 max-w-full">
-                  <div className="text-4xl sm:text-5xl flex-shrink-0">{plantLevel.emoji}</div>
-                  <div className="text-left min-w-0 max-w-[80vw] sm:max-w-xs break-words">
-                    <h3 className="text-lg sm:text-2xl font-bold text-emerald-700 truncate">{plantLevel.stage}</h3>
-                    <p className="text-emerald-600 text-xs sm:text-base truncate">Nivel {plantLevel.level}</p>
-                    {/* Ajuste para que el texto no se desborde */}
-                    <p className="text-emerald-600 text-xs sm:text-sm italic break-words max-w-full whitespace-normal overflow-hidden">
-                      {plantLevel.description}
-                    </p>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-6">
+                <div className="flex items-center space-x-4">
+                  <div className="text-4xl sm:text-5xl">{plantLevel.emoji}</div>
+                  <div className="text-left">
+                    <h3 className="text-xl sm:text-2xl font-bold text-emerald-700">{plantLevel.stage}</h3>
+                    <p className="text-emerald-600 text-sm sm:text-base">Nivel {plantLevel.level}</p>
+                    <p className="text-emerald-600 text-xs sm:text-sm italic">{plantLevel.description}</p>
                   </div>
                 </div>
-                {/* Progreso */}
-                <div 
-                  className="flex-1 w-full min-w-0 max-w-full sm:max-w-md"
-                  style={{ maxWidth: "100vw", overflow: "hidden" }}
-                >
-                  <div className="flex justify-between items-center mb-2 w-full gap-2 flex-wrap">
-                    <span className="text-xs sm:text-sm font-semibold text-emerald-700 truncate block max-w-[100px] min-w-0 overflow-hidden">
-                      {userPoints} puntos
-                    </span>
-                    {/* Ocultar "Meta:" en mobile, mostrar en sm+ */}
+                
+                <div className="flex-1 max-w-md w-full">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-semibold text-emerald-700">{userPoints} puntos</span>
                     {plantLevel.level < 6 && (
-                      <span className="hidden sm:inline text-xs sm:text-sm text-emerald-600 truncate text-right block max-w-[90px] min-w-0 overflow-hidden">
-                        Meta: {plantLevel.nextGoal}
-                      </span>
+                      <span className="text-sm text-emerald-600">Meta: {plantLevel.nextGoal}</span>
                     )}
                   </div>
-                  <div className="w-full overflow-hidden" style={{ minWidth: 0, maxWidth: "100%" }}>
-                    <Progress 
-                      value={progressPercentage} 
-                      className="h-3 bg-emerald-100 max-w-full overflow-hidden"
-                    />
-                  </div>
+                  <Progress 
+                    value={progressPercentage} 
+                    className="h-3 bg-emerald-100"
+                  />
                   {plantLevel.level < 6 && (
-                    <p className="text-xs text-emerald-600 mt-1 break-words max-w-full whitespace-normal overflow-hidden truncate block">
+                    <p className="text-xs text-emerald-600 mt-1">
                       {plantLevel.nextGoal - userPoints} puntos para el siguiente nivel
                     </p>
                   )}
                 </div>
-                {/* Juegos completados */}
-                <div className="flex flex-col items-center justify-center min-w-0">
-                  <p className="text-xl sm:text-3xl font-bold text-emerald-600">{completedGames.length}</p>
-                  <p className="text-xs sm:text-sm text-emerald-700 text-center">Juegos Completados</p>
+                
+                <div className="text-center">
+                  <p className="text-2xl sm:text-3xl font-bold text-emerald-600">{completedGames.length}</p>
+                  <p className="text-xs sm:text-sm text-emerald-700">Juegos Completados</p>
                 </div>
               </div>
             </CardContent>

@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -170,105 +171,16 @@
   .text-responsive-lg {
     font-size: 1.125rem;
   }
-  .container, .max-w-2xl, .max-w-xl, .max-w-3xl, .max-w-4xl {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
+}
+
+@media (min-width: 641px) {
+  .text-responsive-sm {
+    font-size: 1rem;
   }
-}
-
-/* Se asegura que los textos no estén fuera de los contenedores */
-main, section, .card, .rounded-xl, .rounded-2xl, .rounded-lg, .container, .max-w-2xl, .max-w-xl, .max-w-3xl, .max-w-4xl, .footer {
-  box-sizing: border-box;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  max-width: 100vw;
-  min-width: 0;
-}
-@media (max-width: 640px) {
-  .card, .rounded-xl, .rounded-2xl, .rounded-lg, .container, .max-w-2xl, .max-w-xl, .max-w-3xl, .max-w-4xl {
-    padding-left: 6px !important;
-    padding-right: 6px !important;
-    max-width: 100vw !important;
-    min-width: 0 !important;
+  .text-responsive-base {
+    font-size: 1.125rem;
   }
-}
-
-.text-xs, .text-sm, .text-base, .text-lg, .text-xl, .text-2xl, .text-3xl, .text-4xl, .text-5xl {
-  word-break: break-word;
-  overflow-wrap: break-word;
-  min-width: 0;
-}
-
-/* Ajuste para evitar overflow en móviles */
-@media (max-width: 640px) {
-  body, #root, .min-h-screen {
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-  }
-  .card, .rounded-xl, .rounded-2xl, .rounded-lg, .container, .max-w-2xl, .max-w-xl, .max-w-3xl, .max-w-4xl {
-    margin-left: auto !important;
-    margin-right: auto !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100vw !important;
-    padding-left: 6px !important;
-    padding-right: 6px !important;
-  }
-}
-
-/* Margen interno para textos en tarjetas */
-.card, .rounded-xl, .rounded-2xl, .rounded-lg {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-}
-
-/* Ajuste general para evitar elementos fuera de la pantalla */
-html, body, #root {
-  max-width: 100vw !important;
-  overflow-x: hidden !important;
-}
-
-/* Footer ajustes: asegura que los elementos se mantengan visibles y responsivos */
-footer, .footer {
-  max-width: 100vw !important;
-  overflow-x: hidden !important;
-}
-
-/* Grids y flex responsivos para evitar overflow */
-.grid, .flex {
-  min-width: 0;
-  flex-wrap: wrap;
-}
-
-/* Elementos y tarjetas en páginas personalizadas */
-.card, .rounded-xl, .rounded-lg {
-  min-width: 0;
-  word-break: break-word;
-}
-
-/* Ajustes adicionales para pantallas pequeñas */
-@media (max-width: 640px) {
-  .sm\\:gap-8 {
-    gap: 1.25rem !important;
-  }
-  .sm\\:py-8 {
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-  }
-  .w-full, .max-w-full {
-    width: 100vw !important;
-    max-width: 100vw !important;
-  }
-  .overflow-x-hidden {
-    overflow-x: hidden !important;
-  }
-}
-
-@media (max-width: 420px) {
-  .px-4, .sm\\:px-8 {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+  .text-responsive-lg {
+    font-size: 1.25rem;
   }
 }
