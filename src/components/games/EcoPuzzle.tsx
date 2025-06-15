@@ -145,6 +145,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const newPieces: PuzzlePiece[] = [];
     const { rows, cols, totalPieces } = selectedLevel;
 
+    // Create pieces in order (0 to totalPieces-1)
     for (let i = 0; i < totalPieces; i++) {
       const row = Math.floor(i / cols);
       const col = i % cols;
@@ -159,7 +160,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       });
     }
 
-    // Mezclar las piezas
+    // Shuffle the pieces array for display
     const shuffledPieces = [...newPieces];
     for (let i = shuffledPieces.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -173,11 +174,30 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     setTimeElapsed(0);
     setGameStarted(false);
     setShowCelebration(false);
+
+    console.log('Puzzle initialized:', {
+      totalPieces,
+      rows,
+      cols,
+      pieces: newPieces.map(p => ({ id: p.id, row: p.row, col: p.col, correctPosition: p.correctPosition }))
+    });
   };
 
   const checkCompletion = (newBoardPieces: (number | null)[]) => {
     const allPiecesPlaced = newBoardPieces.every(piece => piece !== null);
-    const allPiecesCorrect = newBoardPieces.every((pieceId, index) => pieceId === index);
+    const allPiecesCorrect = newBoardPieces.every((pieceId, boardIndex) => {
+      return pieceId === boardIndex;
+    });
+    
+    console.log('Checking completion:', {
+      allPiecesPlaced,
+      allPiecesCorrect,
+      boardState: newBoardPieces.map((pieceId, index) => ({
+        boardIndex: index,
+        pieceId,
+        isCorrect: pieceId === index
+      }))
+    });
     
     if (allPiecesPlaced && allPiecesCorrect && !isComplete) {
       setIsComplete(true);
@@ -206,22 +226,31 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     
     if (draggedPiece === null) return;
 
+    console.log('Dropping piece:', draggedPiece, 'on board position:', boardIndex);
+
     const newBoardPieces = [...boardPieces];
-    const newPieces = pieces.filter(p => p.id !== draggedPiece);
     
-    // Si ya hay una pieza en esa posición, devolverla a las piezas sueltas
+    // If there's already a piece on the board at this position, return it to loose pieces
     if (newBoardPieces[boardIndex] !== null) {
-      const returnedPieceId = newBoardPieces[boardIndex];
-      const returnedPiece = [...pieces, ...newPieces].find(p => p.id === returnedPieceId);
-      if (returnedPiece) {
-        newPieces.push(returnedPiece);
-      }
+      const existingPieceId = newBoardPieces[boardIndex]!;
+      const existingPiece = {
+        id: existingPieceId,
+        correctPosition: existingPieceId,
+        currentPosition: null,
+        imageUrl: selectedImage!.url,
+        row: Math.floor(existingPieceId / selectedLevel!.cols),
+        col: existingPieceId % selectedLevel!.cols
+      };
+      setPieces(prev => [...prev, existingPiece]);
     }
     
+    // Place the dragged piece on the board
     newBoardPieces[boardIndex] = draggedPiece;
     
+    // Remove the piece from loose pieces
+    setPieces(prev => prev.filter(p => p.id !== draggedPiece));
+    
     setBoardPieces(newBoardPieces);
-    setPieces(newPieces);
     setMoves(moves + 1);
     setDraggedPiece(null);
     
@@ -232,25 +261,23 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     e.preventDefault();
     if (draggedPiece === null) return;
 
+    // Find if the piece is currently on the board
     const pieceIndexInBoard = boardPieces.indexOf(draggedPiece);
     if (pieceIndexInBoard !== -1) {
+      // Remove piece from board and add back to loose pieces
       const newBoardPieces = [...boardPieces];
-      const draggedPieceData = [...pieces].find(p => p.id === draggedPiece) || 
-                               newBoardPieces.map((id, idx) => id === draggedPiece ? { 
-                                 id: draggedPiece, 
-                                 correctPosition: draggedPiece, 
-                                 currentPosition: null, 
-                                 imageUrl: selectedImage!.url,
-                                 row: Math.floor(draggedPiece / selectedLevel!.cols),
-                                 col: draggedPiece % selectedLevel!.cols
-                               } : null).filter(Boolean)[0];
-      
       newBoardPieces[pieceIndexInBoard] = null;
       
-      if (draggedPieceData) {
-        setPieces([...pieces, draggedPieceData]);
-      }
+      const draggedPieceData = {
+        id: draggedPiece,
+        correctPosition: draggedPiece,
+        currentPosition: null,
+        imageUrl: selectedImage!.url,
+        row: Math.floor(draggedPiece / selectedLevel!.cols),
+        col: draggedPiece % selectedLevel!.cols
+      };
       
+      setPieces(prev => [...prev, draggedPieceData]);
       setBoardPieces(newBoardPieces);
       setMoves(moves + 1);
     }
@@ -276,13 +303,12 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     setShowCelebration(false);
   };
 
-  // Fixed function to get piece style with proper background positioning
+  // Get piece style for loose pieces
   const getPieceStyle = (piece: PuzzlePiece) => {
     if (!selectedLevel) return {};
     
     const { rows, cols } = selectedLevel;
-    // Size of each piece in the container (80px for loose pieces, varies for board)
-    const pieceSize = 80; // Fixed size for consistency
+    const pieceSize = 80; // Size of loose pieces
     
     return {
       backgroundImage: `url(${piece.imageUrl})`,
@@ -292,21 +318,24 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     };
   };
 
-  // Function to get piece style for board pieces (different size)
-  const getBoardPieceStyle = (piece: PuzzlePiece) => {
-    if (!selectedLevel) return {};
+  // Get piece style for board pieces
+  const getBoardPieceStyle = (pieceId: number) => {
+    if (!selectedLevel || !selectedImage) return {};
     
     const { rows, cols } = selectedLevel;
-    // Board piece size calculation based on container
     const boardWidth = 400;
     const boardHeight = selectedLevel.level === 'hard' ? 320 : 400;
     const pieceWidth = boardWidth / cols;
     const pieceHeight = boardHeight / rows;
     
+    // Calculate row and col from pieceId
+    const row = Math.floor(pieceId / cols);
+    const col = pieceId % cols;
+    
     return {
-      backgroundImage: `url(${piece.imageUrl})`,
+      backgroundImage: `url(${selectedImage.url})`,
       backgroundSize: `${boardWidth}px ${boardHeight}px`,
-      backgroundPosition: `-${piece.col * pieceWidth}px -${piece.row * pieceHeight}px`,
+      backgroundPosition: `-${col * pieceWidth}px -${row * pieceHeight}px`,
       backgroundRepeat: 'no-repeat'
     };
   };
@@ -471,23 +500,14 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                   gridTemplateRows: `repeat(${selectedLevel.rows}, 1fr)`
                 }}
               >
-                {Array.from({ length: selectedLevel.totalPieces }, (_, index) => {
-                  const pieceId = boardPieces[index];
-                  const piece = pieces.find(p => p.id === pieceId) || 
-                              (pieceId !== null ? {
-                                id: pieceId,
-                                correctPosition: pieceId,
-                                currentPosition: index,
-                                imageUrl: selectedImage.url,
-                                row: Math.floor(pieceId / selectedLevel.cols),
-                                col: pieceId % selectedLevel.cols
-                              } : null);
+                {Array.from({ length: selectedLevel.totalPieces }, (_, boardIndex) => {
+                  const pieceId = boardPieces[boardIndex];
                   
                   return (
                     <div
-                      key={`board-${index}`}
+                      key={`board-${boardIndex}`}
                       onDragOver={handleDragOver}
-                      onDrop={(e) => handleDropOnBoard(e, index)}
+                      onDrop={(e) => handleDropOnBoard(e, boardIndex)}
                       className={`transition-all duration-200 overflow-hidden rounded-md ${
                         pieceId !== null
                           ? 'shadow-md border-2 border-emerald-300'
@@ -495,12 +515,18 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                       } ${isComplete ? 'animate-pulse' : ''}`}
                       style={{ aspectRatio: selectedLevel.level === 'hard' ? '4/5' : '1' }}
                     >
-                      {piece && (
+                      {pieceId !== null && (
                         <div 
                           className="w-full h-full cursor-move"
-                          style={getBoardPieceStyle(piece)}
+                          style={getBoardPieceStyle(pieceId)}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, pieceId)}
                         />
                       )}
+                      {/* Debug info */}
+                      <div className="absolute top-0 left-0 text-xs text-gray-500 bg-white/80 px-1">
+                        {boardIndex}
+                      </div>
                     </div>
                   );
                 })}
@@ -540,6 +566,10 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                         className="w-full h-full"
                         style={getPieceStyle(piece)}
                       />
+                      {/* Debug info */}
+                      <div className="absolute top-0 left-0 text-xs text-white bg-black/50 px-1">
+                        {piece.id}
+                      </div>
                     </div>
                   );
                 })}
