@@ -482,25 +482,26 @@ const Index = () => {
           
           {/* Plant Progress */}
           <Card className="bg-white/80 backdrop-blur-sm border-2 border-emerald-200 shadow-xl mb-8 sm:mb-12">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-6">
-                <div className="flex items-center space-x-4">
-                  <div className="text-4xl sm:text-5xl">{plantLevel.emoji}</div>
-                  <div className="text-left max-w-[160px] sm:max-w-xs break-words">
-                    <h3 className="text-xl sm:text-2xl font-bold text-emerald-700">{plantLevel.stage}</h3>
-                    <p className="text-emerald-600 text-sm sm:text-base">Nivel {plantLevel.level}</p>
+            <CardContent className="p-2 sm:p-6 w-full">
+              <div className="flex flex-col sm:flex-row items-center justify-between sm:space-x-6 gap-4 sm:gap-0 flex-wrap max-w-full">
+                {/* Semilla + etapa */}
+                <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 max-w-full">
+                  <div className="text-4xl sm:text-5xl flex-shrink-0">{plantLevel.emoji}</div>
+                  <div className="text-left min-w-0 max-w-[80vw] sm:max-w-xs break-words">
+                    <h3 className="text-lg sm:text-2xl font-bold text-emerald-700 truncate">{plantLevel.stage}</h3>
+                    <p className="text-emerald-600 text-xs sm:text-base truncate">Nivel {plantLevel.level}</p>
                     {/* Ajuste para que el texto no se desborde */}
-                    <p className="text-emerald-600 text-xs sm:text-sm italic max-w-full break-words whitespace-normal overflow-hidden">
+                    <p className="text-emerald-600 text-xs sm:text-sm italic break-words max-w-full whitespace-normal overflow-hidden">
                       {plantLevel.description}
                     </p>
                   </div>
                 </div>
-                
-                <div className="flex-1 max-w-md w-full min-w-0">
-                  <div className="flex justify-between items-center mb-2 w-full">
-                    <span className="text-sm font-semibold text-emerald-700">{userPoints} puntos</span>
+                {/* Progreso */}
+                <div className="flex-1 w-full min-w-[0px] max-w-full sm:max-w-md">
+                  <div className="flex justify-between items-center mb-2 w-full gap-2">
+                    <span className="text-xs sm:text-sm font-semibold text-emerald-700 truncate">{userPoints} puntos</span>
                     {plantLevel.level < 6 && (
-                      <span className="text-sm text-emerald-600 max-w-[90px] truncate inline-block text-right">
+                      <span className="text-xs sm:text-sm text-emerald-600 truncate text-right block max-w-[105px]">
                         Meta: {plantLevel.nextGoal}
                       </span>
                     )}
@@ -510,15 +511,15 @@ const Index = () => {
                     className="h-3 bg-emerald-100"
                   />
                   {plantLevel.level < 6 && (
-                    <p className="text-xs text-emerald-600 mt-1 max-w-full break-words whitespace-normal">
+                    <p className="text-xs text-emerald-600 mt-1 break-words max-w-full whitespace-normal">
                       {plantLevel.nextGoal - userPoints} puntos para el siguiente nivel
                     </p>
                   )}
                 </div>
-                
-                <div className="text-center">
-                  <p className="text-2xl sm:text-3xl font-bold text-emerald-600">{completedGames.length}</p>
-                  <p className="text-xs sm:text-sm text-emerald-700">Juegos Completados</p>
+                {/* Juegos completados */}
+                <div className="flex flex-col items-center justify-center min-w-0">
+                  <p className="text-xl sm:text-3xl font-bold text-emerald-600">{completedGames.length}</p>
+                  <p className="text-xs sm:text-sm text-emerald-700 text-center">Juegos Completados</p>
                 </div>
               </div>
             </CardContent>

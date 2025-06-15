@@ -183,6 +183,22 @@ main, section, .card, .rounded-xl, .rounded-2xl, .rounded-lg, .container, .max-w
   overflow-wrap: break-word;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+  max-width: 100vw;
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .card, .rounded-xl, .rounded-2xl, .rounded-lg, .container, .max-w-2xl, .max-w-xl, .max-w-3xl, .max-w-4xl {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+  }
+}
+
+.text-xs, .text-sm, .text-base, .text-lg, .text-xl, .text-2xl, .text-3xl, .text-4xl, .text-5xl {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
 }
 
 /* Ajuste para evitar overflow en móviles */
