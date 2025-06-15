@@ -41,12 +41,13 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const [selectedImage, setSelectedImage] = useState<PuzzleImage | null>(null);
   const [loosePieces, setLoosePieces] = useState<PuzzlePiece[]>([]);
   const [boardPieces, setBoardPieces] = useState<(PuzzlePiece | null)[]>([]);
-  const [draggedPiece, setDraggedPiece] = useState<PuzzlePiece | null>(null);
+  const [draggedPieceId, setDraggedPieceId] = useState<string | null>(null);
   const [isComplete, setIsComplete] = useState(false);
   const [moves, setMoves] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [correctPlacement, setCorrectPlacement] = useState<string | null>(null);
 
   const puzzleConfigs: PuzzleConfig[] = [
     {
@@ -138,6 +139,16 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     return () => clearInterval(timer);
   }, [gameStarted, isComplete]);
 
+  // Clear correct placement effect after 1 second
+  useEffect(() => {
+    if (correctPlacement) {
+      const timer = setTimeout(() => {
+        setCorrectPlacement(null);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [correctPlacement]);
+
   const initializePuzzle = () => {
     if (!selectedLevel || !selectedImage) return;
 
@@ -167,6 +178,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     setTimeElapsed(0);
     setGameStarted(false);
     setShowCelebration(false);
+    setCorrectPlacement(null);
 
     console.log('Puzzle initialized with pieces:', pieces.map(p => p.id));
   };
@@ -193,9 +205,10 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     }
   };
 
-  const handleDragStart = (piece: PuzzlePiece) => {
+  const handleDragStart = (e: React.DragEvent, piece: PuzzlePiece) => {
     if (piece.isLocked) return;
-    setDraggedPiece(piece);
+    setDraggedPieceId(piece.id);
+    e.dataTransfer.setData('text/plain', piece.id);
     if (!gameStarted) setGameStarted(true);
     console.log('Drag start:', piece.id);
   };
@@ -207,6 +220,11 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const handleDropOnBoard = (e: React.DragEvent, boardIndex: number) => {
     e.preventDefault();
     
+    const pieceId = e.dataTransfer.getData('text/plain');
+    if (!pieceId) return;
+
+    // Find the piece being dragged
+    const draggedPiece = loosePieces.find(p => p.id === pieceId);
     if (!draggedPiece) return;
 
     const expectedRow = Math.floor(boardIndex / selectedLevel!.cols);
@@ -234,8 +252,11 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       // Remove from loose pieces
       setLoosePieces(prev => prev.filter(p => p.id !== draggedPiece.id));
       
+      // Show correct placement effect
+      setCorrectPlacement(pieceId);
+      
       setMoves(moves + 1);
-      setDraggedPiece(null);
+      setDraggedPieceId(null);
       
       // Check completion after state updates
       setTimeout(() => {
@@ -249,23 +270,27 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const handleDropOnLoosePieces = (e: React.DragEvent) => {
     e.preventDefault();
     
-    if (!draggedPiece || !draggedPiece.isLocked) return;
+    const pieceId = e.dataTransfer.getData('text/plain');
+    if (!pieceId) return;
 
-    // Find the piece on the board and remove it
-    const pieceIndex = boardPieces.findIndex(p => p && p.id === draggedPiece.id);
+    // Find the piece on the board
+    const pieceIndex = boardPieces.findIndex(p => p && p.id === pieceId);
     if (pieceIndex !== -1) {
-      const newBoardPieces = [...boardPieces];
-      newBoardPieces[pieceIndex] = null;
-      setBoardPieces(newBoardPieces);
-      
-      // Add back to loose pieces (unlocked)
-      const unlockedPiece = { ...draggedPiece, isLocked: false };
-      setLoosePieces(prev => [...prev, unlockedPiece]);
-      
-      setMoves(moves + 1);
+      const piece = boardPieces[pieceIndex];
+      if (piece && piece.isLocked) {
+        const newBoardPieces = [...boardPieces];
+        newBoardPieces[pieceIndex] = null;
+        setBoardPieces(newBoardPieces);
+        
+        // Add back to loose pieces (unlocked)
+        const unlockedPiece = { ...piece, isLocked: false };
+        setLoosePieces(prev => [...prev, unlockedPiece]);
+        
+        setMoves(moves + 1);
+      }
     }
     
-    setDraggedPiece(null);
+    setDraggedPieceId(null);
   };
 
   const getPieceStyle = (piece: PuzzlePiece, size: number) => {
@@ -297,6 +322,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     setTimeElapsed(0);
     setGameStarted(false);
     setShowCelebration(false);
+    setCorrectPlacement(null);
   };
 
   // Level selection screen
@@ -463,7 +489,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                   const piece = boardPieces[boardIndex];
                   const boardWidth = 400;
                   const boardHeight = selectedLevel.level === 'hard' ? 320 : 400;
-                  const pieceWidth = (boardWidth - 16) / selectedLevel.cols; // accounting for padding and gaps
+                  const pieceWidth = (boardWidth - 16) / selectedLevel.cols;
                   const pieceHeight = (boardHeight - 16) / selectedLevel.rows;
                   
                   return (
@@ -473,7 +499,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                       onDrop={(e) => handleDropOnBoard(e, boardIndex)}
                       className={`transition-all duration-200 overflow-hidden rounded-md ${
                         piece
-                          ? 'shadow-md border-2 border-emerald-500'
+                          ? `shadow-md border-2 ${correctPlacement === piece.id ? 'border-green-400 animate-pulse bg-green-100' : 'border-emerald-500'}`
                           : 'border-2 border-dashed border-gray-400 hover:border-emerald-300 hover:bg-emerald-50/30'
                       } ${isComplete ? 'animate-pulse' : ''}`}
                       style={{ 
@@ -483,11 +509,14 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                     >
                       {piece && (
                         <div 
-                          className={`w-full h-full ${piece.isLocked ? 'cursor-default' : 'cursor-move'}`}
+                          className="w-full h-full"
                           style={getPieceStyle(piece, pieceWidth)}
-                          draggable={!piece.isLocked}
-                          onDragStart={() => handleDragStart(piece)}
                         />
+                      )}
+                      {correctPlacement === piece?.id && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-green-400/20 rounded-md">
+                          <CheckCircle className="w-8 h-8 text-green-600 animate-bounce" />
+                        </div>
                       )}
                     </div>
                   );
@@ -513,9 +542,9 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                     <div
                       key={`loose-${piece.id}`}
                       draggable
-                      onDragStart={() => handleDragStart(piece)}
+                      onDragStart={(e) => handleDragStart(e, piece)}
                       className={`absolute w-20 h-20 cursor-move transition-all duration-200 hover:scale-110 hover:z-10 border-2 border-emerald-300 rounded-md overflow-hidden shadow-lg hover:shadow-xl ${
-                        draggedPiece?.id === piece.id ? 'opacity-50 scale-95' : ''
+                        draggedPieceId === piece.id ? 'opacity-50 scale-95' : ''
                       }`}
                       style={{
                         left: `${x}px`,
