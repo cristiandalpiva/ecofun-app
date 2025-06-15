@@ -45,7 +45,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   ]);
   const [currentPuzzleIndex, setCurrentPuzzleIndex] = useState(0);
   const [pieces, setPieces] = useState<Piece[]>([]);
-  const [slots, setSlots<(Piece | null)[]>([]);
+  const [slots, setSlots] = useState<(Piece | null)[]>([]);
   const [isComplete, setIsComplete] = useState(false);
   const [moves, setMoves] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
