@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, RotateCcw, BookOpen } from 'lucide-react';
+import { ArrowLeft, RotateCcw, BookOpen, AlertCircle } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
 
 interface InteractiveStoriesProps {
@@ -16,6 +15,7 @@ interface StoryChoice {
   isCorrect: boolean;
   ecoPoints: number;
   consequence: string;
+  educationalFeedback?: string;
   nextScene: number | 'end';
 }
 
@@ -45,6 +45,8 @@ const InteractiveStories: React.FC<InteractiveStoriesProps> = ({ onComplete, onB
   const [ecoPoints, setEcoPoints] = useState(0);
   const [storyProgress, setStoryProgress] = useState(0);
   const [correctChoices, setCorrectChoices] = useState(0);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [lastChoice, setLastChoice] = useState<StoryChoice | null>(null);
 
   const stories: Story[] = [
     {
@@ -57,7 +59,7 @@ const InteractiveStories: React.FC<InteractiveStoriesProps> = ({ onComplete, onB
       scenes: [
         {
           id: 0,
-          title: "El Comienzo de la Aventura",
+          title: "El Descubrimiento del Problema",
           description: "Maya, una niña curiosa de 10 años, entra por primera vez al bosque cerca de su casa. Su abuela le había contado historias mágicas sobre este lugar, pero al llegar encuentra algo inesperado: basura esparcida por todas partes. Los animales se ven tristes y el río que debería ser cristalino tiene un color extraño.",
           image: "🌲🦝😢",
           choices: [
@@ -65,73 +67,140 @@ const InteractiveStories: React.FC<InteractiveStoriesProps> = ({ onComplete, onB
               text: "Maya decide recoger toda la basura que encuentra y buscar dónde desecharla correctamente",
               isCorrect: true,
               ecoPoints: 15,
-              consequence: "¡Excelente decisión! Los animales se acercan a Maya con gratitud. Un búho sabio le explica que su acción ha salvado muchas vidas. Los animales le muestran el camino hacia el corazón del bosque.",
+              consequence: "¡Excelente decisión! Los animales se acercan a Maya con gratitud. Un búho sabio le explica que su acción ha salvado muchas vidas.",
               nextScene: 1
             },
             {
               text: "Maya piensa que no es su responsabilidad y decide explorar otras áreas del bosque",
               isCorrect: false,
               ecoPoints: 0,
-              consequence: "Los animales huyen asustados al ver que Maya ignora el problema. El ambiente se vuelve silencioso y ella se siente sola. Sin embargo, decide que debe hacer algo al respecto.",
-              nextScene: 1
+              consequence: "Los animales huyen asustados al ver que Maya ignora el problema.",
+              educationalFeedback: "💡 Consejo Ecológico: Todos somos responsables del cuidado del medio ambiente. Cada pequeña acción cuenta para proteger los ecosistemas. Cuando encontramos basura en la naturaleza, recogerla ayuda a proteger a los animales que pueden confundirla con comida o lastimarse con ella.",
+              nextScene: 0
             },
             {
-              text: "Maya recoge solo las cosas más grandes y deja el resto para después",
+              text: "Maya toma fotos de la basura para mostrarle a sus amigos lo feo que se ve",
               isCorrect: false,
               ecoPoints: 0,
-              consequence: "Aunque Maya ayuda un poco, los animales siguen preocupados. Un conejito le explica que cada pedacito de basura importa para mantener su hogar seguro.",
-              nextScene: 1
+              consequence: "Aunque Maya documenta el problema, no toma acción directa para solucionarlo.",
+              educationalFeedback: "💡 Consejo Ecológico: Documentar problemas ambientales es importante, pero siempre debemos combinar la concienciación con la acción directa. ¡Recoger la basura mientras tomamos las fotos es doblemente efectivo!",
+              nextScene: 0
             }
           ]
         },
         {
           id: 1,
-          title: "El Misterio del Río Contaminado",
-          description: "Maya llega al río que era famoso por su agua pura, pero ahora está turbio y huele mal. Ve una fábrica a lo lejos que libera humo y desechos. Los peces ya no saltan como antes, y las plantas acuáticas se ven marchitas. Maya sabe que debe actuar, pero ¿cuál será la mejor manera?",
-          image: "🏭💨🐟",
+          title: "La Separación de Residuos",
+          description: "Maya ha recogido mucha basura del bosque y ahora se encuentra frente a varios contenedores: uno azul para papel, uno amarillo para plástico, uno verde para vidrio y uno marrón para residuos orgánicos. Tiene en sus manos una botella de plástico, papeles sucios y restos de comida.",
+          image: "♻️🗑️📦",
           choices: [
             {
-              text: "Maya va a la fábrica, habla con el gerente y le propone instalar filtros para limpiar el agua antes de desecharla",
+              text: "Maya separa cuidadosamente cada residuo en su contenedor correspondiente",
               isCorrect: true,
               ecoPoints: 20,
-              consequence: "¡Brillante idea! El gerente se sorprende por la sabiduría de Maya y acepta instalar los filtros. En pocas semanas, el río comienza a recuperar su belleza natural.",
+              consequence: "¡Perfecto! Maya comprende la importancia del reciclaje. Los materiales podrán ser reutilizados para crear nuevos productos.",
               nextScene: 2
             },
             {
-              text: "Maya toma fotos de la contaminación y las publica en redes sociales para que todos vean el problema",
+              text: "Maya lo pone todo junto en cualquier contenedor porque está cansada",
               isCorrect: false,
               ecoPoints: 0,
-              consequence: "Aunque Maya intenta ayudar, las fotos no generan el cambio necesario. Se da cuenta de que necesita una acción más directa para solucionar el problema.",
-              nextScene: 2
+              consequence: "Maya pone toda la basura junta, complicando el proceso de reciclaje.",
+              educationalFeedback: "💡 Consejo Ecológico: La separación correcta de residuos es fundamental para el reciclaje. Cuando mezclamos materiales, es muy difícil procesarlos y muchos terminan en vertederos en lugar de ser reutilizados. ¡Cada material separado correctamente puede tener una segunda vida!",
+              nextScene: 1
             },
             {
-              text: "Maya decide buscar otro río más limpio para los animales",
+              text: "Maya solo separa el plástico y el papel, pero deja los orgánicos con el vidrio",
               isCorrect: false,
               ecoPoints: 0,
-              consequence: "Maya se aleja del problema, pero los animales le explican que no pueden abandonar su hogar. Ella comprende que huir no es la solución.",
-              nextScene: 2
+              consequence: "Maya hace un esfuerzo parcial, pero la mezcla incorrecta sigue siendo problemática.",
+              educationalFeedback: "💡 Consejo Ecológico: Los residuos orgánicos pueden contaminar otros materiales reciclables. Es importante separarlos todos correctamente. Los orgánicos pueden convertirse en compost, ¡que es un excelente fertilizante natural!",
+              nextScene: 1
             }
           ]
         },
         {
           id: 2,
+          title: "El Misterio del Río Contaminado",
+          description: "Maya llega al río que era famoso por su agua pura, pero ahora está turbio y huele mal. Ve una fábrica a lo lejos que libera humo y desechos. Los peces ya no saltan como antes, y las plantas acuáticas se ven marchitas.",
+          image: "🏭💨🐟",
+          choices: [
+            {
+              text: "Maya va a la fábrica, habla con el gerente y le propone instalar filtros para limpiar el agua",
+              isCorrect: true,
+              ecoPoints: 25,
+              consequence: "¡Brillante idea! El gerente se sorprende por la sabiduría de Maya y acepta instalar los filtros.",
+              nextScene: 3
+            },
+            {
+              text: "Maya decide buscar otro río más limpio para los animales",
+              isCorrect: false,
+              ecoPoints: 0,
+              consequence: "Maya evita el problema en lugar de enfrentarlo.",
+              educationalFeedback: "💡 Consejo Ecológico: Huir de los problemas ambientales no los soluciona. Los ecosistemas están interconectados, y la contaminación se extiende. Es mejor buscar soluciones que beneficien a todos los seres vivos del área.",
+              nextScene: 2
+            },
+            {
+              text: "Maya tira piedras al río para 'limpiarlo' removiendo el agua",
+              isCorrect: false,
+              ecoPoints: 0,
+              consequence: "Las piedras no limpian el agua contaminada, solo la alteran más.",
+              educationalFeedback: "💡 Consejo Ecológico: La contaminación del agua requiere soluciones técnicas como filtros, tratamiento de aguas residuales y control de emisiones en su origen. ¡Las soluciones reales a menudo requieren cooperación entre personas y organizaciones!",
+              nextScene: 2
+            }
+          ]
+        },
+        {
+          id: 3,
+          title: "La Plantación de Árboles",
+          description: "Con el río comenzando a limpiarse, Maya nota que faltan árboles en muchas áreas del bosque. Un guardabosques le explica que los árboles son los pulmones del planeta y ayudan a purificar el aire y el agua.",
+          image: "🌱🌳🌿",
+          choices: [
+            {
+              text: "Maya organiza una jornada de plantación con su escuela usando especies nativas de la región",
+              isCorrect: true,
+              ecoPoints: 30,
+              consequence: "¡Excelente planificación! Las especies nativas crecen mejor y ayudan a restaurar el ecosistema original.",
+              nextScene: 4
+            },
+            {
+              text: "Maya planta cualquier árbol que encuentra en la tienda, sin investigar si es apropiado",
+              isCorrect: false,
+              ecoPoints: 0,
+              consequence: "Maya planta árboles que no son adecuados para el ecosistema local.",
+              educationalFeedback: "💡 Consejo Ecológico: Las especies invasoras pueden dañar los ecosistemas locales. Es importante plantar especies nativas que ya están adaptadas al clima y suelo de la región. ¡Estas especies también proporcionan mejor alimento y refugio para la fauna local!",
+              nextScene: 3
+            },
+            {
+              text: "Maya piensa que los árboles crecen solos y no hace nada",
+              isCorrect: false,
+              ecoPoints: 0,
+              consequence: "Maya no comprende que los bosques dañados necesitan ayuda para regenerarse.",
+              educationalFeedback: "💡 Consejo Ecológico: Los bosques perturbados a menudo necesitan ayuda humana para recuperarse. La reforestación acelera la recuperación del ecosistema y ayuda a combatir el cambio climático. ¡Un árbol puede absorber hasta 22 kg de CO2 al año!",
+              nextScene: 3
+            }
+          ]
+        },
+        {
+          id: 4,
           title: "La Sabiduría del Guardián del Bosque",
-          description: "Al final de su aventura, Maya se encuentra con el Guardián del Bosque, un sabio búho centenario que ha protegido este lugar durante generaciones. El búho le explica que el bosque necesita guardianes jóvenes como ella, personas que entiendan que cada decisión, por pequeña que sea, afecta a todos los seres vivos. Maya debe elegir cómo quiere ser recordada en este bosque.",
+          description: "Al final de su aventura, Maya se encuentra con el Guardián del Bosque, un sabio búho centenario. El búho le explica que el bosque necesita guardianes jóvenes como ella, personas que entiendan que cada decisión afecta a todos los seres vivos.",
           image: "🦉✨🌿",
           choices: [
             {
-              text: "Maya promete convertirse en la nueva Guardiana Junior del Bosque y enseñar a otros niños sobre la importancia de cuidar la naturaleza",
+              text: "Maya promete convertirse en la nueva Guardiana Junior y enseñar a otros niños sobre la naturaleza",
               isCorrect: true,
-              ecoPoints: 25,
-              consequence: "¡Magnífico! El búho otorga a Maya el título sagrado de 'Guardiana Junior del Bosque'. Ella recibe una semilla mágica que crecerá cada vez que alguien más aprenda a cuidar la naturaleza.",
+              ecoPoints: 35,
+              consequence: "¡Magnífico! El búho otorga a Maya el título sagrado de 'Guardiana Junior del Bosque'.",
               nextScene: 'end'
             },
             {
               text: "Maya promete cuidar solo este bosque cuando venga de visita",
               isCorrect: false,
               ecoPoints: 0,
-              consequence: "El búho sonríe gentilmente pero le explica que el cuidado de la naturaleza no tiene límites. Maya reflexiona y decide que puede hacer mucho más.",
-              nextScene: 'end'
+              consequence: "Maya limita su compromiso ambiental.",
+              educationalFeedback: "💡 Consejo Ecológico: El cuidado del medio ambiente no tiene límites geográficos. Todo está conectado: el aire, el agua, los animales. Ser guardián de la naturaleza significa cuidarla en todos lados, todos los días.",
+              nextScene: 4
             }
           ]
         }
@@ -419,32 +488,37 @@ const InteractiveStories: React.FC<InteractiveStoriesProps> = ({ onComplete, onB
     setEcoPoints(0);
     setCorrectChoices(0);
     setStoryProgress(0);
+    setShowFeedback(false);
+    setLastChoice(null);
     setGameState('playing');
   };
 
   const makeChoice = (choice: StoryChoice) => {
+    setLastChoice(choice);
+    
     if (choice.isCorrect) {
       setEcoPoints(prev => prev + choice.ecoPoints);
       setCorrectChoices(prev => prev + 1);
-      toast({
-        title: "¡Decisión Ecológica Correcta!",
-        description: choice.consequence,
-        duration: 4000,
-      });
+      setShowFeedback(true);
+      
+      setTimeout(() => {
+        setShowFeedback(false);
+        if (choice.nextScene === 'end') {
+          setGameState('storyComplete');
+          setStoryProgress(100);
+        } else {
+          setCurrentScene(choice.nextScene);
+          setStoryProgress(((choice.nextScene as number) + 1) / (currentStory?.scenes.length || 1) * 100);
+        }
+      }, 3000);
     } else {
+      setShowFeedback(true);
       toast({
-        title: "Reflexiona sobre tu decisión",
-        description: choice.consequence,
+        title: "¡Reflexiona sobre tu decisión!",
+        description: "Esta no es la mejor opción para el medio ambiente. Lee el consejo educativo.",
         duration: 4000,
+        variant: "destructive"
       });
-    }
-    
-    if (choice.nextScene === 'end') {
-      setGameState('storyComplete');
-      setStoryProgress(100);
-    } else {
-      setCurrentScene(choice.nextScene);
-      setStoryProgress((choice.nextScene + 1) / (currentStory?.scenes.length || 1) * 100);
     }
   };
 
@@ -454,12 +528,19 @@ const InteractiveStories: React.FC<InteractiveStoriesProps> = ({ onComplete, onB
     setEcoPoints(0);
     setCorrectChoices(0);
     setStoryProgress(0);
+    setShowFeedback(false);
+    setLastChoice(null);
   };
 
   const completeStory = () => {
     const bonusPoints = correctChoices * 10;
     const finalPoints = ecoPoints + bonusPoints;
     onComplete(finalPoints);
+  };
+
+  const continuePlaying = () => {
+    setShowFeedback(false);
+    setLastChoice(null);
   };
 
   if (!currentStory && gameState !== 'storySelect') {
@@ -543,42 +624,68 @@ const InteractiveStories: React.FC<InteractiveStoriesProps> = ({ onComplete, onB
                 
                 <Progress value={storyProgress} className="h-2 sm:h-3" />
 
-                <div className={`bg-gradient-to-b ${currentStory.bgGradient} p-4 sm:p-6 rounded-lg border-2 border-purple-300`}>
-                  <div className="text-center mb-4">
-                    <div className="text-3xl sm:text-4xl mb-3">
-                      {currentStory.scenes[currentScene]?.image}
-                    </div>
-                    <h4 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
-                      {currentStory.scenes[currentScene]?.title}
-                    </h4>
-                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                      {currentStory.scenes[currentScene]?.description}
-                    </p>
-                  </div>
-
-                  <div className="space-y-3">
-                    <p className="text-center text-sm font-semibold text-purple-700 mb-4">
-                      ¿Qué decisión tomará el protagonista?
-                    </p>
-                    {currentStory.scenes[currentScene]?.choices.map((choice, index) => (
-                      <Button
-                        key={index}
-                        onClick={() => makeChoice(choice)}
-                        variant="outline"
-                        className="w-full text-left text-xs sm:text-sm p-3 sm:p-4 h-auto border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50"
-                      >
-                        <div className="flex justify-between items-start w-full">
-                          <span className="flex-1">{choice.text}</span>
-                          {choice.isCorrect && (
-                            <span className="text-green-600 font-semibold ml-2 text-xs">
-                              ✓ Eco
-                            </span>
-                          )}
+                {showFeedback && lastChoice ? (
+                  <div className={`p-4 sm:p-6 rounded-lg border-2 ${lastChoice.isCorrect ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300'}`}>
+                    <div className="text-center space-y-4">
+                      <div className={`text-lg font-bold ${lastChoice.isCorrect ? 'text-green-700' : 'text-red-700'}`}>
+                        {lastChoice.isCorrect ? '¡Excelente Decisión Ecológica! ✅' : '¡Reflexiona sobre tu Decisión! ❌'}
+                      </div>
+                      <p className="text-sm sm:text-base text-gray-700">
+                        {lastChoice.consequence}
+                      </p>
+                      {lastChoice.educationalFeedback && (
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                          <div className="flex items-start space-x-2">
+                            <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                            <p className="text-sm text-blue-800">
+                              {lastChoice.educationalFeedback}
+                            </p>
+                          </div>
                         </div>
-                      </Button>
-                    ))}
+                      )}
+                      {lastChoice.isCorrect ? (
+                        <p className="text-xs text-green-600">Avanzando a la siguiente escena...</p>
+                      ) : (
+                        <Button 
+                          onClick={continuePlaying}
+                          className="bg-purple-500 hover:bg-purple-600 text-white"
+                        >
+                          Intentar de Nuevo
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className={`bg-gradient-to-b ${currentStory.bgGradient} p-4 sm:p-6 rounded-lg border-2 border-purple-300`}>
+                    <div className="text-center mb-4">
+                      <div className="text-3xl sm:text-4xl mb-3">
+                        {currentStory.scenes[currentScene]?.image}
+                      </div>
+                      <h4 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
+                        {currentStory.scenes[currentScene]?.title}
+                      </h4>
+                      <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                        {currentStory.scenes[currentScene]?.description}
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <p className="text-center text-sm font-semibold text-purple-700 mb-4">
+                        ¿Qué decisión tomas?
+                      </p>
+                      {currentStory.scenes[currentScene]?.choices.map((choice, index) => (
+                        <Button
+                          key={index}
+                          onClick={() => makeChoice(choice)}
+                          variant="outline"
+                          className="w-full text-left text-xs sm:text-sm p-3 sm:p-4 h-auto border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50"
+                        >
+                          {choice.text}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
