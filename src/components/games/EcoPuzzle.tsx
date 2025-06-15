@@ -153,7 +153,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const { rows, cols } = selectedLevel;
     const newPieces: PuzzlePiece[] = [];
 
-    // Create all pieces
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
         newPieces.push({
@@ -166,7 +165,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       }
     }
 
-    // Shuffle pieces
     const shuffledPieces = [...newPieces].sort(() => Math.random() - 0.5);
     
     setPieces(shuffledPieces);
@@ -177,14 +175,13 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     setGameStarted(false);
     setShowCelebration(false);
     setCorrectPlacement(null);
-
-    console.log('Puzzle initialized with pieces:', newPieces.map(p => p.id));
   };
 
   const checkCompletion = () => {
-    const allPiecesPlaced = slots.every(slot => slot !== null);
+    const lockedPieces = pieces.filter(p => p.isLocked);
+    const totalPieces = selectedLevel?.totalPieces || 0;
     
-    if (allPiecesPlaced && !isComplete) {
+    if (lockedPieces.length === totalPieces) {
       setIsComplete(true);
       setGameStarted(false);
       setShowCelebration(true);
@@ -199,7 +196,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     if (piece.isLocked) return;
     e.dataTransfer.setData('text/plain', piece.id);
     if (!gameStarted) setGameStarted(true);
-    console.log('Drag start:', piece.id);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -212,7 +208,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const pieceId = e.dataTransfer.getData('text/plain');
     if (!pieceId) return;
 
-    // Find the piece being dragged
     const draggedPiece = pieces.find(p => p.id === pieceId);
     if (!draggedPiece || draggedPiece.isLocked) return;
 
@@ -220,33 +215,18 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const expectedCol = slotIndex % selectedLevel!.cols;
     const expectedId = `${expectedRow}-${expectedCol}`;
     
-    console.log('Drop attempt:', { 
-      pieceId, 
-      slotIndex, 
-      expectedId,
-      isCorrect: pieceId === expectedId,
-      slotEmpty: slots[slotIndex] === null
-    });
-
-    // Check if the piece is being placed in its correct position and slot is empty
     if (pieceId === expectedId && slots[slotIndex] === null) {
-      // Lock the piece
-      const lockedPiece = { ...draggedPiece, isLocked: true };
-      
-      // Update slots
       const newSlots = [...slots];
-      newSlots[slotIndex] = lockedPiece;
+      newSlots[slotIndex] = { ...draggedPiece, isLocked: true };
       setSlots(newSlots);
       
-      // Remove from pieces (move it to slot)
-      setPieces(prev => prev.filter(p => p.id !== pieceId));
+      setPieces(prev => prev.map(p => 
+        p.id === pieceId ? { ...p, isLocked: true } : p
+      ));
       
-      // Show correct placement effect
       setCorrectPlacement(pieceId);
-      
       setMoves(moves + 1);
       
-      // Check completion
       setTimeout(() => {
         checkCompletion();
       }, 100);
@@ -431,10 +411,45 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
           </div>
         )}
 
-        {/* Game Board */}
-        <div className="flex flex-col items-center space-y-8">
-          {/* Puzzle Board */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border-2 border-gray-300">
+        {/* Game Layout - Piezas a la izquierda, Tablero a la derecha */}
+        <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
+          {/* Piezas disponibles - Izquierda */}
+          <div className="order-2 lg:order-1 bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border-2 border-gray-300 max-w-sm">
+            <h3 className="text-lg font-semibold text-emerald-700 mb-4 text-center">
+              🧩 Piezas disponibles ({pieces.filter(p => !p.isLocked).length})
+            </h3>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {pieces.filter(p => !p.isLocked).map((piece) => (
+                <div
+                  key={`piece-${piece.id}`}
+                  draggable={!piece.isLocked}
+                  onDragStart={(e) => handleDragStart(e, piece)}
+                  className="w-20 h-20 cursor-move transition-all duration-200 hover:scale-110 border-2 border-emerald-300 rounded-md overflow-hidden shadow-lg hover:shadow-xl"
+                  style={{
+                    aspectRatio: selectedLevel.level === 'hard' ? '4/5' : '1'
+                  }}
+                >
+                  <div 
+                    className="w-full h-full"
+                    style={getPieceStyle(piece, 80)}
+                  />
+                </div>
+              ))}
+            </div>
+            
+            {/* Shuffle button */}
+            <Button 
+              onClick={initializePuzzle} 
+              className="mt-4 w-full bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg"
+              size="sm"
+            >
+              <Shuffle className="w-4 h-4 mr-1" />
+              Mezclar
+            </Button>
+          </div>
+
+          {/* Tablero del rompecabezas - Derecha */}
+          <div className="order-1 lg:order-2 bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border-2 border-gray-300">
             <div 
               className="grid gap-1 bg-gray-200 p-2 rounded-lg border-4 border-gray-400"
               style={{ 
@@ -478,43 +493,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                   </div>
                 );
               })}
-            </div>
-            
-            {/* Shuffle button */}
-            <Button 
-              onClick={initializePuzzle} 
-              className="mt-4 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg"
-              size="sm"
-            >
-              <Shuffle className="w-4 h-4 mr-1" />
-              Mezclar
-            </Button>
-          </div>
-
-          {/* Loose Pieces */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border-2 border-gray-300 max-w-4xl">
-            <h3 className="text-lg font-semibold text-emerald-700 mb-4 text-center">
-              🧩 Piezas disponibles ({pieces.length})
-            </h3>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {pieces.map((piece) => (
-                <div
-                  key={`piece-${piece.id}`}
-                  draggable={!piece.isLocked}
-                  onDragStart={(e) => handleDragStart(e, piece)}
-                  className={`w-20 h-20 cursor-move transition-all duration-200 hover:scale-110 border-2 border-emerald-300 rounded-md overflow-hidden shadow-lg hover:shadow-xl ${
-                    piece.isLocked ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                  style={{
-                    aspectRatio: selectedLevel.level === 'hard' ? '4/5' : '1'
-                  }}
-                >
-                  <div 
-                    className="w-full h-full"
-                    style={getPieceStyle(piece, 80)}
-                  />
-                </div>
-              ))}
             </div>
           </div>
         </div>
