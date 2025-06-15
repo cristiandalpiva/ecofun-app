@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -207,7 +208,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const shuffledPieces = [...newPieces].sort(() => Math.random() - 0.5);
     
     setPieces(shuffledPieces);
-    setSlots(Array(selectedLevel.totalPieces).fill(null));
     setIsComplete(false);
     setMoves(0);
     setTimeElapsed(0);
@@ -503,8 +503,8 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
 
         {/* Game Layout - Responsive */}
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-8 items-center lg:items-start justify-center">
-          {/* Piezas disponibles */}
-          <div className="order-1 bg-white/90 backdrop-blur-sm rounded-2xl p-3 sm:p-6 shadow-2xl border-2 border-gray-300 w-full max-w-sm lg:max-w-xs">
+          {/* Piezas disponibles - left side */}
+          <div className="order-1 lg:order-1 bg-white/90 backdrop-blur-sm rounded-2xl p-3 sm:p-6 shadow-2xl border-2 border-gray-300 w-full max-w-sm lg:max-w-xs">
             <h3 className="text-sm sm:text-lg font-semibold text-emerald-700 mb-3 sm:mb-4 text-center">
               🧩 Piezas disponibles ({pieces.filter(p => !p.isLocked).length})
             </h3>
@@ -537,8 +537,8 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
             </Button>
           </div>
 
-          {/* Tablero del rompecabezas */}
-          <div className="order-2 bg-white/90 backdrop-blur-sm rounded-2xl p-3 sm:p-6 shadow-2xl border-2 border-gray-300">
+          {/* Tablero del rompecabezas - right side */}
+          <div className="order-2 lg:order-2 bg-white/90 backdrop-blur-sm rounded-2xl p-3 sm:p-6 shadow-2xl border-2 border-gray-300">
             <div 
               className="grid gap-1 bg-gray-200 p-2 rounded-lg border-4 border-gray-400 mx-auto"
               style={{ 
