@@ -149,7 +149,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     // Create array of piece numbers from 0 to totalPieces-1
     const allPieces = Array.from({ length: totalPieces }, (_, i) => i);
     
-    // Shuffle the pieces properly using Fisher-Yates algorithm
+    // Shuffle the pieces
     const shuffledPieces = [...allPieces];
     for (let i = shuffledPieces.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -166,7 +166,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       attempts++;
     }
     
-    // All pieces start in the pieces area (not on the board)
+    // All pieces start in the pieces area
     setPieces(shuffledPieces);
     setBoardPieces(Array(totalPieces).fill(null));
     setIsComplete(false);
