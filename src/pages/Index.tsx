@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -49,7 +50,10 @@ interface Game {
 
 const Index = () => {
   const [currentGame, setCurrentGame] = useState<string | null>(null);
-  const [userPoints, setUserPoints] = useState(0);
+  const [userPoints, setUserPoints] = useState(() => {
+    const saved = localStorage.getItem('ecoPoints');
+    return saved ? parseInt(saved) : 0;
+  });
   const [completedGames, setCompletedGames] = useState<string[]>([]);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -63,6 +67,11 @@ const Index = () => {
       setShowOnboarding(true);
     }
   }, []);
+
+  // Save points to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('ecoPoints', userPoints.toString());
+  }, [userPoints]);
 
   const games: Game[] = [
     {
@@ -216,7 +225,7 @@ const Index = () => {
       setCompletedGames(prev => [...prev, currentGame]);
       toast({
         title: "¡Juego Completado! 🎉",
-        description: `Has ganado ${points} puntos. Total: ${userPoints + points} puntos`,
+        description: `Has ganado ${points} puntos. Tu planta está creciendo!`,
         duration: 3000,
       });
     }
@@ -233,17 +242,60 @@ const Index = () => {
     ? games 
     : games.filter(game => game.category === selectedCategory);
 
-  const getUserLevel = () => {
-    if (userPoints < 100) return { level: 1, title: "EcoIniciante", icon: "🌱", progress: userPoints };
-    if (userPoints < 300) return { level: 2, title: "EcoExplorador", icon: "🌿", progress: userPoints - 100 };
-    if (userPoints < 600) return { level: 3, title: "EcoGuardián", icon: "🌳", progress: userPoints - 300 };
-    if (userPoints < 1000) return { level: 4, title: "EcoHéroe", icon: "🦸‍♀️", progress: userPoints - 600 };
-    return { level: 5, title: "EcoMaestro", icon: "👑", progress: 400 };
+  const getPlantLevel = () => {
+    if (userPoints < 100) return { 
+      level: 1, 
+      stage: "Semilla", 
+      emoji: "🌰", 
+      progress: userPoints,
+      description: "¡Tu aventura ecológica comienza aquí!",
+      nextGoal: 100
+    };
+    if (userPoints < 300) return { 
+      level: 2, 
+      stage: "Brote", 
+      emoji: "🌱", 
+      progress: userPoints - 100,
+      description: "¡Tu conciencia ecológica está germinando!",
+      nextGoal: 300
+    };
+    if (userPoints < 600) return { 
+      level: 3, 
+      stage: "Plantita", 
+      emoji: "🌿", 
+      progress: userPoints - 300,
+      description: "Creciendo fuerte con buenos hábitos verdes",
+      nextGoal: 600
+    };
+    if (userPoints < 1000) return { 
+      level: 4, 
+      stage: "Planta", 
+      emoji: "🪴", 
+      progress: userPoints - 600,
+      description: "¡Ya eres un verdadero guardián del planeta!",
+      nextGoal: 1000
+    };
+    if (userPoints < 1500) return { 
+      level: 5, 
+      stage: "Árbol", 
+      emoji: "🌳", 
+      progress: userPoints - 1000,
+      description: "¡Eres un ejemplo de vida sostenible!",
+      nextGoal: 1500
+    };
+    return { 
+      level: 6, 
+      stage: "Bosque", 
+      emoji: "🌲", 
+      progress: 500,
+      description: "¡Eres un EcoMaestro! Inspiras a toda la comunidad",
+      nextGoal: 1500
+    };
   };
 
-  const userLevel = getUserLevel();
-  const nextLevelPoints = userLevel.level < 5 ? [100, 300, 600, 1000][userLevel.level - 1] : 1000;
-  const progressPercentage = userLevel.level < 5 ? (userLevel.progress / (nextLevelPoints - (userLevel.level > 1 ? [0, 100, 300, 600][userLevel.level - 2] : 0))) * 100 : 100;
+  const plantLevel = getPlantLevel();
+  const progressPercentage = plantLevel.level < 6 ? 
+    (plantLevel.progress / (plantLevel.nextGoal - (plantLevel.level > 1 ? [0, 100, 300, 600, 1000][plantLevel.level - 2] : 0))) * 100 : 100;
 
   if (currentGame) {
     const game = games.find(g => g.id === currentGame);
@@ -330,9 +382,9 @@ const Index = () => {
             <div className="hidden sm:flex items-center space-x-4">
               <div className="text-right">
                 <div className="flex items-center space-x-2">
-                  <span className="text-lg">{userLevel.icon}</span>
+                  <span className="text-lg">{plantLevel.emoji}</span>
                   <div>
-                    <p className="font-bold text-emerald-700 text-sm">{userLevel.title}</p>
+                    <p className="font-bold text-emerald-700 text-sm">{plantLevel.stage}</p>
                     <p className="text-xs text-emerald-600">{userPoints} puntos</p>
                   </div>
                 </div>
@@ -355,9 +407,9 @@ const Index = () => {
               <div className="flex flex-col space-y-3">
                 <div className="px-4 py-2 border-b border-emerald-100">
                   <div className="flex items-center space-x-2">
-                    <span className="text-lg">{userLevel.icon}</span>
+                    <span className="text-lg">{plantLevel.emoji}</span>
                     <div>
-                      <p className="font-bold text-emerald-700 text-sm">{userLevel.title}</p>
+                      <p className="font-bold text-emerald-700 text-sm">{plantLevel.stage}</p>
                       <p className="text-xs text-emerald-600">{userPoints} puntos</p>
                     </div>
                   </div>
@@ -399,35 +451,41 @@ const Index = () => {
       <section className="container mx-auto px-4 py-8 sm:py-12 text-center">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl sm:text-5xl font-bold text-emerald-800 mb-4 sm:mb-6 leading-tight">
-            ¡Aprende a Cuidar el Planeta Jugando!
+            ¡Haz Crecer tu Planta Cuidando el Planeta!
           </h2>
           <p className="text-lg sm:text-xl text-emerald-700 mb-6 sm:mb-8 leading-relaxed">
-            Descubre el mundo de la ecología a través de juegos divertidos y educativos
+            Cada juego alimenta tu planta virtual. ¡Ve cómo crece desde una semilla hasta un hermoso bosque!
           </p>
           
-          {/* User Progress */}
+          {/* Plant Progress */}
           <Card className="bg-white/80 backdrop-blur-sm border-2 border-emerald-200 shadow-xl mb-8 sm:mb-12">
             <CardContent className="p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-6">
                 <div className="flex items-center space-x-4">
-                  <div className="text-3xl sm:text-4xl">{userLevel.icon}</div>
+                  <div className="text-4xl sm:text-5xl">{plantLevel.emoji}</div>
                   <div className="text-left">
-                    <h3 className="text-xl sm:text-2xl font-bold text-emerald-700">{userLevel.title}</h3>
-                    <p className="text-emerald-600 text-sm sm:text-base">Nivel {userLevel.level}</p>
+                    <h3 className="text-xl sm:text-2xl font-bold text-emerald-700">{plantLevel.stage}</h3>
+                    <p className="text-emerald-600 text-sm sm:text-base">Nivel {plantLevel.level}</p>
+                    <p className="text-emerald-600 text-xs sm:text-sm italic">{plantLevel.description}</p>
                   </div>
                 </div>
                 
                 <div className="flex-1 max-w-md w-full">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-semibold text-emerald-700">{userPoints} puntos</span>
-                    {userLevel.level < 5 && (
-                      <span className="text-sm text-emerald-600">Siguiente: {nextLevelPoints}</span>
+                    {plantLevel.level < 6 && (
+                      <span className="text-sm text-emerald-600">Meta: {plantLevel.nextGoal}</span>
                     )}
                   </div>
                   <Progress 
                     value={progressPercentage} 
                     className="h-3 bg-emerald-100"
                   />
+                  {plantLevel.level < 6 && (
+                    <p className="text-xs text-emerald-600 mt-1">
+                      {plantLevel.nextGoal - userPoints} puntos para el siguiente nivel
+                    </p>
+                  )}
                 </div>
                 
                 <div className="text-center">
@@ -504,7 +562,7 @@ const Index = () => {
                     
                     <div className="flex justify-between items-center text-xs text-emerald-600">
                       <span>⏱️ {game.estimatedTime}</span>
-                      <span className="font-semibold">🏆 {game.points} pts</span>
+                      <span className="font-semibold">🌱 +{game.points} pts</span>
                     </div>
 
                     {completedGames.includes(game.id) && (
@@ -521,7 +579,7 @@ const Index = () => {
       </section>
 
       {/* Mascot */}
-      <EcoMascot />
+      <EcoMascot size="large" plantStage={plantLevel.level} mood="happy" />
 
       {/* Suggestions Modal */}
       <SuggestionForm 

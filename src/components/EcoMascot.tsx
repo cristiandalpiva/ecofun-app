@@ -25,14 +25,51 @@ const EcoMascot = ({ size = "medium", mood = "happy", plantStage = 1 }: EcoMasco
   };
 
   const plantStages = [
-    { emoji: "🌰", color: "from-amber-700 to-amber-900", shadowColor: "shadow-amber-200" },
-    { emoji: "🌱", color: "from-green-400 to-green-600", shadowColor: "shadow-green-200" },
-    { emoji: "🌿", color: "from-green-500 to-green-700", shadowColor: "shadow-green-300" },
-    { emoji: "🪴", color: "from-green-600 to-green-800", shadowColor: "shadow-green-400" },
-    { emoji: "🌳", color: "from-green-700 to-green-900", shadowColor: "shadow-green-500" }
+    { 
+      emoji: "🌰", 
+      color: "from-amber-700 to-amber-900", 
+      shadowColor: "shadow-amber-200",
+      name: "Semilla",
+      description: "¡El comienzo de todo!"
+    },
+    { 
+      emoji: "🌱", 
+      color: "from-green-400 to-green-600", 
+      shadowColor: "shadow-green-200",
+      name: "Brote",
+      description: "¡Primeros signos de vida!"
+    },
+    { 
+      emoji: "🌿", 
+      color: "from-green-500 to-green-700", 
+      shadowColor: "shadow-green-300",
+      name: "Plantita",
+      description: "Creciendo fuerte"
+    },
+    { 
+      emoji: "🪴", 
+      color: "from-green-600 to-green-800", 
+      shadowColor: "shadow-green-400",
+      name: "Planta",
+      description: "¡Ya es una planta completa!"
+    },
+    { 
+      emoji: "🌳", 
+      color: "from-green-700 to-green-900", 
+      shadowColor: "shadow-green-500",
+      name: "Árbol",
+      description: "¡Un majestuoso árbol!"
+    },
+    { 
+      emoji: "🌲", 
+      color: "from-emerald-800 to-green-900", 
+      shadowColor: "shadow-emerald-500",
+      name: "Bosque",
+      description: "¡Todo un ecosistema!"
+    }
   ];
 
-  const currentPlant = plantStages[plantStage] || plantStages[0];
+  const currentPlant = plantStages[Math.min(plantStage - 1, plantStages.length - 1)] || plantStages[0];
 
   const getAnimationIntensity = () => {
     switch (mood) {
@@ -45,13 +82,74 @@ const EcoMascot = ({ size = "medium", mood = "happy", plantStage = 1 }: EcoMasco
     }
   };
 
+  const getParticlesByStage = () => {
+    const particles = [];
+    
+    // Básicas para todos los niveles desde brote
+    if (plantStage >= 2) {
+      particles.push(
+        <div key="sparkle1" className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-xs opacity-70 animate-bounce" style={{ animationDelay: '0.5s' }}>
+          ✨
+        </div>
+      );
+    }
+    
+    // Desde plantita
+    if (plantStage >= 3) {
+      particles.push(
+        <div key="leaf1" className="absolute top-1 right-0 text-xs opacity-70 animate-bounce" style={{ animationDelay: '1s' }}>
+          🍃
+        </div>
+      );
+    }
+    
+    // Desde planta
+    if (plantStage >= 4) {
+      particles.push(
+        <div key="flower1" className="absolute top-1 left-0 text-xs opacity-70 animate-bounce" style={{ animationDelay: '1.5s' }}>
+          🌸
+        </div>
+      );
+    }
+    
+    // Árbol - más vida
+    if (plantStage >= 5) {
+      particles.push(
+        <div key="butterfly1" className="absolute top-2 right-1 text-xs opacity-70 animate-bounce" style={{ animationDelay: '2s' }}>
+          🦋
+        </div>,
+        <div key="bird1" className="absolute top-0 right-2 text-xs opacity-70 animate-bounce" style={{ animationDelay: '2.5s' }}>
+          🐦
+        </div>
+      );
+    }
+    
+    // Bosque - ecosistema completo
+    if (plantStage >= 6) {
+      particles.push(
+        <div key="bee1" className="absolute top-3 left-1 text-xs opacity-70 animate-bounce" style={{ animationDelay: '3s' }}>
+          🐝
+        </div>,
+        <div key="mushroom1" className="absolute bottom-0 left-0 text-xs opacity-70 animate-bounce" style={{ animationDelay: '3.5s' }}>
+          🍄
+        </div>,
+        <div key="sun1" className="absolute -top-2 left-2 text-xs opacity-70 animate-bounce" style={{ animationDelay: '4s' }}>
+          ☀️
+        </div>
+      );
+    }
+    
+    return particles;
+  };
+
   return (
-    <div className={`${sizeClasses[size]} relative`}>
+    <div className={`${sizeClasses[size]} relative fixed bottom-4 right-4 z-40`}>
       {/* Planta animada según el estadio */}
       <div 
         className={`w-full h-full bg-gradient-to-br ${currentPlant.color} rounded-full ${currentPlant.shadowColor} shadow-lg flex items-center justify-center border-2 border-green-800 transition-all duration-300 ${
           isAnimating ? getAnimationIntensity() : ''
         }`}
+        title={`${currentPlant.name}: ${currentPlant.description}`}
       >
         {/* Emoji de la planta según el estadio */}
         <div className={`text-3xl ${size === 'large' ? 'text-4xl' : size === 'small' ? 'text-xl' : 'text-2xl'} transition-all duration-300 ${
@@ -61,22 +159,15 @@ const EcoMascot = ({ size = "medium", mood = "happy", plantStage = 1 }: EcoMasco
         </div>
       </div>
       
-      {/* Efectos de partículas para estadios avanzados */}
-      {plantStage >= 2 && (
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-xs opacity-70 animate-bounce" style={{ animationDelay: '0.5s' }}>
-            ✨
-          </div>
-          {plantStage >= 4 && (
-            <>
-              <div className="absolute top-1 right-0 text-xs opacity-70 animate-bounce" style={{ animationDelay: '1s' }}>
-                🌸
-              </div>
-              <div className="absolute top-1 left-0 text-xs opacity-70 animate-bounce" style={{ animationDelay: '1.5s' }}>
-                🦋
-              </div>
-            </>
-          )}
+      {/* Efectos de partículas según el estadio */}
+      <div className="absolute inset-0 pointer-events-none">
+        {getParticlesByStage()}
+      </div>
+      
+      {/* Tooltip con información del nivel */}
+      {size === 'large' && (
+        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+          {currentPlant.name}: {currentPlant.description}
         </div>
       )}
     </div>

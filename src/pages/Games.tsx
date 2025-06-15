@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -177,7 +178,7 @@ const Games = () => {
     
     toast({
       title: "¡Juego completado! 🎉",
-      description: `Has ganado ${points} puntos. Total: ${newTotal} puntos`,
+      description: `Has ganado ${points} puntos. ¡Tu planta está creciendo! Total: ${newTotal} puntos`,
     });
     
     setSelectedGame(null);
@@ -212,6 +213,18 @@ const Games = () => {
     }
   };
 
+  // Obtener el nivel de la planta
+  const getPlantLevel = () => {
+    if (userPoints < 100) return { emoji: "🌰", stage: "Semilla" };
+    if (userPoints < 300) return { emoji: "🌱", stage: "Brote" };
+    if (userPoints < 600) return { emoji: "🌿", stage: "Plantita" };
+    if (userPoints < 1000) return { emoji: "🪴", stage: "Planta" };
+    if (userPoints < 1500) return { emoji: "🌳", stage: "Árbol" };
+    return { emoji: "🌲", stage: "Bosque" };
+  };
+
+  const plantLevel = getPlantLevel();
+
   if (selectedGame) {
     const game = games.find(g => g.id === selectedGame);
     if (game) {
@@ -243,6 +256,17 @@ const Games = () => {
               </h1>
             </div>
             
+            {/* Tu planta y puntos */}
+            <div className="flex items-center space-x-4">
+              <div className="bg-green-100 px-4 py-2 rounded-lg flex items-center space-x-2">
+                <span className="text-2xl">{plantLevel.emoji}</span>
+                <div>
+                  <p className="font-bold text-green-800 text-sm">{plantLevel.stage}</p>
+                  <p className="text-green-600 text-xs">{userPoints} puntos</p>
+                </div>
+              </div>
+            </div>
+            
             {/* Navegación adicional */}
             <div className="flex flex-wrap gap-2">
               <Link to="/achievements">
@@ -269,7 +293,7 @@ const Games = () => {
 
         <div className="text-center mb-8">
           <p className="text-xl text-gray-600 mb-6">
-            ¡Aprende sobre el medio ambiente mientras te diviertes!
+            ¡Haz crecer tu planta jugando y cuidando el medio ambiente!
           </p>
           
           <Card className="bg-white/80 backdrop-blur-sm border-2 border-green-200 max-w-md mx-auto">
@@ -316,7 +340,7 @@ const Games = () => {
 
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-green-600">
-                      {game.points}
+                      🌱 {game.points}
                     </span>
                     <Zap className="w-4 h-4 text-yellow-500" />
                   </div>
@@ -340,15 +364,18 @@ const Games = () => {
           <Card className="bg-green-100/80 backdrop-blur-sm border-2 border-green-300 max-w-2xl mx-auto">
             <CardContent className="p-6">
               <h3 className="text-2xl font-bold text-green-800 mb-4">
-                🌱 ¡Más juegos próximamente!
+                🌱 ¡Haz crecer tu planta!
               </h3>
               <p className="text-green-700 mb-4">
-                Estamos trabajando en nuevos juegos ecológicos para que sigas aprendiendo y divirtiéndote.
+                Cada juego que completes alimenta tu planta virtual. Observa cómo crece desde una semilla hasta convertirse en un hermoso bosque.
               </p>
               <div className="flex justify-center space-x-2">
-                <span className="animate-bounce">🌍</span>
-                <span className="animate-bounce delay-100">🌿</span>
-                <span className="animate-bounce delay-200">🦋</span>
+                <span className="animate-bounce">🌰</span>
+                <span className="animate-bounce delay-100">🌱</span>
+                <span className="animate-bounce delay-200">🌿</span>
+                <span className="animate-bounce delay-300">🪴</span>
+                <span className="animate-bounce delay-400">🌳</span>
+                <span className="animate-bounce delay-500">🌲</span>
               </div>
             </CardContent>
           </Card>
