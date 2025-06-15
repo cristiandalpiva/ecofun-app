@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -219,6 +218,15 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
       setCurrentPiece(rotated);
     }
   }, [currentPiece, gameOver, isPaused, rotatePiece, checkCollision]);
+
+  // Nuevos handlers para touch
+  const handleLeft = () => movePiece(-1, 0);
+  const handleRight = () => movePiece(1, 0);
+  const handleDown = () => movePiece(0, 1);
+  const handleRotateBtn = () => handleRotate();
+
+  // Agrega controles táctiles solo si es mobile o tablet
+  const isMobileOrTablet = typeof window !== "undefined" && window.innerWidth < 1024;
 
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
     switch (event.key) {
@@ -462,6 +470,16 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
                     )}
                   </CardContent>
                 </Card>
+                
+                {/* CONTROLES TÁCTILES */}
+                {isMobileOrTablet && !gameOver && (
+                  <div className="flex justify-center mt-4 space-x-4 select-none">
+                    <Button className="text-lg" onClick={handleLeft}>⬅️</Button>
+                    <Button className="text-lg" onClick={handleRotateBtn}>🔄</Button>
+                    <Button className="text-lg" onClick={handleRight}>➡️</Button>
+                    <Button className="text-lg" onClick={handleDown}>⬇️</Button>
+                  </div>
+                )}
                 
                 {/* Controls */}
                 <Card className="mt-4 bg-blue-50 border-2 border-blue-300">

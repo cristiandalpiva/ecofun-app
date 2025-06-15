@@ -31,10 +31,13 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
   const [objects, setObjects] = useState<GameObject[]>([]);
   const [gameLevel, setGameLevel] = useState(1);
 
-  const gameWidth = 700;
-  const gameHeight = 500;
-  const playerWidth = 60;
-  const playerHeight = 40;
+  // Responsive área de juego
+  // Determina tamaño según ancho de pantalla
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 600;
+  const gameWidth = isMobile ? 325 : 700;
+  const gameHeight = isMobile ? 280 : 500;
+  const playerWidth = isMobile ? 40 : 60;
+  const playerHeight = isMobile ? 26 : 40;
 
   // Generar objetos (plástico y peces)
   const generateObject = useCallback(() => {
