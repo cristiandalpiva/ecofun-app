@@ -170,18 +170,42 @@
   .text-responsive-lg {
     font-size: 1.125rem;
   }
+  .container, .max-w-2xl, .max-w-xl, .max-w-3xl, .max-w-4xl {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
 }
 
-@media (min-width: 641px) {
-  .text-responsive-sm {
-    font-size: 1rem;
+/* Se asegura que los textos no estén fuera de los contenedores */
+main, section, .card, .rounded-xl, .rounded-2xl, .rounded-lg, .container, .max-w-2xl, .max-w-xl, .max-w-3xl, .max-w-4xl, .footer {
+  box-sizing: border-box;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+/* Ajuste para evitar overflow en móviles */
+@media (max-width: 640px) {
+  body, #root, .min-h-screen {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
   }
-  .text-responsive-base {
-    font-size: 1.125rem;
+  .card, .rounded-xl, .rounded-2xl, .rounded-lg, .container, .max-w-2xl, .max-w-xl, .max-w-3xl, .max-w-4xl {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
   }
-  .text-responsive-lg {
-    font-size: 1.25rem;
-  }
+}
+
+/* Margen interno para textos en tarjetas */
+.card, .rounded-xl, .rounded-2xl, .rounded-lg {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
 /* Ajuste general para evitar elementos fuera de la pantalla */
