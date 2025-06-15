@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Shuffle, RotateCw, CheckCircle, Eye, EyeOff, Grid3X3, Grid2X2, List } from "lucide-react";
+import { ArrowLeft, Shuffle, CheckCircle, Eye, EyeOff, Grid3X3, Grid2X2, List } from "lucide-react";
 
 interface EcoPuzzleProps {
   onComplete: (points: number) => void;
@@ -26,91 +25,102 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const puzzles = [
     {
       id: 0,
-      name: "Gato Dormilón",
-      description: "Un adorable gatito durmiendo plácidamente en un cojín colorido.",
-      educationalContent: "Los gatos duermen entre 12-16 horas al día porque son cazadores naturales que necesitan conservar energía. En la naturaleza, esto les ayuda a mantener el equilibrio del ecosistema controlando poblaciones de roedores.",
-      completionMessage: "¡Excelente! Los gatos como este ayudan a mantener el equilibrio natural cazando ratones y otros pequeños animales.",
-      image: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop",
+      name: "Reciclaje Básico",
+      description: "Aprende sobre los diferentes materiales reciclables y su importancia.",
+      educationalContent: "El reciclaje es fundamental para reducir los residuos. Cada material reciclable puede convertirse en nuevos productos: el papel se convierte en papel nuevo, el plástico en fibras textiles, y el vidrio puede reciclarse infinitas veces sin perder calidad.",
+      completionMessage: "¡Excelente! Ahora sabes cómo identificar los diferentes materiales reciclables. Cada vez que reciclas, ayudas a conservar recursos naturales.",
+      image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&h=400&fit=crop",
       difficulty: "Fácil",
       gridSize: 3,
       points: 50
     },
     {
       id: 1,
-      name: "Cachorro Juguetón",
-      description: "Un tierno cachorro de labrador jugando felizmente en el jardín.",
-      educationalContent: "Los perros son compañeros leales que también ayudan en la conservación. Algunos perros especiales trabajan detectando especies en peligro de extinción y ayudando a los científicos a proteger la vida silvestre.",
-      completionMessage: "¡Fantástico! Los perros pueden ser grandes aliados en la protección del medio ambiente cuando son entrenados adecuadamente.",
-      image: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop",
+      name: "Paneles Solares",
+      description: "Descubre cómo la energía solar puede iluminar nuestro futuro.",
+      educationalContent: "Los paneles solares convierten la luz del sol en electricidad limpia. Una instalación solar doméstica puede generar toda la energía que necesita una casa y reducir las emisiones de CO2 hasta en 100,000 libras durante 20 años.",
+      completionMessage: "¡Fantástico! Los paneles solares como estos pueden generar energía limpia durante más de 25 años, ayudando a combatir el cambio climático.",
+      image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=400&fit=crop",
       difficulty: "Fácil",
       gridSize: 3,
       points: 50
     },
     {
       id: 2,
-      name: "Panda Gigante",
-      description: "Un hermoso panda gigante comiendo bambú en su hábitat natural.",
-      educationalContent: "Los pandas gigantes son una especie protegida que come principalmente bambú. Gracias a los esfuerzos de conservación, su población ha aumentado de 1,000 a más de 1,800 pandas en vida silvestre.",
-      completionMessage: "¡Increíble! Los pandas como este han sido salvados de la extinción gracias a programas de conservación y protección de su hábitat.",
-      image: "https://images.unsplash.com/photo-1539685043687-c946862e8b8b?w=400&h=400&fit=crop",
-      difficulty: "Fácil",
-      gridSize: 3,
-      points: 50
-    },
-    {
-      id: 3,
-      name: "Mariposas Coloridas",
-      description: "Hermosas mariposas de colores brillantes volando entre flores silvestres.",
-      educationalContent: "Las mariposas son polinizadores esenciales que ayudan a las plantas a reproducirse. Una sola mariposa puede visitar hasta 1,000 flores en un día, transportando polen y ayudando a crear nuevas plantas.",
-      completionMessage: "¡Perfecto! Las mariposas que acabas de completar son pequeñas trabajadoras que mantienen nuestros jardines y bosques llenos de flores.",
-      image: "https://images.unsplash.com/photo-1444927714506-8492d94b5ba0?w=400&h=400&fit=crop",
-      difficulty: "Medio",
-      gridSize: 4,
-      points: 75
-    },
-    {
-      id: 4,
-      name: "Tortugas Marinas",
-      description: "Majestuosas tortugas marinas nadando en aguas cristalinas del océano.",
-      educationalContent: "Las tortugas marinas han existido por más de 100 millones de años. Ayudan a mantener los arrecifes de coral saludables y las praderas marinas equilibradas, pero necesitan playas limpias para poner sus huevos.",
-      completionMessage: "¡Genial! Las tortugas marinas como estas son guardianas de los océanos, pero necesitan nuestro cuidado para sobrevivir.",
-      image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=400&fit=crop",
-      difficulty: "Medio",
-      gridSize: 4,
-      points: 75
-    },
-    {
-      id: 5,
       name: "Jardín de Girasoles",
-      description: "Un campo dorado lleno de girasoles grandes y brillantes mirando hacia el sol.",
-      educationalContent: "Los girasoles siempre giran para seguir al sol durante el día. Sus semillas alimentan a muchos pájaros y sus raíces ayudan a limpiar el suelo de contaminantes. ¡Un girasol puede producir hasta 2,000 semillas!",
-      completionMessage: "¡Excelente trabajo! Los girasoles no solo son hermosos, también limpian el ambiente y alimentan a muchos animales.",
+      description: "Un hermoso campo de girasoles que siguen al sol durante todo el día.",
+      educationalContent: "Los girasoles son maestros de la eficiencia energética: rotan para seguir al sol maximizando la fotosíntesis. Sus semillas alimentan aves y sus raíces pueden absorber toxinas del suelo, limpiando el ambiente naturalmente.",
+      completionMessage: "¡Increíble! Los girasoles no solo son hermosos, también son purificadores naturales del suelo y proveen alimento para la fauna silvestre.",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
       points: 75
     },
     {
-      id: 6,
-      name: "Familia de Elefantes",
-      description: "Una hermosa familia de elefantes caminando juntos por la sabana africana.",
-      educationalContent: "Los elefantes son arquitectos de la naturaleza. Crean caminos que otros animales usan, dispersan semillas en sus deposiciones creando nuevos bosques, y excavan pozos de agua que salvan vidas durante las sequías.",
-      completionMessage: "¡Increíble! Los elefantes como estos son fundamentales para mantener el equilibrio en su hábitat y ayudar a que crezcan nuevas plantas.",
+      id: 3,
+      name: "Tigre en Peligro",
+      description: "Un majestuoso tigre en su hábitat natural, una especie que necesita nuestra protección.",
+      educationalContent: "Los tigres son cazadores apex que mantienen el equilibrio en sus ecosistemas. Quedan menos de 4,000 tigres salvajes en el mundo. Cada tigre necesita un territorio de hasta 100 km² para sobrevivir y cazar adecuadamente.",
+      completionMessage: "¡Perfecto! Los tigres como este son indicadores de la salud del ecosistema. Proteger su hábitat significa proteger bosques enteros.",
       image: "https://images.unsplash.com/photo-1551969014-7d2c4cddf0b6?w=400&h=400&fit=crop",
+      difficulty: "Medio",
+      gridSize: 4,
+      points: 75
+    },
+    {
+      id: 4,
+      name: "Planta Creciendo",
+      description: "Una pequeña planta emergiendo de la tierra, símbolo de nueva vida y esperanza.",
+      educationalContent: "Una sola semilla puede convertirse en un árbol que produzca oxígeno para dos personas durante toda su vida. Las plantas absorben CO2 del aire y lo convierten en oxígeno mediante la fotosíntesis, siendo fundamentales para la vida en la Tierra.",
+      completionMessage: "¡Genial! Esta pequeña planta representa el poder de la naturaleza para regenerarse y limpiar nuestro aire.",
+      image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=400&fit=crop",
+      difficulty: "Medio",
+      gridSize: 4,
+      points: 75
+    },
+    {
+      id: 5,
+      name: "Persona Cuidando una Planta",
+      description: "Una persona cuidando amorosamente una pequeña planta, mostrando la conexión humano-naturaleza.",
+      educationalContent: "Cuando cuidamos plantas, no solo embellecemos nuestro entorno. Las plantas de interior purifican el aire, reducen el estrés y mejoran nuestra salud mental. Cuidar un jardín nos conecta con la naturaleza y nos enseña paciencia y responsabilidad.",
+      completionMessage: "¡Excelente! El cuidado de las plantas nos enseña a ser responsables con la naturaleza y a valorar la vida en todas sus formas.",
+      image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=400&fit=crop",
+      difficulty: "Medio",
+      gridSize: 4,
+      points: 75
+    },
+    {
+      id: 6,
+      name: "Animales en Extinción",
+      description: "Especies únicas que necesitan nuestra protección urgente para no desaparecer.",
+      educationalContent: "Cada especie que se extingue rompe una cadena alimentaria y afecta todo el ecosistema. Más de 28,000 especies están en peligro de extinción. La conservación no solo salva animales, sino que preserva la biodiversidad necesaria para un planeta saludable.",
+      completionMessage: "¡Increíble! Cada especie que proteges ayuda a mantener el equilibrio natural que necesitamos para un planeta saludable.",
+      image: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=400&h=400&fit=crop",
       difficulty: "Difícil",
       gridSize: 5,
       points: 100
     },
     {
       id: 7,
-      name: "Pingüinos en la Antártida",
-      description: "Adorables pingüinos emperadores cuidando a sus crías en el hielo antártico.",
-      educationalContent: "Los pingüinos emperadores son termómetros vivientes del cambio climático. Pueden bucear hasta 500 metros de profundidad y aguantar la respiración por 20 minutos. Su supervivencia depende del hielo marino estable.",
-      completionMessage: "¡Fantástico! Los pingüinos que acabas de armar nos recuerdan la importancia de cuidar los polos y luchar contra el cambio climático.",
-      image: "https://images.unsplash.com/photo-1551986782-d0169b3f8fa7?w=400&h=400&fit=crop",
+      name: "Basural Contaminante",
+      description: "Un basural que muestra el impacto negativo de la mala gestión de residuos.",
+      educationalContent: "Los basurales liberan gases tóxicos y contaminan el suelo y agua subterránea. Un solo basural puede contaminar el agua potable de miles de personas. La correcta separación y reciclaje de residuos puede reducir hasta 80% de lo que enviamos a basurales.",
+      completionMessage: "¡Fantástico! Ahora entiendes por qué es tan importante reducir, reutilizar y reciclar para evitar la contaminación.",
+      image: "https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=400&h=400&fit=crop",
       difficulty: "Difícil",
       gridSize: 5,
       points: 100
+    },
+    {
+      id: 8,
+      name: "Incendios Forestales",
+      description: "La devastación de los incendios forestales y su impacto en el ecosistema.",
+      educationalContent: "Los incendios forestales pueden liberar tanto CO2 como millones de autos en un año. Destruyen hábitats, contaminan el aire y afectan el clima global. La prevención y el manejo sostenible de bosques son clave para reducir estos desastres naturales.",
+      completionMessage: "¡Excelente! Entender los incendios forestales nos ayuda a valorar la importancia de cuidar nuestros bosques y prevenir estos desastres.",
+      image: "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400&h=400&fit=crop",
+      difficulty: "Medio",
+      gridSize: 4,
+      points: 75
     }
   ];
 
@@ -136,10 +146,20 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
 
   const initializePuzzle = () => {
     const shuffledPieces = Array.from({ length: totalPieces }, (_, i) => i);
-    // Shuffle the pieces
+    // Shuffle the pieces properly
     for (let i = shuffledPieces.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffledPieces[i], shuffledPieces[j]] = [shuffledPieces[j], shuffledPieces[i]];
+    }
+    
+    // Ensure we don't start with the puzzle already solved
+    let attempts = 0;
+    while (shuffledPieces.every((piece, index) => piece === index) && attempts < 10) {
+      for (let i = shuffledPieces.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPieces[i], shuffledPieces[j]] = [shuffledPieces[j], shuffledPieces[i]];
+      }
+      attempts++;
     }
     
     setPieces(shuffledPieces);
@@ -174,7 +194,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
 
   const handleDragOver = (e: React.DragEvent, boardIndex: number) => {
     e.preventDefault();
-    // Only allow drop if the piece belongs to this position
     if (draggedPiece === boardIndex) {
       e.dataTransfer.dropEffect = 'move';
       setDraggedOverIndex(boardIndex);
@@ -194,7 +213,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     
     if (draggedPiece === null) return;
 
-    // Only allow dropping if the piece matches the correct position
     if (draggedPiece !== boardIndex) {
       setDraggedPiece(null);
       return;
@@ -203,7 +221,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const newBoardPieces = [...boardPieces];
     const newPieces = pieces.filter(p => p !== draggedPiece);
     
-    // If there's already a piece in this board position, return it to the pieces area
     if (newBoardPieces[boardIndex] !== null) {
       newPieces.push(newBoardPieces[boardIndex] as number);
     }
@@ -222,7 +239,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     e.preventDefault();
     if (draggedPiece === null) return;
 
-    // If dragging from board back to pieces area
     const pieceIndexInBoard = boardPieces.indexOf(draggedPiece);
     if (pieceIndexInBoard !== -1) {
       const newBoardPieces = [...boardPieces];
@@ -475,22 +491,25 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                   className="grid gap-1 mx-auto aspect-square max-w-md p-3 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300"
                   style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }}
                 >
-                  {boardPieces.map((piece, index) => (
-                    <div
-                      key={`board-${index}`}
-                      onDragOver={(e) => handleDragOver(e, index)}
-                      onDragLeave={handleDragLeave}
-                      onDrop={(e) => handleDropOnBoard(e, index)}
-                      className={`aspect-square rounded border-2 transition-all duration-200 ${
-                        piece !== null
-                          ? 'border-emerald-400 shadow-md'
-                          : draggedOverIndex === index
-                          ? 'border-green-500 bg-green-100 border-solid'
-                          : 'border-gray-300 bg-gray-100 border-dashed'
-                      } ${isComplete ? 'animate-pulse' : ''}`}
-                      style={piece !== null ? getPieceStyle(piece) : {}}
-                    />
-                  ))}
+                  {Array.from({ length: totalPieces }, (_, index) => {
+                    const piece = boardPieces[index];
+                    return (
+                      <div
+                        key={`board-${index}`}
+                        onDragOver={(e) => handleDragOver(e, index)}
+                        onDragLeave={handleDragLeave}
+                        onDrop={(e) => handleDropOnBoard(e, index)}
+                        className={`aspect-square rounded border-2 transition-all duration-200 ${
+                          piece !== null
+                            ? 'border-emerald-400 shadow-md'
+                            : draggedOverIndex === index
+                            ? 'border-green-500 bg-green-100 border-solid'
+                            : 'border-gray-300 bg-gray-100 border-dashed'
+                        } ${isComplete ? 'animate-pulse' : ''}`}
+                        style={piece !== null ? getPieceStyle(piece) : {}}
+                      />
+                    );
+                  })}
                 </div>
                 <p className="text-xs text-gray-600 mt-2 text-center">
                   Solo puedes colocar cada pieza en su lugar correcto
