@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,7 @@ import RecycleBench from '@/components/games/RecycleBench';
 import EcoPlatformer from '@/components/games/EcoPlatformer';
 import EcoComparison from '@/components/games/EcoComparison';
 import InteractiveStories from '@/components/games/InteractiveStories';
+import LightOffGame from '@/components/games/LightOffGame';
 import { toast } from "@/hooks/use-toast";
 
 const Games = () => {
@@ -70,13 +70,23 @@ const Games = () => {
     },
     {
       id: 'tap-game',
-      title: 'Tap Ecológico',
-      description: 'Toca los elementos ecológicos y evita la contaminación',
-      icon: '👆',
+      title: 'Cuida el Agua',
+      description: 'Juego de reflejos con temática de conservación del agua',
+      icon: '💧',
       difficulty: 'Fácil',
       points: '10-40 pts',
       category: 'Reflejos',
       component: TapGame
+    },
+    {
+      id: 'light-off-game',
+      title: 'Apagá la Luz',
+      description: 'Apaga las luces que se prenden para ahorrar energía',
+      icon: '💡',
+      difficulty: 'Fácil',
+      points: '15-50 pts',
+      category: 'Reflejos',
+      component: LightOffGame
     },
     {
       id: 'trash-catcher',
@@ -153,8 +163,8 @@ const Games = () => {
       title: '¿Quién es más Ecológico?',
       description: 'Compara personajes y elige quién hace lo correcto',
       icon: '👥',
-      difficulty: 'Fácil',
-      points: '20-120 pts',
+      difficulty: 'Medio',
+      points: '30-120 pts',
       category: 'Comparación',
       component: EcoComparison
     },

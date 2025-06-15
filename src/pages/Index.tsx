@@ -20,6 +20,8 @@ import TrashCatcher from "@/components/games/TrashCatcher";
 import EcoPuzzle from "@/components/games/EcoPuzzle";
 import EndangeredAnimals from "@/components/games/EndangeredAnimals";
 import InteractiveStories from "@/components/games/InteractiveStories";
+import EcoComparison from "@/components/games/EcoComparison";
+import LightOffGame from "@/components/games/LightOffGame";
 
 import EcoMascot from "@/components/EcoMascot";
 import Footer from "@/components/Footer";
@@ -130,26 +132,37 @@ const Index = () => {
       points: 45
     },
     {
-      id: "solar-panels",
-      title: "Paneles Solares",
-      description: "Gestiona tu sistema de energía solar",
-      icon: "☀️",
+      id: "eco-comparison",
+      title: "¿Quién es más Ecológico?",
+      description: "Compara personajes y elige quién hace lo correcto",
+      icon: "👥",
       difficulty: "Medio",
-      category: "Energía",
-      component: SolarPanels,
-      estimatedTime: "7-12 min",
-      points: 70
+      category: "Educación",
+      component: EcoComparison,
+      estimatedTime: "8-15 min",
+      points: 90
     },
     {
       id: "tap-game",
-      title: "Toca Verde",
-      description: "Juego de reflejos con temática ecológica",
-      icon: "👆",
+      title: "Cuida el Agua",
+      description: "Juego de reflejos con temática de conservación del agua",
+      icon: "💧",
       difficulty: "Fácil",
       category: "Educación",
       component: TapGame,
       estimatedTime: "2-4 min",
       points: 30
+    },
+    {
+      id: "light-off-game",
+      title: "Apagá la Luz",
+      description: "Apaga las luces que se prenden para ahorrar energía",
+      icon: "💡",
+      difficulty: "Fácil",
+      category: "Energía",
+      component: LightOffGame,
+      estimatedTime: "3-5 min",
+      points: 35
     },
     {
       id: "trash-catcher",

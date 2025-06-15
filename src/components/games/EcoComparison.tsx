@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, RotateCcw, Users, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Users, CheckCircle, XCircle, Star } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
 
 interface EcoComparisonProps {
@@ -29,213 +29,285 @@ interface Scenario {
   educationalTip: string;
 }
 
+interface Level {
+  id: number;
+  title: string;
+  description: string;
+  scenarios: Scenario[];
+  pointsMultiplier: number;
+}
+
 const EcoComparison: React.FC<EcoComparisonProps> = ({ onComplete, onBack }) => {
+  const [currentLevel, setCurrentLevel] = useState(1);
   const [currentScenario, setCurrentScenario] = useState(0);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(180);
+  const [timeLeft, setTimeLeft] = useState(120);
   const [gameWon, setGameWon] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [levelCompleted, setLevelCompleted] = useState(false);
 
-  const scenarios: Scenario[] = [
+  const levels: Level[] = [
     {
       id: 1,
-      title: "En la Escuela",
-      situation: "Es hora del recreo y los niños van a almorzar. ¿Quién tiene hábitos más ecológicos?",
-      characters: [
+      title: "Nivel Principiante",
+      description: "Decisiones básicas del día a día",
+      pointsMultiplier: 1,
+      scenarios: [
         {
           id: 1,
-          name: "Ana",
-          avatar: "👧",
-          description: "Ana siempre trae su almuerzo en contenedores reutilizables",
-          actions: [
-            "🥪 Trae sándwich en contenedor de vidrio",
-            "🍎 Fruta fresca sin empaque",
-            "💧 Botella de agua reutilizable",
-            "♻️ Separa sus residuos correctamente"
+          title: "En la Escuela",
+          situation: "Es hora del recreo y los niños van a almorzar. ¿Quién tiene hábitos más ecológicos?",
+          characters: [
+            {
+              id: 1,
+              name: "Ana",
+              avatar: "👧",
+              description: "Ana siempre trae su almuerzo en contenedores reutilizables",
+              actions: [
+                "🥪 Trae sándwich en contenedor de vidrio",
+                "🍎 Fruta fresca sin empaque",
+                "💧 Botella de agua reutilizable",
+                "♻️ Separa sus residuos correctamente"
+              ],
+              isEcoFriendly: true,
+              explanation: "Ana reduce residuos usando contenedores reutilizables y evita empaques innecesarios. ¡Es muy ecológica!"
+            },
+            {
+              id: 2,
+              name: "Bruno",
+              avatar: "👦",
+              description: "Bruno compra comida empaquetada en la cafetería",
+              actions: [
+                "🍟 Papas fritas en bolsa plástica",
+                "🥤 Bebida en vaso desechable",
+                "🍫 Dulces con muchos empaques",
+                "🗑️ Tira todo en un solo basurero"
+              ],
+              isEcoFriendly: false,
+              explanation: "Bruno genera muchos residuos con empaques desechables y no recicla. Puede mejorar sus hábitos."
+            }
           ],
-          isEcoFriendly: true,
-          explanation: "Ana reduce residuos usando contenedores reutilizables y evita empaques innecesarios. ¡Es muy ecológica!"
+          educationalTip: "Usar contenedores reutilizables reduce hasta 90% de residuos en el almuerzo escolar."
         },
         {
           id: 2,
-          name: "Bruno",
-          avatar: "👦",
-          description: "Bruno compra comida empaquetada en la cafetería",
-          actions: [
-            "🍟 Papas fritas en bolsa plástica",
-            "🥤 Bebida en vaso desechable",
-            "🍫 Dulces con muchos empaques",
-            "🗑️ Tira todo en un solo basurero"
+          title: "En Casa",
+          situation: "Dos hermanas se preparan para salir. ¿Cuál es más consciente del medio ambiente?",
+          characters: [
+            {
+              id: 3,
+              name: "Clara",
+              avatar: "👩",
+              description: "Clara apaga todas las luces y desconecta aparatos",
+              actions: [
+                "💡 Apaga luces al salir de cada habitación",
+                "🔌 Desconecta cargadores sin usar",
+                "❄️ Ajusta termostato para ahorrar energía",
+                "🚿 Ducha rápida (5 minutos)"
+              ],
+              isEcoFriendly: true,
+              explanation: "Clara ahorra energía y agua, reduciendo significativamente su huella de carbono."
+            },
+            {
+              id: 4,
+              name: "Diana",
+              avatar: "👱‍♀️",
+              description: "Diana deja todo encendido 'por si acaso'",
+              actions: [
+                "💡 Deja luces encendidas en toda la casa",
+                "📺 TV encendida aunque no la vea",
+                "🔌 Cargadores conectados sin usar",
+                "🛁 Ducha larga (20 minutos)"
+              ],
+              isEcoFriendly: false,
+              explanation: "Diana desperdicia mucha energía y agua. Pequeños cambios harían gran diferencia."
+            }
           ],
-          isEcoFriendly: false,
-          explanation: "Bruno genera muchos residuos con empaques desechables y no recicla. Puede mejorar sus hábitos."
+          educationalTip: "Apagar luces innecesarias puede reducir el consumo eléctrico del hogar hasta en 25%."
         }
-      ],
-      educationalTip: "Usar contenedores reutilizables reduce hasta 90% de residuos en el almuerzo escolar."
+      ]
     },
     {
       id: 2,
-      title: "En Casa",
-      situation: "Dos hermanas se preparan para salir. ¿Cuál es más consciente del medio ambiente?",
-      characters: [
+      title: "Nivel Intermedio",
+      description: "Decisiones de consumo responsable",
+      pointsMultiplier: 1.5,
+      scenarios: [
         {
           id: 3,
-          name: "Clara",
-          avatar: "👩",
-          description: "Clara apaga todas las luces y desconecta aparatos",
-          actions: [
-            "💡 Apaga luces al salir de cada habitación",
-            "🔌 Desconecta cargadores sin usar",
-            "❄️ Ajusta termostato para ahorrar energía",
-            "🚿 Ducha rápida (5 minutos)"
+          title: "De Compras",
+          situation: "Dos amigos van al supermercado. ¿Quién compra de manera más sostenible?",
+          characters: [
+            {
+              id: 5,
+              name: "Eduardo",
+              avatar: "🧑",
+              description: "Eduardo planifica sus compras y trae bolsas reutilizables",
+              actions: [
+                "🛍️ Trae bolsas de tela reutilizables",
+                "📝 Lista de compras para evitar desperdicio",
+                "🥬 Prefiere productos locales y orgánicos",
+                "📦 Evita productos con exceso de empaque"
+              ],
+              isEcoFriendly: true,
+              explanation: "Eduardo reduce residuos plásticos y apoya la agricultura local sostenible."
+            },
+            {
+              id: 6,
+              name: "Felipe",
+              avatar: "👨",
+              description: "Felipe compra impulsivamente y usa bolsas plásticas",
+              actions: [
+                "🛒 Olvida traer bolsas reutilizables",
+                "🛍️ Usa múltiples bolsas plásticas",
+                "🍔 Compra comida procesada con mucho empaque",
+                "🗑️ No se fija en el origen de productos"
+              ],
+              isEcoFriendly: false,
+              explanation: "Felipe genera muchos residuos plásticos y no considera el impacto ambiental de sus compras."
+            }
           ],
-          isEcoFriendly: true,
-          explanation: "Clara ahorra energía y agua, reduciendo significativamente su huella de carbono."
+          educationalTip: "Una bolsa reutilizable puede reemplazar hasta 1,000 bolsas plásticas durante su vida útil."
         },
         {
           id: 4,
-          name: "Diana",
-          avatar: "👱‍♀️",
-          description: "Diana deja todo encendido 'por si acaso'",
-          actions: [
-            "💡 Deja luces encendidas en toda la casa",
-            "📺 TV encendida aunque no la vea",
-            "🔌 Cargadores conectados sin usar",
-            "🛁 Ducha larga (20 minutos)"
+          title: "En el Parque",
+          situation: "Dos familias disfrutan un día en el parque. ¿Cuál respeta más la naturaleza?",
+          characters: [
+            {
+              id: 7,
+              name: "Familia García",
+              avatar: "👨‍👩‍👧‍👦",
+              description: "La familia García cuida el medio ambiente en sus actividades",
+              actions: [
+                "🥪 Picnic con platos y cubiertos reutilizables",
+                "🗑️ Recogen toda su basura y la separan",
+                "🌸 No cortan flores ni dañan plantas",
+                "🐦 Observan animales sin molestarlos"
+              ],
+              isEcoFriendly: true,
+              explanation: "Los García disfrutan la naturaleza sin dañarla, siendo un ejemplo de turismo responsable."
+            },
+            {
+              id: 8,
+              name: "Familia López",
+              avatar: "👨‍👩‍👦‍👦",
+              description: "La familia López no se preocupa por su impacto ambiental",
+              actions: [
+                "🍽️ Usa platos y cubiertos desechables",
+                "🗑️ Deja basura en el suelo",
+                "🌺 Los niños cortan flores para llevarse",
+                "🏃 Persiguen y molestan a los animales"
+              ],
+              isEcoFriendly: false,
+              explanation: "Los López dañan el ecosistema del parque y no respetan la vida silvestre."
+            }
           ],
-          isEcoFriendly: false,
-          explanation: "Diana desperdicia mucha energía y agua. Pequeños cambios harían gran diferencia."
+          educationalTip: "Los espacios naturales tardan años en recuperarse del daño causado por visitantes irresponsables."
         }
-      ],
-      educationalTip: "Apagar luces innecesarias puede reducir el consumo eléctrico del hogar hasta en 25%."
+      ]
     },
     {
       id: 3,
-      title: "De Compras",
-      situation: "Dos amigos van al supermercado. ¿Quién compra de manera más sostenible?",
-      characters: [
+      title: "Nivel Avanzado",
+      description: "Decisiones complejas de sostenibilidad",
+      pointsMultiplier: 2,
+      scenarios: [
         {
           id: 5,
-          name: "Eduardo",
-          avatar: "🧑",
-          description: "Eduardo planifica sus compras y trae bolsas reutilizables",
-          actions: [
-            "🛍️ Trae bolsas de tela reutilizables",
-            "📝 Lista de compras para evitar desperdicio",
-            "🥬 Prefiere productos locales y orgánicos",
-            "📦 Evita productos con exceso de empaque"
+          title: "En el Transporte",
+          situation: "Dos estudiantes van a la universidad. ¿Cuál elige el transporte más ecológico?",
+          characters: [
+            {
+              id: 9,
+              name: "Gabriela",
+              avatar: "👩‍🎓",
+              description: "Gabriela usa transporte sostenible",
+              actions: [
+                "🚲 Va en bicicleta cuando el clima es bueno",
+                "🚌 Usa transporte público los días lluviosos",
+                "👫 Comparte auto con compañeros ocasionalmente",
+                "🚶‍♀️ Camina distancias cortas"
+              ],
+              isEcoFriendly: true,
+              explanation: "Gabriela reduce su huella de carbono usando transporte sustentable y manteniéndose activa."
+            },
+            {
+              id: 10,
+              name: "Héctor",
+              avatar: "👨‍🎓",
+              description: "Héctor siempre usa auto privado",
+              actions: [
+                "🚗 Maneja solo en auto grande todos los días",
+                "⛽ No se preocupa por el consumo de gasolina",
+                "🚫 Nunca usa transporte público",
+                "😴 Prefiere comodidad sobre sostenibilidad"
+              ],
+              isEcoFriendly: false,
+              explanation: "Héctor genera alta contaminación usando auto privado innecesariamente todos los días."
+            }
           ],
-          isEcoFriendly: true,
-          explanation: "Eduardo reduce residuos plásticos y apoya la agricultura local sostenible."
+          educationalTip: "Usar transporte público o bicicleta reduce las emisiones de CO₂ hasta en 80% comparado con auto privado."
         },
         {
           id: 6,
-          name: "Felipe",
-          avatar: "👨",
-          description: "Felipe compra impulsivamente y usa bolsas plásticas",
-          actions: [
-            "🛒 Olvida traer bolsas reutilizables",
-            "🛍️ Usa múltiples bolsas plásticas",
-            "🍔 Compra comida procesada con mucho empaque",
-            "🗑️ No se fija en el origen de productos"
+          title: "Alimentación Consciente",
+          situation: "Dos personas eligen su dieta. ¿Cuál tiene mayor impacto positivo en el planeta?",
+          characters: [
+            {
+              id: 11,
+              name: "Isabel",
+              avatar: "👩‍🍳",
+              description: "Isabel sigue una dieta consciente del medio ambiente",
+              actions: [
+                "🥗 Come más vegetales y menos carne",
+                "🌾 Compra productos de temporada",
+                "🚚 Prefiere alimentos producidos localmente",
+                "💧 Evita alimentos que requieren mucha agua"
+              ],
+              isEcoFriendly: true,
+              explanation: "Isabel reduce su huella hídrica y de carbono con una alimentación consciente del planeta."
+            },
+            {
+              id: 12,
+              name: "Joaquín",
+              avatar: "👨‍🍳",
+              description: "Joaquín no considera el impacto ambiental de su dieta",
+              actions: [
+                "🥩 Come carne roja todos los días",
+                "🥑 Compra frutas exóticas fuera de temporada",
+                "✈️ Prefiere alimentos importados",
+                "🗑️ Desperdicia mucha comida"
+              ],
+              isEcoFriendly: false,
+              explanation: "Joaquín genera alta huella de carbono y desperdicia recursos con sus elecciones alimentarias."
+            }
           ],
-          isEcoFriendly: false,
-          explanation: "Felipe genera muchos residuos plásticos y no considera el impacto ambiental de sus compras."
+          educationalTip: "La ganadería produce el 14.5% de las emisiones globales de gases de efecto invernadero."
         }
-      ],
-      educationalTip: "Una bolsa reutilizable puede reemplazar hasta 1,000 bolsas plásticas durante su vida útil."
-    },
-    {
-      id: 4,
-      title: "En el Parque",
-      situation: "Dos familias disfrutan un día en el parque. ¿Cuál respeta más la naturaleza?",
-      characters: [
-        {
-          id: 7,
-          name: "Familia García",
-          avatar: "👨‍👩‍👧‍👦",
-          description: "La familia García cuida el medio ambiente en sus actividades",
-          actions: [
-            "🥪 Picnic con platos y cubiertos reutilizables",
-            "🗑️ Recogen toda su basura y la separan",
-            "🌸 No cortan flores ni dañan plantas",
-            "🐦 Observan animales sin molestarlos"
-          ],
-          isEcoFriendly: true,
-          explanation: "Los García disfrutan la naturaleza sin dañarla, siendo un ejemplo de turismo responsable."
-        },
-        {
-          id: 8,
-          name: "Familia López",
-          avatar: "👨‍👩‍👦‍👦",
-          description: "La familia López no se preocupa por su impacto ambiental",
-          actions: [
-            "🍽️ Usa platos y cubiertos desechables",
-            "🗑️ Deja basura en el suelo",
-            "🌺 Los niños cortan flores para llevarse",
-            "🏃 Persiguen y molestan a los animales"
-          ],
-          isEcoFriendly: false,
-          explanation: "Los López dañan el ecosistema del parque y no respetan la vida silvestre."
-        }
-      ],
-      educationalTip: "Los espacios naturales tardan años en recuperarse del daño causado por visitantes irresponsables."
-    },
-    {
-      id: 5,
-      title: "En el Transporte",
-      situation: "Dos estudiantes van a la universidad. ¿Cuál elige el transporte más ecológico?",
-      characters: [
-        {
-          id: 9,
-          name: "Gabriela",
-          avatar: "👩‍🎓",
-          description: "Gabriela usa transporte sostenible",
-          actions: [
-            "🚲 Va en bicicleta cuando el clima es bueno",
-            "🚌 Usa transporte público los días lluviosos",
-            "👫 Comparte auto con compañeros ocasionalmente",
-            "🚶‍♀️ Camina distancias cortas"
-          ],
-          isEcoFriendly: true,
-          explanation: "Gabriela reduce su huella de carbono usando transporte sustentable y manteniéndose activa."
-        },
-        {
-          id: 10,
-          name: "Héctor",
-          avatar: "👨‍🎓",
-          description: "Héctor siempre usa auto privado",
-          actions: [
-            "🚗 Maneja solo en auto grande todos los días",
-            "⛽ No se preocupa por el consumo de gasolina",
-            "🚫 Nunca usa transporte público",
-            "😴 Prefiere comodidad sobre sostenibilidad"
-          ],
-          isEcoFriendly: false,
-          explanation: "Héctor genera alta contaminación usando auto privado innecesariamente todos los días."
-        }
-      ],
-      educationalTip: "Usar transporte público o bicicleta reduce las emisiones de CO₂ hasta en 80% comparado con auto privado."
+      ]
     }
   ];
 
   useEffect(() => {
-    if (timeLeft > 0 && !gameWon) {
+    if (timeLeft > 0 && !gameWon && !levelCompleted) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (timeLeft === 0 && !gameWon) {
-      handleGameEnd();
+    } else if (timeLeft === 0 && !gameWon && !levelCompleted) {
+      handleLevelEnd();
     }
-  }, [timeLeft, gameWon]);
+  }, [timeLeft, gameWon, levelCompleted]);
 
   const makeChoice = (character: Character) => {
     setSelectedCharacter(character);
     setShowResult(true);
 
+    const currentLevelData = levels[currentLevel - 1];
+    
     if (character.isEcoFriendly) {
-      const points = 20;
+      const points = Math.round(25 * currentLevelData.pointsMultiplier);
       setScore(prev => prev + points);
       setCorrectAnswers(prev => prev + 1);
       
@@ -255,40 +327,57 @@ const EcoComparison: React.FC<EcoComparisonProps> = ({ onComplete, onBack }) => 
       setShowResult(false);
       setSelectedCharacter(null);
       
-      if (currentScenario < scenarios.length - 1) {
+      const currentLevelData = levels[currentLevel - 1];
+      if (currentScenario < currentLevelData.scenarios.length - 1) {
         setCurrentScenario(prev => prev + 1);
       } else {
-        handleGameEnd();
+        handleLevelEnd();
       }
     }, 4000);
   };
 
-  const handleGameEnd = () => {
-    setGameWon(true);
-    const finalScore = score + (correctAnswers * 10);
+  const handleLevelEnd = () => {
+    setLevelCompleted(true);
+    const bonusPoints = Math.round(correctAnswers * 15 * levels[currentLevel - 1].pointsMultiplier);
+    setScore(prev => prev + bonusPoints);
     
     toast({
-      title: "¡Juego Completado! 🎉",
-      description: `Has aprendido a identificar comportamientos ecológicos. Puntuación final: ${finalScore}`,
+      title: `¡Nivel ${currentLevel} Completado! 🎉`,
+      description: `Bonus: ${bonusPoints} puntos. ¿Continuamos al siguiente nivel?`,
     });
   };
 
+  const nextLevel = () => {
+    if (currentLevel < levels.length) {
+      setCurrentLevel(prev => prev + 1);
+      setCurrentScenario(0);
+      setTimeLeft(120);
+      setLevelCompleted(false);
+      setCorrectAnswers(0);
+    } else {
+      setGameWon(true);
+    }
+  };
+
   const resetGame = () => {
+    setCurrentLevel(1);
     setCurrentScenario(0);
     setScore(0);
-    setTimeLeft(180);
+    setTimeLeft(120);
     setGameWon(false);
     setShowResult(false);
     setSelectedCharacter(null);
     setCorrectAnswers(0);
+    setLevelCompleted(false);
   };
 
   const handleComplete = () => {
-    const finalScore = score + (correctAnswers * 10);
+    const finalScore = score;
     onComplete(finalScore);
   };
 
-  const currentScenarioData = scenarios[currentScenario];
+  const currentLevelData = levels[currentLevel - 1];
+  const currentScenarioData = currentLevelData.scenarios[currentScenario];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-50 to-purple-100 p-2 sm:p-4">
@@ -315,18 +404,54 @@ const EcoComparison: React.FC<EcoComparisonProps> = ({ onComplete, onBack }) => 
             {gameWon && (
               <Card className="bg-green-100 border-2 border-green-300 mb-4 sm:mb-6">
                 <CardContent className="p-3 sm:p-4 text-center">
-                  <h3 className="text-lg sm:text-xl font-bold text-green-800 mb-2">🎉 ¡Misión Completada!</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-green-800 mb-2">🏆 ¡Todos los Niveles Completados!</h3>
                   <p className="text-xs sm:text-sm text-green-700 mb-3 sm:mb-4">
-                    Has desarrollado tu capacidad para identificar comportamientos ecológicos. 
-                    Comparar opciones nos ayuda a tomar mejores decisiones para el planeta. 
-                    ¡Ahora puedes ser un ejemplo para otros! 🌍✨
+                    ¡Felicitaciones! Has dominado el arte de identificar comportamientos ecológicos en todos los niveles.
+                    Ahora puedes ser un verdadero líder ambiental. 🌍✨
                   </p>
                   <Button 
                     onClick={handleComplete}
                     className="bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-500 hover:to-blue-500 text-white font-semibold px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base"
                   >
-                    ¡Completar! (+{score + (correctAnswers * 10)} pts)
+                    ¡Completar! (+{score} pts)
                   </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {levelCompleted && !gameWon && (
+              <Card className="bg-yellow-100 border-2 border-yellow-300 mb-4 sm:mb-6">
+                <CardContent className="p-3 sm:p-4 text-center">
+                  <h3 className="text-lg sm:text-xl font-bold text-yellow-800 mb-2">
+                    ⭐ ¡{currentLevelData.title} Completado!
+                  </h3>
+                  <p className="text-xs sm:text-sm text-yellow-700 mb-3 sm:mb-4">
+                    Respuestas correctas: {correctAnswers}/{currentLevelData.scenarios.length}
+                  </p>
+                  <div className="flex justify-center space-x-4">
+                    {currentLevel < levels.length ? (
+                      <Button 
+                        onClick={nextLevel}
+                        className="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white font-semibold"
+                      >
+                        Siguiente Nivel →
+                      </Button>
+                    ) : (
+                      <Button 
+                        onClick={() => setGameWon(true)}
+                        className="bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-500 hover:to-blue-500 text-white font-semibold"
+                      >
+                        ¡Finalizar Juego!
+                      </Button>
+                    )}
+                    <Button 
+                      onClick={handleComplete}
+                      variant="outline"
+                      className="border-2 border-gray-400"
+                    >
+                      Salir (+{score} pts)
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -336,20 +461,29 @@ const EcoComparison: React.FC<EcoComparisonProps> = ({ onComplete, onBack }) => 
               <div className="lg:col-span-1 space-y-3 sm:space-y-4">
                 <Card className="bg-blue-50 border-2 border-blue-300">
                   <CardContent className="p-3 sm:p-4">
-                    <h4 className="text-sm sm:text-base font-bold text-blue-700 mb-2">Puntuación</h4>
+                    <h4 className="text-sm sm:text-base font-bold text-blue-700 mb-2">Nivel {currentLevel}</h4>
+                    <div className="text-xs text-blue-600 mb-2">{currentLevelData.title}</div>
                     <div className="text-lg sm:text-2xl font-bold text-blue-800 mb-2">
                       {score} pts
                     </div>
                     <Progress 
-                      value={(currentScenario / scenarios.length) * 100} 
+                      value={(currentScenario / currentLevelData.scenarios.length) * 100} 
                       className="h-2 sm:h-3 mb-2" 
                     />
                     <p className="text-xs text-blue-600">
-                      Escenario {currentScenario + 1} de {scenarios.length}
+                      Escenario {currentScenario + 1} de {currentLevelData.scenarios.length}
                     </p>
                     <p className="text-xs text-green-600 mt-2">
                       Correctas: {correctAnswers}
                     </p>
+                    <div className="flex items-center mt-2">
+                      {Array.from({ length: currentLevel }, (_, i) => (
+                        <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                      ))}
+                      {Array.from({ length: levels.length - currentLevel }, (_, i) => (
+                        <Star key={i + currentLevel} className="w-3 h-3 text-gray-300" />
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -365,7 +499,7 @@ const EcoComparison: React.FC<EcoComparisonProps> = ({ onComplete, onBack }) => 
 
               {/* Área principal del juego */}
               <div className="lg:col-span-3">
-                {!gameWon && (
+                {!gameWon && !levelCompleted && (
                   <Card className="bg-gradient-to-b from-green-50 to-blue-50 border-2 border-green-300">
                     <CardContent className="p-4 sm:p-6">
                       <div className="text-center mb-4 sm:mb-6">
