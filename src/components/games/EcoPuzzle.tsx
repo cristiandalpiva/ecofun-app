@@ -39,9 +39,8 @@ interface PuzzlePiece {
 const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const [selectedLevel, setSelectedLevel] = useState<PuzzleConfig | null>(null);
   const [selectedImage, setSelectedImage] = useState<PuzzleImage | null>(null);
-  const [loosePieces, setLoosePieces] = useState<PuzzlePiece[]>([]);
-  const [boardPieces, setBoardPieces] = useState<(PuzzlePiece | null)[]>([]);
-  const [draggedPieceId, setDraggedPieceId] = useState<string | null>(null);
+  const [pieces, setPieces] = useState<PuzzlePiece[]>([]);
+  const [slots, setSlots] = useState<(PuzzlePiece | null)[]>([]);
   const [isComplete, setIsComplete] = useState(false);
   const [moves, setMoves] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
@@ -139,7 +138,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     return () => clearInterval(timer);
   }, [gameStarted, isComplete]);
 
-  // Clear correct placement effect after 1 second
   useEffect(() => {
     if (correctPlacement) {
       const timer = setTimeout(() => {
@@ -153,12 +151,12 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     if (!selectedLevel || !selectedImage) return;
 
     const { rows, cols } = selectedLevel;
-    const pieces: PuzzlePiece[] = [];
+    const newPieces: PuzzlePiece[] = [];
 
     // Create all pieces
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
-        pieces.push({
+        newPieces.push({
           id: `${row}-${col}`,
           row,
           col,
@@ -168,11 +166,11 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       }
     }
 
-    // Shuffle pieces for loose pieces
-    const shuffledPieces = [...pieces].sort(() => Math.random() - 0.5);
+    // Shuffle pieces
+    const shuffledPieces = [...newPieces].sort(() => Math.random() - 0.5);
     
-    setLoosePieces(shuffledPieces);
-    setBoardPieces(Array(selectedLevel.totalPieces).fill(null));
+    setPieces(shuffledPieces);
+    setSlots(Array(selectedLevel.totalPieces).fill(null));
     setIsComplete(false);
     setMoves(0);
     setTimeElapsed(0);
@@ -180,21 +178,13 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     setShowCelebration(false);
     setCorrectPlacement(null);
 
-    console.log('Puzzle initialized with pieces:', pieces.map(p => p.id));
+    console.log('Puzzle initialized with pieces:', newPieces.map(p => p.id));
   };
 
   const checkCompletion = () => {
-    const allPiecesPlaced = boardPieces.every(piece => piece !== null);
-    const allPiecesCorrect = boardPieces.every((piece, index) => {
-      if (!piece) return false;
-      const expectedRow = Math.floor(index / selectedLevel!.cols);
-      const expectedCol = index % selectedLevel!.cols;
-      return piece.row === expectedRow && piece.col === expectedCol;
-    });
+    const allPiecesPlaced = slots.every(slot => slot !== null);
     
-    console.log('Checking completion:', { allPiecesPlaced, allPiecesCorrect });
-    
-    if (allPiecesPlaced && allPiecesCorrect && !isComplete) {
+    if (allPiecesPlaced && !isComplete) {
       setIsComplete(true);
       setGameStarted(false);
       setShowCelebration(true);
@@ -207,7 +197,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
 
   const handleDragStart = (e: React.DragEvent, piece: PuzzlePiece) => {
     if (piece.isLocked) return;
-    setDraggedPieceId(piece.id);
     e.dataTransfer.setData('text/plain', piece.id);
     if (!gameStarted) setGameStarted(true);
     console.log('Drag start:', piece.id);
@@ -217,80 +206,51 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     e.preventDefault();
   };
 
-  const handleDropOnBoard = (e: React.DragEvent, boardIndex: number) => {
+  const handleDrop = (e: React.DragEvent, slotIndex: number) => {
     e.preventDefault();
     
     const pieceId = e.dataTransfer.getData('text/plain');
     if (!pieceId) return;
 
     // Find the piece being dragged
-    const draggedPiece = loosePieces.find(p => p.id === pieceId);
-    if (!draggedPiece) return;
+    const draggedPiece = pieces.find(p => p.id === pieceId);
+    if (!draggedPiece || draggedPiece.isLocked) return;
 
-    const expectedRow = Math.floor(boardIndex / selectedLevel!.cols);
-    const expectedCol = boardIndex % selectedLevel!.cols;
+    const expectedRow = Math.floor(slotIndex / selectedLevel!.cols);
+    const expectedCol = slotIndex % selectedLevel!.cols;
+    const expectedId = `${expectedRow}-${expectedCol}`;
     
-    console.log('Drop on board:', { 
-      pieceId: draggedPiece.id, 
-      boardIndex, 
-      expectedPosition: `${expectedRow}-${expectedCol}`,
-      piecePosition: `${draggedPiece.row}-${draggedPiece.col}`
+    console.log('Drop attempt:', { 
+      pieceId, 
+      slotIndex, 
+      expectedId,
+      isCorrect: pieceId === expectedId,
+      slotEmpty: slots[slotIndex] === null
     });
 
-    // Check if the piece is being placed in its correct position
-    const isCorrectPosition = draggedPiece.row === expectedRow && draggedPiece.col === expectedCol;
-    
-    if (isCorrectPosition && !boardPieces[boardIndex]) {
-      // Lock the piece in place
+    // Check if the piece is being placed in its correct position and slot is empty
+    if (pieceId === expectedId && slots[slotIndex] === null) {
+      // Lock the piece
       const lockedPiece = { ...draggedPiece, isLocked: true };
       
-      // Update board
-      const newBoardPieces = [...boardPieces];
-      newBoardPieces[boardIndex] = lockedPiece;
-      setBoardPieces(newBoardPieces);
+      // Update slots
+      const newSlots = [...slots];
+      newSlots[slotIndex] = lockedPiece;
+      setSlots(newSlots);
       
-      // Remove from loose pieces
-      setLoosePieces(prev => prev.filter(p => p.id !== draggedPiece.id));
+      // Remove from pieces (move it to slot)
+      setPieces(prev => prev.filter(p => p.id !== pieceId));
       
       // Show correct placement effect
       setCorrectPlacement(pieceId);
       
       setMoves(moves + 1);
-      setDraggedPieceId(null);
       
-      // Check completion after state updates
+      // Check completion
       setTimeout(() => {
         checkCompletion();
       }, 100);
-    } else {
-      console.log('Incorrect position or slot occupied');
     }
-  };
-
-  const handleDropOnLoosePieces = (e: React.DragEvent) => {
-    e.preventDefault();
-    
-    const pieceId = e.dataTransfer.getData('text/plain');
-    if (!pieceId) return;
-
-    // Find the piece on the board
-    const pieceIndex = boardPieces.findIndex(p => p && p.id === pieceId);
-    if (pieceIndex !== -1) {
-      const piece = boardPieces[pieceIndex];
-      if (piece && piece.isLocked) {
-        const newBoardPieces = [...boardPieces];
-        newBoardPieces[pieceIndex] = null;
-        setBoardPieces(newBoardPieces);
-        
-        // Add back to loose pieces (unlocked)
-        const unlockedPiece = { ...piece, isLocked: false };
-        setLoosePieces(prev => [...prev, unlockedPiece]);
-        
-        setMoves(moves + 1);
-      }
-    }
-    
-    setDraggedPieceId(null);
   };
 
   const getPieceStyle = (piece: PuzzlePiece, size: number) => {
@@ -315,8 +275,8 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const resetGame = () => {
     setSelectedLevel(null);
     setSelectedImage(null);
-    setLoosePieces([]);
-    setBoardPieces([]);
+    setPieces([]);
+    setSlots([]);
     setIsComplete(false);
     setMoves(0);
     setTimeElapsed(0);
@@ -421,7 +381,8 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     );
   }
 
-  if (loosePieces.length === 0 && boardPieces.every(p => p === null)) {
+  // Initialize puzzle if needed
+  if (pieces.length === 0 && slots.every(s => s === null)) {
     initializePuzzle();
   }
 
@@ -470,114 +431,90 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
           </div>
         )}
 
-        {/* Game layout */}
-        <div className="flex justify-center">
-          <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border-2 border-gray-300" 
-               style={{ width: '900px', height: '650px' }}>
-            
-            {/* Central board */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-200 rounded-lg border-4 border-gray-400 shadow-inner"
-                 style={{ width: '400px', height: selectedLevel.level === 'hard' ? '320px' : '400px' }}>
-              <div 
-                className="grid gap-1 w-full h-full p-2"
-                style={{ 
-                  gridTemplateColumns: `repeat(${selectedLevel.cols}, 1fr)`,
-                  gridTemplateRows: `repeat(${selectedLevel.rows}, 1fr)`
-                }}
-              >
-                {Array.from({ length: selectedLevel.totalPieces }, (_, boardIndex) => {
-                  const piece = boardPieces[boardIndex];
-                  const boardWidth = 400;
-                  const boardHeight = selectedLevel.level === 'hard' ? 320 : 400;
-                  const pieceWidth = (boardWidth - 16) / selectedLevel.cols;
-                  const pieceHeight = (boardHeight - 16) / selectedLevel.rows;
-                  
-                  return (
-                    <div
-                      key={`board-${boardIndex}`}
-                      onDragOver={handleDragOver}
-                      onDrop={(e) => handleDropOnBoard(e, boardIndex)}
-                      className={`transition-all duration-200 overflow-hidden rounded-md ${
-                        piece
-                          ? `shadow-md border-2 ${correctPlacement === piece.id ? 'border-green-400 animate-pulse bg-green-100' : 'border-emerald-500'}`
-                          : 'border-2 border-dashed border-gray-400 hover:border-emerald-300 hover:bg-emerald-50/30'
-                      } ${isComplete ? 'animate-pulse' : ''}`}
-                      style={{ 
-                        width: `${pieceWidth}px`,
-                        height: `${pieceHeight}px`
-                      }}
-                    >
-                      {piece && (
-                        <div 
-                          className="w-full h-full"
-                          style={getPieceStyle(piece, pieceWidth)}
-                        />
-                      )}
-                      {correctPlacement === piece?.id && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-green-400/20 rounded-md">
-                          <CheckCircle className="w-8 h-8 text-green-600 animate-bounce" />
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Scattered loose pieces around */}
-            <div className="absolute inset-0 pointer-events-none">
-              <div 
-                className="w-full h-full relative pointer-events-auto"
-                onDragOver={handleDragOver}
-                onDrop={handleDropOnLoosePieces}
-              >
-                {loosePieces.map((piece, index) => {
-                  // Position pieces around the board
-                  const angle = (index / loosePieces.length) * 2 * Math.PI;
-                  const radius = 280;
-                  const x = 450 + radius * Math.cos(angle) - 40;
-                  const y = 325 + radius * Math.sin(angle) - 40;
-                  
-                  return (
-                    <div
-                      key={`loose-${piece.id}`}
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, piece)}
-                      className={`absolute w-20 h-20 cursor-move transition-all duration-200 hover:scale-110 hover:z-10 border-2 border-emerald-300 rounded-md overflow-hidden shadow-lg hover:shadow-xl ${
-                        draggedPieceId === piece.id ? 'opacity-50 scale-95' : ''
-                      }`}
-                      style={{
-                        left: `${x}px`,
-                        top: `${y}px`,
-                        transform: `rotate(${Math.random() * 60 - 30}deg)`,
-                        aspectRatio: selectedLevel.level === 'hard' ? '4/5' : '1'
-                      }}
-                    >
+        {/* Game Board */}
+        <div className="flex flex-col items-center space-y-8">
+          {/* Puzzle Board */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border-2 border-gray-300">
+            <div 
+              className="grid gap-1 bg-gray-200 p-2 rounded-lg border-4 border-gray-400"
+              style={{ 
+                gridTemplateColumns: `repeat(${selectedLevel.cols}, 1fr)`,
+                gridTemplateRows: `repeat(${selectedLevel.rows}, 1fr)`,
+                width: '400px',
+                height: selectedLevel.level === 'hard' ? '320px' : '400px'
+              }}
+            >
+              {Array.from({ length: selectedLevel.totalPieces }, (_, slotIndex) => {
+                const piece = slots[slotIndex];
+                const pieceWidth = (400 - 16) / selectedLevel.cols;
+                const pieceHeight = (selectedLevel.level === 'hard' ? 320 : 400 - 16) / selectedLevel.rows;
+                
+                return (
+                  <div
+                    key={`slot-${slotIndex}`}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, slotIndex)}
+                    className={`relative transition-all duration-200 overflow-hidden rounded-md ${
+                      piece
+                        ? `shadow-md border-2 ${correctPlacement === piece.id ? 'border-green-400 animate-pulse bg-green-100' : 'border-emerald-500'}`
+                        : 'border-2 border-dashed border-gray-400 hover:border-emerald-300 hover:bg-emerald-50/30 bg-gray-100'
+                    } ${isComplete ? 'animate-pulse' : ''}`}
+                    style={{ 
+                      width: `${pieceWidth}px`,
+                      height: `${pieceHeight}px`
+                    }}
+                  >
+                    {piece && (
                       <div 
                         className="w-full h-full"
-                        style={getPieceStyle(piece, 80)}
+                        style={getPieceStyle(piece, pieceWidth)}
                       />
-                    </div>
-                  );
-                })}
-              </div>
+                    )}
+                    {correctPlacement === piece?.id && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-green-400/20 rounded-md">
+                        <CheckCircle className="w-8 h-8 text-green-600 animate-bounce" />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-
+            
             {/* Shuffle button */}
             <Button 
               onClick={initializePuzzle} 
-              className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg"
+              className="mt-4 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg"
               size="sm"
             >
               <Shuffle className="w-4 h-4 mr-1" />
               Mezclar
             </Button>
+          </div>
 
-            {/* Remaining pieces counter */}
-            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-lg border">
-              <span className="text-sm font-medium text-emerald-700">
-                🧩 {loosePieces.length} piezas restantes
-              </span>
+          {/* Loose Pieces */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border-2 border-gray-300 max-w-4xl">
+            <h3 className="text-lg font-semibold text-emerald-700 mb-4 text-center">
+              🧩 Piezas disponibles ({pieces.length})
+            </h3>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {pieces.map((piece) => (
+                <div
+                  key={`piece-${piece.id}`}
+                  draggable={!piece.isLocked}
+                  onDragStart={(e) => handleDragStart(e, piece)}
+                  className={`w-20 h-20 cursor-move transition-all duration-200 hover:scale-110 border-2 border-emerald-300 rounded-md overflow-hidden shadow-lg hover:shadow-xl ${
+                    piece.isLocked ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  style={{
+                    aspectRatio: selectedLevel.level === 'hard' ? '4/5' : '1'
+                  }}
+                >
+                  <div 
+                    className="w-full h-full"
+                    style={getPieceStyle(piece, 80)}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>
