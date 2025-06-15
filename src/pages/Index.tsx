@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -49,10 +49,18 @@ const Index = () => {
   const [currentGame, setCurrentGame] = useState<string | null>(null);
   const [userPoints, setUserPoints] = useState(0);
   const [completedGames, setCompletedGames] = useState<string[]>([]);
-  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Check if onboarding has been completed
+  useEffect(() => {
+    const hasCompletedOnboarding = localStorage.getItem('ecoFunOnboardingCompleted');
+    if (!hasCompletedOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, []);
 
   const games: Game[] = [
     {
@@ -234,10 +242,12 @@ const Index = () => {
 
   const handleOnboardingClose = () => {
     setShowOnboarding(false);
+    localStorage.setItem('ecoFunOnboardingCompleted', 'true');
   };
 
   const handleOnboardingSkip = () => {
     setShowOnboarding(false);
+    localStorage.setItem('ecoFunOnboardingCompleted', 'true');
   };
 
   return (

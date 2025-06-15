@@ -3,7 +3,8 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Users, MessageSquare, Heart, Share2 } from 'lucide-react';
+import { Progress } from "@/components/ui/progress";
+import { ArrowLeft, Users, MessageSquare, Heart, Share2, Trophy, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Community = () => {
