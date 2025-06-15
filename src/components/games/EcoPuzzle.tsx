@@ -268,13 +268,19 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     
     const row = Math.floor(pieceNumber / gridSize);
     const col = pieceNumber % gridSize;
-    const pieceSize = 100 / gridSize;
+    
+    // Calculate the exact background position and size for each piece
+    const backgroundSizePercent = gridSize * 100;
+    const backgroundPosX = -(col * 100);
+    const backgroundPosY = -(row * 100);
     
     return {
       backgroundImage: `url(${currentPuzzleData.image})`,
-      backgroundSize: `${gridSize * 100}% ${gridSize * 100}%`,
-      backgroundPosition: `-${col * pieceSize}% -${row * pieceSize}%`,
+      backgroundSize: `${backgroundSizePercent}% ${backgroundSizePercent}%`,
+      backgroundPosition: `${backgroundPosX}% ${backgroundPosY}%`,
       backgroundRepeat: 'no-repeat',
+      width: '100%',
+      height: '100%',
     };
   };
 
@@ -477,11 +483,15 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                       key={`piece-${pieceNumber}`}
                       draggable
                       onDragStart={(e) => handleDragStart(e, pieceNumber)}
-                      className={`aspect-square rounded border-2 border-emerald-400 cursor-move transition-all duration-200 hover:scale-105 hover:shadow-lg ${
+                      className={`aspect-square rounded border-2 border-emerald-400 cursor-move transition-all duration-200 hover:scale-105 hover:shadow-lg overflow-hidden ${
                         draggedPiece === pieceNumber ? 'opacity-50 scale-95' : ''
                       }`}
-                      style={getPieceStyle(pieceNumber)}
-                    />
+                    >
+                      <div 
+                        className="w-full h-full"
+                        style={getPieceStyle(pieceNumber)}
+                      />
+                    </div>
                   ))}
                 </div>
                 <p className="text-xs text-gray-600 mt-2 text-center">
@@ -508,15 +518,21 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                         onDragOver={(e) => handleDragOver(e, index)}
                         onDragLeave={handleDragLeave}
                         onDrop={(e) => handleDropOnBoard(e, index)}
-                        className={`aspect-square rounded border-2 transition-all duration-200 ${
+                        className={`aspect-square rounded border-2 transition-all duration-200 overflow-hidden ${
                           piece !== null
                             ? 'border-emerald-400 shadow-md'
                             : draggedOverIndex === index
                             ? 'border-green-500 bg-green-100 border-solid'
                             : 'border-gray-300 bg-gray-100 border-dashed'
                         } ${isComplete ? 'animate-pulse' : ''}`}
-                        style={piece !== null ? getPieceStyle(piece) : {}}
-                      />
+                      >
+                        {piece !== null && (
+                          <div 
+                            className="w-full h-full"
+                            style={getPieceStyle(piece)}
+                          />
+                        )}
+                      </div>
                     );
                   })}
                 </div>

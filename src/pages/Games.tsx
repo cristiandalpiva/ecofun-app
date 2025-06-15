@@ -19,6 +19,7 @@ import EcoPlatformer from '@/components/games/EcoPlatformer';
 import EcoComparison from '@/components/games/EcoComparison';
 import InteractiveStories from '@/components/games/InteractiveStories';
 import LightOffGame from '@/components/games/LightOffGame';
+import AventuraSubmarina from '@/components/games/AventuraSubmarina';
 import { toast } from "@/hooks/use-toast";
 
 const Games = () => {
@@ -98,6 +99,16 @@ const Games = () => {
       points: '20-80 pts',
       category: 'Acción',
       component: TrashCatcher
+    },
+    {
+      id: 'aventura-submarina',
+      title: 'Aventura Submarina',
+      description: 'Recoge plástico del océano sin dañar a los peces',
+      icon: '🤿',
+      difficulty: 'Medio',
+      points: '20-100 pts',
+      category: 'Aventura',
+      component: AventuraSubmarina
     },
     {
       id: 'plant-care',
