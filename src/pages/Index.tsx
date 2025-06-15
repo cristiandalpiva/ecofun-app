@@ -350,11 +350,7 @@ const Index = () => {
         {/* MOBILE HEADER */}
         <div className="md:hidden flex items-center justify-between px-3 py-2">
           {/* SVG logo eliminado */}
-          <div className="flex-shrink-0 flex items-center">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 via-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
-              {/* SVG eliminado */}
-            </div>
-          </div>
+          {/* El div contenedor y fondo colorido eliminado */}
           {/* Texto centrado */}
           <div className="flex-1 flex flex-col items-center justify-center px-2">
             <h1 className="text-xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight leading-none">
@@ -382,13 +378,8 @@ const Index = () => {
             <div className="flex items-center justify-between">
               {/* Logo EcoFun mejorado */}
               <Link to="/" className="flex items-center space-x-3">
-                {/* Eliminamos todo el bloque SVG/logo */}
-                <div className="relative">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-400 via-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
-                    {/* SVG eliminado */}
-                  </div>
-                  {/* Hoja decorativa eliminada */}
-                </div>
+                {/* Bloque del logo/el fondo colorido eliminado */}
+                {/* Solo queda el texto */}
                 <div className="flex flex-col">
                   <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight">
                     EcoFun
