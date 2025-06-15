@@ -505,8 +505,9 @@ const Index = () => {
                     <span className="text-xs sm:text-sm font-semibold text-emerald-700 truncate block max-w-[100px] min-w-0 overflow-hidden">
                       {userPoints} puntos
                     </span>
+                    {/* Ocultar "Meta:" en mobile, mostrar en sm+ */}
                     {plantLevel.level < 6 && (
-                      <span className="text-xs sm:text-sm text-emerald-600 truncate text-right block max-w-[90px] min-w-0 overflow-hidden">
+                      <span className="hidden sm:inline text-xs sm:text-sm text-emerald-600 truncate text-right block max-w-[90px] min-w-0 overflow-hidden">
                         Meta: {plantLevel.nextGoal}
                       </span>
                     )}
