@@ -23,6 +23,7 @@ import EndangeredAnimals from "@/components/games/EndangeredAnimals";
 import InteractiveStories from "@/components/games/InteractiveStories";
 import EcoComparison from "@/components/games/EcoComparison";
 import LightOffGame from "@/components/games/LightOffGame";
+import AventuraSubmarina from "@/components/games/AventuraSubmarina";
 
 import EcoMascot from "@/components/EcoMascot";
 import Footer from "@/components/Footer";
@@ -74,6 +75,17 @@ const Index = () => {
   }, [userPoints]);
 
   const games: Game[] = [
+    {
+      id: "aventura-submarina",
+      title: "Aventura Submarina",
+      description: "Recoge plástico del océano sin dañar a los peces",
+      icon: "🤿",
+      difficulty: "Medio",
+      category: "Reciclaje",
+      component: AventuraSubmarina,
+      estimatedTime: "5-10 min",
+      points: 70
+    },
     {
       id: "animal-quiz",
       title: "Safari Animal",

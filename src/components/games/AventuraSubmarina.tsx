@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -84,6 +83,7 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
     return (
       px < obj.x + obj.width &&
       px + playerWidth > obj.x &&
+      py < obj.y + obj.height &&
       py < obj.y + obj.height &&
       py + playerHeight > obj.y
     );
@@ -336,7 +336,7 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
                 </div>
               ))}
 
-              {/* Jugador (submarinista) */}
+              {/* Jugador (submarinista) - Nuevo diseño */}
               <div
                 className="absolute bottom-20 transition-all duration-100"
                 style={{
@@ -345,8 +345,21 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
                   height: playerHeight,
                 }}
               >
-                <div className="w-full h-full bg-blue-600 rounded-lg border-2 border-blue-800 flex items-center justify-center text-2xl">
-                  🤿
+                <div className="w-full h-full relative">
+                  {/* Cuerpo del buzo */}
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-6 bg-blue-700 rounded-t-lg border-2 border-blue-900"></div>
+                  {/* Tanque de oxígeno */}
+                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 translate-x-3 w-3 h-5 bg-gray-400 rounded border border-gray-600"></div>
+                  {/* Máscara/cabeza */}
+                  <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-yellow-200 rounded-full border-2 border-yellow-400 flex items-center justify-center">
+                    <div className="w-2 h-1 bg-black rounded-full"></div>
+                  </div>
+                  {/* Aletas */}
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-x-4 w-3 h-2 bg-blue-500 rounded-full"></div>
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-x-1 w-3 h-2 bg-blue-500 rounded-full"></div>
+                  {/* Brazos */}
+                  <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 -translate-x-3 w-2 h-3 bg-blue-600 rounded"></div>
+                  <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 translate-x-1 w-2 h-3 bg-blue-600 rounded"></div>
                 </div>
               </div>
 

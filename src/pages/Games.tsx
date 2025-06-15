@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,6 @@ import PlantCare from '@/components/games/PlantCare';
 import PlantQuiz from '@/components/games/PlantQuiz';
 import AnimalQuiz from '@/components/games/AnimalQuiz';
 import EndangeredAnimals from '@/components/games/EndangeredAnimals';
-import EcoPlatformer from '@/components/games/EcoPlatformer';
 import EcoComparison from '@/components/games/EcoComparison';
 import InteractiveStories from '@/components/games/InteractiveStories';
 import LightOffGame from '@/components/games/LightOffGame';
@@ -30,6 +28,16 @@ const Games = () => {
   });
 
   const games = [
+    {
+      id: 'aventura-submarina',
+      title: 'Aventura Submarina',
+      description: 'Recoge plástico del océano sin dañar a los peces',
+      icon: '🤿',
+      difficulty: 'Medio',
+      points: '20-100 pts',
+      category: 'Aventura',
+      component: AventuraSubmarina
+    },
     {
       id: 'eco-quiz',
       title: 'Quiz Ecológico',
@@ -101,16 +109,6 @@ const Games = () => {
       component: TrashCatcher
     },
     {
-      id: 'aventura-submarina',
-      title: 'Aventura Submarina',
-      description: 'Recoge plástico del océano sin dañar a los peces',
-      icon: '🤿',
-      difficulty: 'Medio',
-      points: '20-100 pts',
-      category: 'Aventura',
-      component: AventuraSubmarina
-    },
-    {
       id: 'plant-care',
       title: 'Cuidado de Plantas',
       description: 'Cuida tu jardín virtual y aprende sobre las plantas',
@@ -149,16 +147,6 @@ const Games = () => {
       points: '25-80 pts',
       category: 'Animales',
       component: EndangeredAnimals
-    },
-    {
-      id: 'eco-platformer',
-      title: 'Aventura Ecológica',
-      description: 'Salta y corre mientras limpias el medio ambiente',
-      icon: '🏃',
-      difficulty: 'Medio',
-      points: '25-90 pts',
-      category: 'Aventura',
-      component: EcoPlatformer
     },
     {
       id: 'eco-comparison',
