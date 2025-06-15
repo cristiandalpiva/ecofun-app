@@ -30,7 +30,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       description: "Aprende sobre los diferentes contenedores de reciclaje y su importancia.",
       educationalContent: "Los contenedores de reciclaje están codificados por colores: azul para papel y cartón, amarillo para plásticos y latas, verde para vidrio, y marrón para residuos orgánicos. Separar correctamente los residuos puede reducir hasta 80% de lo que enviamos a vertederos.",
       completionMessage: "¡Excelente! Ahora sabes cómo identificar los diferentes contenedores de reciclaje. Cada vez que reciclas correctamente, ayudas a conservar recursos naturales.",
-      image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&h=400&fit=crop",
+      image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600&h=600&fit=crop",
       difficulty: "Fácil",
       gridSize: 3,
       points: 50
@@ -41,7 +41,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       description: "Descubre cómo la energía solar puede iluminar nuestro futuro sostenible.",
       educationalContent: "Los paneles solares convierten la luz del sol directamente en electricidad limpia mediante células fotovoltaicas. Una instalación solar doméstica puede generar toda la energía que necesita una casa y reducir las emisiones de CO2 hasta en 100,000 libras durante 20 años.",
       completionMessage: "¡Fantástico! Los paneles solares como estos pueden generar energía limpia durante más de 25 años, siendo una inversión clave para combatir el cambio climático.",
-      image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=400&fit=crop",
+      image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&h=600&fit=crop",
       difficulty: "Fácil",
       gridSize: 3,
       points: 50
@@ -52,76 +52,76 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       description: "Un hermoso campo de girasoles que siguen al sol durante todo el día.",
       educationalContent: "Los girasoles practican el heliotropismo, rotando para seguir al sol y maximizar la fotosíntesis. Sus semillas alimentan aves, sus raíces pueden absorber toxinas del suelo, y una hectárea de girasoles puede producir suficiente aceite para biodiesel ecológico.",
       completionMessage: "¡Increíble! Los girasoles no solo son hermosos, también son purificadores naturales del suelo y una fuente renovable de biocombustible.",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=600&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
       points: 75
     },
     {
       id: 3,
-      name: "Tigre en su Hábitat",
-      description: "Un majestuoso tigre en la selva, una especie que necesita nuestra protección urgente.",
-      educationalContent: "Los tigres son cazadores apex que mantienen el equilibrio en sus ecosistemas. Quedan menos de 4,000 tigres salvajes en el mundo. Cada tigre necesita un territorio de hasta 100 km² para sobrevivir, y su presencia indica un ecosistema selvático saludable.",
-      completionMessage: "¡Perfecto! Los tigres como este son indicadores de la salud del ecosistema. Proteger su hábitat significa proteger selvas enteras y la biodiversidad que albergan.",
-      image: "https://images.unsplash.com/photo-1551969014-7d2c4cddf0b6?w=400&h=400&fit=crop",
+      name: "Bosque Verde",
+      description: "Un hermoso bosque que nos muestra la importancia de cuidar nuestros árboles.",
+      educationalContent: "Los bosques absorben CO2 y producen el oxígeno que respiramos. Un solo árbol maduro puede producir oxígeno suficiente para dos personas durante un año completo. Los bosques también regulan el clima, previenen la erosión y son hogar de millones de especies.",
+      completionMessage: "¡Perfecto! Los bosques como este son los pulmones de nuestro planeta. Cada árbol que protegemos ayuda a combatir el cambio climático.",
+      image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=600&h=600&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
       points: 75
     },
     {
       id: 4,
-      name: "Planta Creciendo",
-      description: "Una pequeña planta emergiendo de la tierra, símbolo de nueva vida y esperanza ecológica.",
-      educationalContent: "Una sola semilla contiene el potencial de convertirse en un árbol que produzca oxígeno para dos personas durante toda su vida. Las plantas absorben CO2 del aire y lo convierten en oxígeno mediante la fotosíntesis, siendo los pulmones verdes de nuestro planeta.",
-      completionMessage: "¡Genial! Esta pequeña planta representa el poder de la naturaleza para regenerarse y limpiar nuestro aire, recordándonos la importancia de cuidar cada semilla de vida.",
-      image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=400&fit=crop",
+      name: "Lago Cristalino",
+      description: "Un lago rodeado de naturaleza que muestra la belleza del agua limpia.",
+      educationalContent: "Los cuerpos de agua dulce como lagos y ríos contienen menos del 3% del agua mundial, pero son esenciales para toda la vida. Filtran contaminantes naturalmente y proporcionan hábitat para miles de especies. Proteger nuestras fuentes de agua es proteger la vida misma.",
+      completionMessage: "¡Genial! Este lago representa la importancia del agua limpia para todos los seres vivos. Cada gota que cuidamos es vida que preservamos.",
+      image: "https://images.unsplash.com/photo-1500673922987-e212871fec22?w=600&h=600&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
       points: 75
     },
     {
       id: 5,
-      name: "Cuidando una Planta",
-      description: "Una persona cuidando amorosamente una pequeña planta, mostrando la conexión humano-naturaleza.",
-      educationalContent: "Cuando cuidamos plantas, creamos un vínculo especial con la naturaleza. Las plantas de interior purifican el aire eliminando toxinas, reducen el estrés y mejoran nuestra salud mental. Cuidar un jardín nos enseña paciencia, responsabilidad y respeto por los ciclos naturales.",
-      completionMessage: "¡Excelente! El cuidado de las plantas nos conecta con la naturaleza y nos enseña a ser guardianes responsables del medio ambiente, valorando la vida en todas sus formas.",
-      image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=400&fit=crop",
-      difficulty: "Medio",
-      gridSize: 4,
-      points: 75
+      name: "Ballena Jorobada",
+      description: "Una majestuosa ballena jorobada saltando en el océano.",
+      educationalContent: "Las ballenas jorobadas pueden medir hasta 16 metros y son conocidas por sus complejas canciones que pueden escucharse a kilómetros de distancia. Son migradoras épicas que viajan hasta 25,000 km al año. Su recuperación de la casi extinción es una historia de éxito de la conservación marina.",
+      completionMessage: "¡Increíble! Las ballenas como esta son ingenieros del ecosistema marino, ayudando a mantener el equilibrio oceánico con sus migraciones y comportamientos.",
+      image: "https://images.unsplash.com/photo-1518877593221-1f28583780b4?w=600&h=600&fit=crop",
+      difficulty: "Difícil",
+      gridSize: 5,
+      points: 100
     },
     {
       id: 6,
-      name: "Animales en Extinción",
-      description: "Especies únicas que necesitan nuestra protección urgente para no desaparecer para siempre.",
-      educationalContent: "Cada especie que se extingue rompe una cadena alimentaria y afecta todo el ecosistema. Más de 28,000 especies están en peligro de extinción actualmente. La conservación no solo salva animales individuales, sino que preserva la biodiversidad necesaria para un planeta saludable y equilibrado.",
-      completionMessage: "¡Increíble! Cada especie que proteges ayuda a mantener el equilibrio natural que necesitamos para un planeta saludable. Tu conciencia es el primer paso hacia la conservación.",
-      image: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=400&h=400&fit=crop",
+      name: "Pingüinos Antárticos",
+      description: "Dos pingüinos en su hábitat natural, indicadores del cambio climático.",
+      educationalContent: "Los pingüinos son indicadores clave del cambio climático. Su población refleja la salud del ecosistema polar. El derretimiento del hielo ártico afecta directamente su hábitat y fuentes de alimento. Proteger las regiones polares es crucial para estas especies únicas.",
+      completionMessage: "¡Fantástico! Los pingüinos como estos nos alertan sobre los cambios en nuestro clima. Son centinelas naturales que nos ayudan a entender el impacto del calentamiento global.",
+      image: "https://images.unsplash.com/photo-1441057206919-63d19fac2369?w=600&h=600&fit=crop",
       difficulty: "Difícil",
       gridSize: 5,
       points: 100
     },
     {
       id: 7,
-      name: "Contaminación por Basura",
-      description: "Un basural que muestra el impacto devastador de la mala gestión de residuos.",
-      educationalContent: "Los basurales liberan gases tóxicos como metano y CO2, contaminan el suelo y las aguas subterráneas. Un solo basural puede contaminar el agua potable de miles de personas durante décadas. La correcta separación y reciclaje de residuos puede reducir hasta 80% de lo que enviamos a estos sitios.",
-      completionMessage: "¡Fantástico! Ahora entiendes por qué es tan importante reducir, reutilizar y reciclar para evitar que nuestros residuos se conviertan en focos de contaminación.",
-      image: "https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=400&h=400&fit=crop",
-      difficulty: "Difícil",
-      gridSize: 5,
-      points: 100
-    },
-    {
-      id: 8,
-      name: "Incendios Forestales",
-      description: "La devastación de los incendios forestales y su impacto destructivo en el ecosistema.",
-      educationalContent: "Los incendios forestales pueden liberar tanto CO2 como millones de autos en un año, destruyendo hábitats que tardaron décadas en formarse. Contaminan el aire, afectan el clima global y pueden destruir comunidades enteras. La prevención y el manejo sostenible de bosques son claves para reducir estos desastres.",
-      completionMessage: "¡Excelente! Entender los incendios forestales nos ayuda a valorar la importancia de cuidar nuestros bosques y tomar medidas preventivas para proteger estos ecosistemas vitales.",
-      image: "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400&h=400&fit=crop",
+      name: "Flores Naranjas",
+      description: "Hermosas flores naranjas que muestran la diversidad de la naturaleza.",
+      educationalContent: "Las flores son fundamentales para la polinización y la biodiversidad. Una sola abeja puede visitar hasta 5,000 flores en un día. Sin polinizadores, perdríamos un tercio de nuestros alimentos. Las flores silvestres también purifican el suelo y proporcionan medicina natural.",
+      completionMessage: "¡Excelente! Estas flores representan la increíble red de vida que conecta plantas, polinizadores y ecosistemas enteros. Cada flor es un eslabón vital en la cadena de la vida.",
+      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=600&h=600&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
       points: 75
+    },
+    {
+      id: 8,
+      name: "Ciervos en el Bosque",
+      description: "Dos ciervos en su hábitat natural, mostrando la vida silvestre en armonía.",
+      educationalContent: "Los ciervos son herbívoros clave que ayudan a mantener el equilibrio en los ecosistemas forestales. Su pastoreo controla el crecimiento de plantas y crea espacios para otras especies. Son también dispersores de semillas, ayudando a regenerar los bosques mientras se desplazan.",
+      completionMessage: "¡Perfecto! Estos ciervos muestran cómo cada animal tiene un papel importante en mantener el equilibrio natural. Su presencia indica un ecosistema saludable y próspero.",
+      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=600&h=600&fit=crop",
+      difficulty: "Difícil",
+      gridSize: 5,
+      points: 100
     }
   ];
 
@@ -269,15 +269,15 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const row = Math.floor(pieceNumber / gridSize);
     const col = pieceNumber % gridSize;
     
-    // Calculate the exact background position and size for each piece
-    const backgroundSizePercent = gridSize * 100;
-    const backgroundPosX = -(col * 100);
-    const backgroundPosY = -(row * 100);
+    // Calculate the exact background position for each piece
+    // Each piece should show exactly 1/gridSize of the image
+    const pieceWidthPercent = 100 / gridSize;
+    const pieceHeightPercent = 100 / gridSize;
     
     return {
       backgroundImage: `url(${currentPuzzleData.image})`,
-      backgroundSize: `${backgroundSizePercent}% ${backgroundSizePercent}%`,
-      backgroundPosition: `${backgroundPosX}% ${backgroundPosY}%`,
+      backgroundSize: `${gridSize * 100}% ${gridSize * 100}%`,
+      backgroundPosition: `-${col * pieceWidthPercent}% -${row * pieceHeightPercent}%`,
       backgroundRepeat: 'no-repeat',
       width: '100%',
       height: '100%',
@@ -483,7 +483,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                       key={`piece-${pieceNumber}`}
                       draggable
                       onDragStart={(e) => handleDragStart(e, pieceNumber)}
-                      className={`aspect-square rounded border-2 border-emerald-400 cursor-move transition-all duration-200 hover:scale-105 hover:shadow-lg overflow-hidden ${
+                      className={`aspect-square rounded border-2 border-emerald-400 cursor-move transition-all duration-200 hover:scale-105 hover:shadow-lg overflow-hidden bg-white ${
                         draggedPiece === pieceNumber ? 'opacity-50 scale-95' : ''
                       }`}
                     >
@@ -520,7 +520,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                         onDrop={(e) => handleDropOnBoard(e, index)}
                         className={`aspect-square rounded border-2 transition-all duration-200 overflow-hidden ${
                           piece !== null
-                            ? 'border-emerald-400 shadow-md'
+                            ? 'border-emerald-400 shadow-md bg-white'
                             : draggedOverIndex === index
                             ? 'border-green-500 bg-green-100 border-solid'
                             : 'border-gray-300 bg-gray-100 border-dashed'
