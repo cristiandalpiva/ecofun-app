@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -277,23 +276,42 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     setShowCelebration(false);
   };
 
-  // Función para obtener el estilo de la pieza
+  // Fixed function to get piece style with proper background positioning
   const getPieceStyle = (piece: PuzzlePiece) => {
     if (!selectedLevel) return {};
     
     const { rows, cols } = selectedLevel;
-    const pieceWidth = 100 / cols;
-    const pieceHeight = 100 / rows;
+    // Size of each piece in the container (80px for loose pieces, varies for board)
+    const pieceSize = 80; // Fixed size for consistency
     
     return {
       backgroundImage: `url(${piece.imageUrl})`,
-      backgroundSize: `${cols * 100}% ${rows * 100}%`,
-      backgroundPosition: `-${piece.col * pieceWidth}% -${piece.row * pieceHeight}%`,
+      backgroundSize: `${cols * pieceSize}px ${rows * pieceSize}px`,
+      backgroundPosition: `-${piece.col * pieceSize}px -${piece.row * pieceSize}px`,
       backgroundRepeat: 'no-repeat'
     };
   };
 
-  // Pantalla de selección de nivel
+  // Function to get piece style for board pieces (different size)
+  const getBoardPieceStyle = (piece: PuzzlePiece) => {
+    if (!selectedLevel) return {};
+    
+    const { rows, cols } = selectedLevel;
+    // Board piece size calculation based on container
+    const boardWidth = 400;
+    const boardHeight = selectedLevel.level === 'hard' ? 320 : 400;
+    const pieceWidth = boardWidth / cols;
+    const pieceHeight = boardHeight / rows;
+    
+    return {
+      backgroundImage: `url(${piece.imageUrl})`,
+      backgroundSize: `${boardWidth}px ${boardHeight}px`,
+      backgroundPosition: `-${piece.col * pieceWidth}px -${piece.row * pieceHeight}px`,
+      backgroundRepeat: 'no-repeat'
+    };
+  };
+
+  // Level selection screen
   if (!selectedLevel) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-green-50 to-cyan-100 p-4">
@@ -340,7 +358,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     );
   }
 
-  // Pantalla de selección de imagen
+  // Image selection screen
   if (!selectedImage) {
     const availableImages = getAvailableImages();
     
@@ -416,7 +434,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
           </div>
         </div>
 
-        {/* Celebración */}
+        {/* Celebration */}
         {showCelebration && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
             <Card className="bg-white border-4 border-emerald-400 shadow-2xl animate-scale-in">
@@ -438,12 +456,12 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
           </div>
         )}
 
-        {/* Nueva distribución estilo referencia */}
+        {/* Game layout */}
         <div className="flex justify-center">
           <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border-2 border-gray-300" 
                style={{ width: '900px', height: '650px' }}>
             
-            {/* Tablero central */}
+            {/* Central board */}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-200 rounded-lg border-4 border-gray-400 shadow-inner"
                  style={{ width: '400px', height: selectedLevel.level === 'hard' ? '320px' : '400px' }}>
               <div 
@@ -480,7 +498,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                       {piece && (
                         <div 
                           className="w-full h-full cursor-move"
-                          style={getPieceStyle(piece)}
+                          style={getBoardPieceStyle(piece)}
                         />
                       )}
                     </div>
@@ -489,7 +507,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
               </div>
             </div>
 
-            {/* Piezas dispersas alrededor */}
+            {/* Scattered pieces around */}
             <div className="absolute inset-0 pointer-events-none">
               <div 
                 className="w-full h-full relative pointer-events-auto"
@@ -497,7 +515,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                 onDrop={handleDropOnPieces}
               >
                 {pieces.map((piece, index) => {
-                  // Posicionar piezas alrededor del tablero
+                  // Position pieces around the board
                   const angle = (index / pieces.length) * 2 * Math.PI;
                   const radius = 280;
                   const x = 450 + radius * Math.cos(angle) - 40;
@@ -528,7 +546,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
               </div>
             </div>
 
-            {/* Botón de mezclar */}
+            {/* Shuffle button */}
             <Button 
               onClick={initializePuzzle} 
               className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg"
@@ -538,7 +556,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
               Mezclar
             </Button>
 
-            {/* Contador de piezas restantes */}
+            {/* Remaining pieces counter */}
             <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-lg border">
               <span className="text-sm font-medium text-emerald-700">
                 🧩 {pieces.length} piezas restantes
@@ -547,7 +565,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
           </div>
         </div>
 
-        {/* Imagen de referencia */}
+        {/* Reference image */}
         <div className="mt-8 text-center">
           <h4 className="text-lg font-medium text-gray-700 mb-4">Imagen de referencia:</h4>
           <div className={`mx-auto rounded-lg overflow-hidden border-4 border-emerald-300 shadow-lg ${
