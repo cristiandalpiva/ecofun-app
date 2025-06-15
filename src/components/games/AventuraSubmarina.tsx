@@ -84,6 +84,7 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
       px < obj.x + obj.width &&
       px + playerWidth > obj.x &&
       py < obj.y + obj.height &&
+      py < obj.y + obj.height &&
       py + playerHeight > obj.y
     );
   };
@@ -277,119 +278,103 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
 
         {/* Área de juego */}
         <Card className="bg-white/10 backdrop-blur-sm border-2 border-blue-300 shadow-xl">
-          <CardContent className="p-1 sm:p-4">
-            <div className="w-full overflow-x-auto">
-              <div 
-                className="relative bg-gradient-to-b from-blue-300 to-blue-800 rounded-lg overflow-hidden"
-                style={{ width: gameWidth, height: gameHeight, margin: '0 auto' }}
-              >
-                {paused && (
-                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="text-white text-4xl font-bold">PAUSADO</div>
+          <CardContent className="p-4">
+            <div 
+              className="relative bg-gradient-to-b from-blue-300 to-blue-800 rounded-lg overflow-hidden"
+              style={{ width: gameWidth, height: gameHeight, margin: '0 auto' }}
+            >
+              {paused && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50">
+                  <div className="text-white text-4xl font-bold">PAUSADO</div>
+                </div>
+              )}
+              
+              {gameEnded && (
+                <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-50">
+                  <div className="text-center text-white">
+                    <h2 className="text-3xl font-bold mb-2">
+                      {lives <= 0 ? '¡Juego Terminado!' : '¡Tiempo Agotado!'}
+                    </h2>
+                    <p className="text-xl mb-4">Puntuación: {score}</p>
+                    <p className="text-lg">
+                      {score >= 150 ? '¡Excelente trabajo limpiando el océano! 🌊' :
+                       score >= 100 ? '¡Buen trabajo! El océano está más limpio gracias a ti 🐟' :
+                       score >= 50 ? '¡Cada esfuerzo cuenta! Sigue protegiendo la vida marina 🌊' :
+                       '¡No te rindas! Cada pieza de plástico que recoges hace la diferencia 💪'}
+                    </p>
                   </div>
-                )}
-                
-                {gameEnded && (
-                  <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-50">
-                    <div className="text-center text-white">
-                      <h2 className="text-3xl font-bold mb-2">
-                        {lives <= 0 ? '¡Juego Terminado!' : '¡Tiempo Agotado!'}
-                      </h2>
-                      <p className="text-xl mb-4">Puntuación: {score}</p>
-                      <p className="text-lg">
-                        {score >= 150 ? '¡Excelente trabajo limpiando el océano! 🌊' :
-                         score >= 100 ? '¡Buen trabajo! El océano está más limpio gracias a ti 🐟' :
-                         score >= 50 ? '¡Cada esfuerzo cuenta! Sigue protegiendo la vida marina 🌊' :
-                         '¡No te rindas! Cada pieza de plástico que recoges hace la diferencia 💪'}
-                      </p>
-                    </div>
-                  </div>
-                )}
+                </div>
+              )}
 
-                {/* Burbujas de fondo */}
-                <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-ping" style={{ left: '10%', top: '20%', animationDelay: '0s' }}></div>
-                <div className="absolute w-3 h-3 bg-white/20 rounded-full animate-ping" style={{ left: '70%', top: '40%', animationDelay: '1s' }}></div>
-                <div className="absolute w-1 h-1 bg-white/40 rounded-full animate-ping" style={{ left: '30%', top: '60%', animationDelay: '2s' }}></div>
-                <div className="absolute w-2 h-2 bg-white/25 rounded-full animate-ping" style={{ left: '80%', top: '15%', animationDelay: '0.5s' }}></div>
+              {/* Burbujas de fondo */}
+              <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-ping" style={{ left: '10%', top: '20%', animationDelay: '0s' }}></div>
+              <div className="absolute w-3 h-3 bg-white/20 rounded-full animate-ping" style={{ left: '70%', top: '40%', animationDelay: '1s' }}></div>
+              <div className="absolute w-1 h-1 bg-white/40 rounded-full animate-ping" style={{ left: '30%', top: '60%', animationDelay: '2s' }}></div>
+              <div className="absolute w-2 h-2 bg-white/25 rounded-full animate-ping" style={{ left: '80%', top: '15%', animationDelay: '0.5s' }}></div>
 
-                {/* Objetos del juego */}
-                {objects.map(obj => (
-                  <div
-                    key={obj.id}
-                    className={`absolute transition-opacity duration-200 ${obj.collected ? 'opacity-0' : ''}`}
-                    style={{
-                      left: obj.x,
-                      top: obj.y,
-                      width: obj.width,
-                      height: obj.height,
-                    }}
-                  >
-                    {obj.type === 'plastic' ? (
-                      <div className="w-full h-full bg-yellow-400 rounded border-2 border-yellow-600 flex items-center justify-center text-xs">
-                        🗑️
-                      </div>
-                    ) : (
-                      <div className="w-full h-full bg-orange-400 rounded-full border-2 border-orange-600 flex items-center justify-center text-xs">
-                        🐟
-                      </div>
-                    )}
-                  </div>
-                ))}
-
-                {/* Jugador (submarinista) - Nuevo diseño */}
+              {/* Objetos del juego */}
+              {objects.map(obj => (
                 <div
-                  className="absolute bottom-20 transition-all duration-100"
+                  key={obj.id}
+                  className={`absolute transition-opacity duration-200 ${obj.collected ? 'opacity-0' : ''}`}
                   style={{
-                    left: playerX,
-                    width: playerWidth,
-                    height: playerHeight,
+                    left: obj.x,
+                    top: obj.y,
+                    width: obj.width,
+                    height: obj.height,
                   }}
                 >
-                  <div className="w-full h-full relative">
-                    {/* Cuerpo del buzo */}
-                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-6 bg-blue-700 rounded-t-lg border-2 border-blue-900"></div>
-                    {/* Tanque de oxígeno */}
-                    <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 translate-x-3 w-3 h-5 bg-gray-400 rounded border border-gray-600"></div>
-                    {/* Máscara/cabeza */}
-                    <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-yellow-200 rounded-full border-2 border-yellow-400 flex items-center justify-center">
-                      <div className="w-2 h-1 bg-black rounded-full"></div>
+                  {obj.type === 'plastic' ? (
+                    <div className="w-full h-full bg-yellow-400 rounded border-2 border-yellow-600 flex items-center justify-center text-xs">
+                      🗑️
                     </div>
-                    {/* Aletas */}
-                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-x-4 w-3 h-2 bg-blue-500 rounded-full"></div>
-                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-x-1 w-3 h-2 bg-blue-500 rounded-full"></div>
-                    {/* Brazos */}
-                    <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 -translate-x-3 w-2 h-3 bg-blue-600 rounded"></div>
-                    <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 translate-x-1 w-2 h-3 bg-blue-600 rounded"></div>
-                  </div>
+                  ) : (
+                    <div className="w-full h-full bg-orange-400 rounded-full border-2 border-orange-600 flex items-center justify-center text-xs">
+                      🐟
+                    </div>
+                  )}
                 </div>
+              ))}
 
-                {/* Fondo del océano */}
-                <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-green-800 to-green-600">
-                  <div className="absolute bottom-2 left-10 text-green-300">🪸</div>
-                  <div className="absolute bottom-3 left-32 text-green-400">🌿</div>
-                  <div className="absolute bottom-1 right-20 text-green-300">🪸</div>
-                  <div className="absolute bottom-4 right-40 text-green-400">🌿</div>
+              {/* Jugador (submarinista) - Nuevo diseño */}
+              <div
+                className="absolute bottom-20 transition-all duration-100"
+                style={{
+                  left: playerX,
+                  width: playerWidth,
+                  height: playerHeight,
+                }}
+              >
+                <div className="w-full h-full relative">
+                  {/* Cuerpo del buzo */}
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-6 bg-blue-700 rounded-t-lg border-2 border-blue-900"></div>
+                  {/* Tanque de oxígeno */}
+                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 translate-x-3 w-3 h-5 bg-gray-400 rounded border border-gray-600"></div>
+                  {/* Máscara/cabeza */}
+                  <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-yellow-200 rounded-full border-2 border-yellow-400 flex items-center justify-center">
+                    <div className="w-2 h-1 bg-black rounded-full"></div>
+                  </div>
+                  {/* Aletas */}
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-x-4 w-3 h-2 bg-blue-500 rounded-full"></div>
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-x-1 w-3 h-2 bg-blue-500 rounded-full"></div>
+                  {/* Brazos */}
+                  <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 -translate-x-3 w-2 h-3 bg-blue-600 rounded"></div>
+                  <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 translate-x-1 w-2 h-3 bg-blue-600 rounded"></div>
                 </div>
+              </div>
+
+              {/* Fondo del océano */}
+              <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-green-800 to-green-600">
+                <div className="absolute bottom-2 left-10 text-green-300">🪸</div>
+                <div className="absolute bottom-3 left-32 text-green-400">🌿</div>
+                <div className="absolute bottom-1 right-20 text-green-300">🪸</div>
+                <div className="absolute bottom-4 right-40 text-green-400">🌿</div>
               </div>
             </div>
 
             {/* Controles móviles */}
-            <div className="flex sm:hidden justify-center mt-4 space-x-4">
+            <div className="flex justify-center mt-4 space-x-4">
               <Button
-                onMouseDown={() => movePlayer('left')}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 text-2xl rounded-full"
-              >
-                ←
-              </Button>
-              <Button
-                onMouseDown={() => movePlayer('right')}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 text-2xl rounded-full"
-              >
-                →
-              </Button>
-            </div>
-            <div className="hidden sm:flex justify-center mt-4 space-x-4">
-               <Button
                 onMouseDown={() => movePlayer('left')}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3"
               >
