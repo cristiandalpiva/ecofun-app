@@ -486,18 +486,23 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-6">
                 <div className="flex items-center space-x-4">
                   <div className="text-4xl sm:text-5xl">{plantLevel.emoji}</div>
-                  <div className="text-left">
+                  <div className="text-left max-w-[160px] sm:max-w-xs break-words">
                     <h3 className="text-xl sm:text-2xl font-bold text-emerald-700">{plantLevel.stage}</h3>
                     <p className="text-emerald-600 text-sm sm:text-base">Nivel {plantLevel.level}</p>
-                    <p className="text-emerald-600 text-xs sm:text-sm italic">{plantLevel.description}</p>
+                    {/* Ajuste para que el texto no se desborde */}
+                    <p className="text-emerald-600 text-xs sm:text-sm italic max-w-full break-words whitespace-normal overflow-hidden">
+                      {plantLevel.description}
+                    </p>
                   </div>
                 </div>
                 
-                <div className="flex-1 max-w-md w-full">
-                  <div className="flex justify-between items-center mb-2">
+                <div className="flex-1 max-w-md w-full min-w-0">
+                  <div className="flex justify-between items-center mb-2 w-full">
                     <span className="text-sm font-semibold text-emerald-700">{userPoints} puntos</span>
                     {plantLevel.level < 6 && (
-                      <span className="text-sm text-emerald-600">Meta: {plantLevel.nextGoal}</span>
+                      <span className="text-sm text-emerald-600 max-w-[90px] truncate inline-block text-right">
+                        Meta: {plantLevel.nextGoal}
+                      </span>
                     )}
                   </div>
                   <Progress 
@@ -505,7 +510,7 @@ const Index = () => {
                     className="h-3 bg-emerald-100"
                   />
                   {plantLevel.level < 6 && (
-                    <p className="text-xs text-emerald-600 mt-1">
+                    <p className="text-xs text-emerald-600 mt-1 max-w-full break-words whitespace-normal">
                       {plantLevel.nextGoal - userPoints} puntos para el siguiente nivel
                     </p>
                   )}
