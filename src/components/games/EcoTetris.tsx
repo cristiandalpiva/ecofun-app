@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,6 +38,8 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
   const [isPaused, setIsPaused] = useState(false);
   const [gameWon, setGameWon] = useState(false);
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const [cellSize, setCellSize] = useState(24);
 
   const ecoTetriminoes = [
     {
@@ -92,7 +93,8 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
     }
   ];
 
-  const createPiece = useCallback((pieceData = ecoTetriminoes[Math.floor(Math.random() * ecoTetriminoes.length)]): Piece => {
+  const createPiece = useCallback((): Piece => {
+    const pieceData = ecoTetriminoes[Math.floor(Math.random() * ecoTetriminoes.length)];
     const blocks: Block[] = [];
     const shape = pieceData.shape;
     
@@ -318,6 +320,21 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
     return piece ? piece.icon : '';
   };
 
+  useEffect(() => {
+    const boardEl = boardContainerRef.current;
+    if (!boardEl) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (boardEl) {
+        const newCellSize = boardEl.offsetWidth / BOARD_WIDTH;
+        setCellSize(newCellSize);
+      }
+    });
+
+    resizeObserver.observe(boardEl);
+    return () => resizeObserver.disconnect();
+  }, []);
+
   const renderBoard = () => {
     const displayBoard = board.map(row => [...row]);
     
@@ -335,7 +352,8 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
         {row.map((cell, x) => (
           <div
             key={x}
-            className={`w-6 h-6 border border-gray-400 flex items-center justify-center text-xs ${
+            style={{ width: cellSize, height: cellSize, fontSize: cellSize / 2 }}
+            className={`border border-gray-400 flex items-center justify-center ${
               cell ? getCellStyle(cell) : 'bg-gray-100'
             }`}
           >
@@ -443,10 +461,12 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
               {/* Game Board */}
               <div className="lg:col-span-3">
                 <Card className="bg-gray-50 border-2 border-gray-300">
-                  <CardContent className="p-4">
+                  <CardContent className="p-2 sm:p-4">
                     <div className="flex justify-center">
-                      <div className="inline-block border-4 border-gray-600 bg-white">
-                        {renderBoard()}
+                      <div ref={boardContainerRef} className="w-full max-w-xs">
+                        <div className="inline-block border-4 border-gray-600 bg-white">
+                          {renderBoard()}
+                        </div>
                       </div>
                     </div>
                     
@@ -463,8 +483,25 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
                   </CardContent>
                 </Card>
                 
+                {/* Mobile Controls */}
+                <div className="mt-4 lg:hidden">
+                  <Card className="bg-blue-50 border-2 border-blue-300">
+                    <CardContent className="p-2">
+                      <h4 className="font-bold text-blue-700 mb-2 text-center">Controles</h4>
+                      <div className="flex justify-around items-center">
+                        <Button onMouseDown={() => movePiece(-1, 0)} className="p-4 text-2xl rounded-full">←</Button>
+                        <div className="flex flex-col gap-2">
+                          <Button onMouseDown={handleRotate} className="p-4 text-2xl rounded-full">↑</Button>
+                          <Button onMouseDown={() => movePiece(0, 1)} className="p-4 text-2xl rounded-full">↓</Button>
+                        </div>
+                        <Button onMouseDown={() => movePiece(1, 0)} className="p-4 text-2xl rounded-full">→</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
                 {/* Controls */}
-                <Card className="mt-4 bg-blue-50 border-2 border-blue-300">
+                <Card className="mt-4 bg-blue-50 border-2 border-blue-300 hidden lg:block">
                   <CardContent className="p-4">
                     <h4 className="font-bold text-blue-700 mb-2">🎮 Controles</h4>
                     <div className="text-sm text-blue-600 space-y-1">

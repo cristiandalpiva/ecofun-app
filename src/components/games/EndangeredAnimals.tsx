@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -395,41 +394,43 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
             {/* Habitats */}
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-gray-800 mb-4">🌍 Hábitats Naturales</h2>
-              {gameHabitats.map(habitat => {
-                const HabitatIcon = habitat.icon;
-                return (
-                  <Card
-                    key={habitat.id}
-                    className={`${habitat.color} border-2 min-h-[120px] transition-all duration-200`}
-                    onDragOver={(e) => e.preventDefault()}
-                    onDrop={() => handleDrop(habitat.id)}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-3 mb-3">
-                        <HabitatIcon className="w-6 h-6 text-gray-700" />
-                        <div>
-                          <h3 className="font-bold text-gray-800">{habitat.name} {habitat.emoji}</h3>
-                          <p className="text-xs text-gray-600">{habitat.description}</p>
-                        </div>
-                      </div>
-                      
-                      {/* Placed Animals */}
-                      <div className="flex flex-wrap gap-2">
-                        {habitat.animals.map(animal => (
-                          <div 
-                            key={animal.id}
-                            className="flex items-center space-x-2 bg-white/80 rounded-full px-3 py-1 border"
-                          >
-                            <span className="text-sm">{animal.emoji}</span>
-                            <span className="text-xs font-medium">{animal.name}</span>
-                            <CheckCircle className="w-3 h-3 text-green-600" />
+              <div className="lg:grid lg:grid-cols-1 lg:gap-4 flex gap-4 overflow-x-auto pb-4 lg:pb-0 snap-x">
+                {gameHabitats.map(habitat => {
+                  const HabitatIcon = habitat.icon;
+                  return (
+                    <Card
+                      key={habitat.id}
+                      className={`${habitat.color} border-2 min-h-[120px] transition-all duration-200 w-72 lg:w-full flex-shrink-0 lg:flex-shrink snap-start`}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={() => handleDrop(habitat.id)}
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex items-center space-x-3 mb-3">
+                          <HabitatIcon className="w-6 h-6 text-gray-700" />
+                          <div>
+                            <h3 className="font-bold text-gray-800">{habitat.name} {habitat.emoji}</h3>
+                            <p className="text-xs text-gray-600">{habitat.description}</p>
                           </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                        </div>
+                        
+                        {/* Placed Animals */}
+                        <div className="flex flex-wrap gap-2">
+                          {habitat.animals.map(animal => (
+                            <div 
+                              key={animal.id}
+                              className="flex items-center space-x-2 bg-white/80 rounded-full px-3 py-1 border"
+                            >
+                              <span className="text-sm">{animal.emoji}</span>
+                              <span className="text-xs font-medium">{animal.name}</span>
+                              <CheckCircle className="w-3 h-3 text-green-600" />
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
           </div>
         ) : (
