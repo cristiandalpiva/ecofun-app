@@ -122,6 +122,14 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-green-500;
   }
+
+  /* Mobile-friendly touch targets */
+  @media (max-width: 768px) {
+    button, [role="button"], .cursor-pointer {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
 }
 
 /* Custom animations for child-friendly interactions */
@@ -141,4 +149,38 @@
 
 .sparkle {
   animation: sparkle 1s ease-in-out infinite;
+}
+
+@keyframes scale-in {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out;
+}
+
+/* Responsive text sizing */
+@media (max-width: 640px) {
+  .text-responsive-sm {
+    font-size: 0.875rem;
+  }
+  .text-responsive-base {
+    font-size: 1rem;
+  }
+  .text-responsive-lg {
+    font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 641px) {
+  .text-responsive-sm {
+    font-size: 1rem;
+  }
+  .text-responsive-base {
+    font-size: 1.125rem;
+  }
+  .text-responsive-lg {
+    font-size: 1.25rem;
+  }
 }
