@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,7 +25,7 @@ interface PuzzleImage {
   name: string;
   description: string;
   url: string;
-  aspectRatio: string; // '1:1' or '4:5'
+  aspectRatio: string;
 }
 
 interface PuzzlePiece {
@@ -36,6 +35,7 @@ interface PuzzlePiece {
   imageUrl: string;
   backgroundPosition: string;
   backgroundSize: string;
+  clipPath: string;
 }
 
 const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
@@ -84,7 +84,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   ];
 
   const puzzleImages: PuzzleImage[] = [
-    // Imágenes cuadradas (1:1) para fácil y medio
     {
       id: 'forest',
       name: 'Bosque Verde',
@@ -105,21 +104,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       description: 'Paisaje montañoso con vegetación',
       url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop',
       aspectRatio: '1:1'
-    },
-    {
-      id: 'sunflowers',
-      name: 'Campo de Girasoles',
-      description: 'Hermosos girasoles bajo el sol',
-      url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=600&fit=crop',
-      aspectRatio: '1:1'
-    },
-    // Imágenes verticales (4:5) para difícil
-    {
-      id: 'waterfall',
-      name: 'Cascada Natural',
-      description: 'Una cascada rodeada de naturaleza',
-      url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=480&h=600&fit=crop',
-      aspectRatio: '4:5'
     },
     {
       id: 'deer',
@@ -146,6 +130,67 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     return puzzleImages.filter(img => img.aspectRatio === '1:1');
   };
 
+  // Generar formas de piezas realistas
+  const generatePuzzlePieceShape = (row: number, col: number, rows: number, cols: number) => {
+    const isTopEdge = row === 0;
+    const isBottomEdge = row === rows - 1;
+    const isLeftEdge = col === 0;
+    const isRightEdge = col === cols - 1;
+    
+    // Crear un clipPath SVG para formas de piezas realistas
+    let path = `M 10 10`;
+    
+    // Lado superior
+    if (isTopEdge) {
+      path += ` L 90 10`;
+    } else {
+      const hasTab = Math.random() > 0.5;
+      if (hasTab) {
+        path += ` L 35 10 Q 40 5 45 10 Q 50 0 55 10 Q 60 5 65 10 L 90 10`;
+      } else {
+        path += ` L 35 10 Q 40 15 45 10 Q 50 20 55 10 Q 60 15 65 10 L 90 10`;
+      }
+    }
+    
+    // Lado derecho
+    if (isRightEdge) {
+      path += ` L 90 90`;
+    } else {
+      const hasTab = Math.random() > 0.5;
+      if (hasTab) {
+        path += ` L 90 35 Q 95 40 90 45 Q 100 50 90 55 Q 95 60 90 65 L 90 90`;
+      } else {
+        path += ` L 90 35 Q 85 40 90 45 Q 80 50 90 55 Q 85 60 90 65 L 90 90`;
+      }
+    }
+    
+    // Lado inferior
+    if (isBottomEdge) {
+      path += ` L 10 90`;
+    } else {
+      const hasTab = Math.random() > 0.5;
+      if (hasTab) {
+        path += ` L 65 90 Q 60 95 55 90 Q 50 100 45 90 Q 40 95 35 90 L 10 90`;
+      } else {
+        path += ` L 65 90 Q 60 85 55 90 Q 50 80 45 90 Q 40 85 35 90 L 10 90`;
+      }
+    }
+    
+    // Lado izquierdo
+    if (isLeftEdge) {
+      path += ` L 10 10 Z`;
+    } else {
+      const hasTab = Math.random() > 0.5;
+      if (hasTab) {
+        path += ` L 10 65 Q 5 60 10 55 Q 0 50 10 45 Q 5 40 10 35 L 10 10 Z`;
+      } else {
+        path += ` L 10 65 Q 15 60 10 55 Q 20 50 10 45 Q 15 40 10 35 L 10 10 Z`;
+      }
+    }
+    
+    return `polygon(${path})`;
+  };
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (gameStarted && !isComplete) {
@@ -162,7 +207,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const newPieces: PuzzlePiece[] = [];
     const { rows, cols, totalPieces } = selectedLevel;
 
-    // Crear las piezas con sus posiciones correctas
     for (let i = 0; i < totalPieces; i++) {
       const row = Math.floor(i / cols);
       const col = i % cols;
@@ -173,11 +217,11 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
         currentPosition: null,
         imageUrl: selectedImage.url,
         backgroundPosition: `-${(col * 100) / (cols - 1)}% -${(row * 100) / (rows - 1)}%`,
-        backgroundSize: `${cols * 100}% ${rows * 100}%`
+        backgroundSize: `${cols * 100}% ${rows * 100}%`,
+        clipPath: generatePuzzlePieceShape(row, col, rows, cols)
       });
     }
 
-    // Mezclar las piezas
     const shuffledPieces = [...newPieces];
     for (let i = shuffledPieces.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -227,7 +271,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const newBoardPieces = [...boardPieces];
     const newPieces = pieces.filter(p => p.id !== draggedPiece);
     
-    // Si hay una pieza en esta posición, devolverla a piezas
     if (newBoardPieces[boardIndex] !== null) {
       const returnedPiece = pieces.find(p => p.id === newBoardPieces[boardIndex]);
       if (returnedPiece) {
@@ -381,17 +424,15 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     );
   }
 
-  // Inicializar puzzle si aún no se ha hecho
   if (pieces.length === 0) {
     initializePuzzle();
   }
 
-  // Pantalla del juego
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-green-50 to-cyan-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-cyan-50 to-teal-100 p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-200">
           <Button onClick={resetGame} variant="outline" className="text-gray-600 hover:text-gray-800">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Cambiar Imagen
@@ -432,122 +473,128 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
           </div>
         )}
 
-        {/* Área del juego */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Área de piezas */}
-          <div className="lg:col-span-1">
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-emerald-200 shadow-xl">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold text-emerald-700">
-                    🧩 Piezas ({pieces.length})
-                  </h3>
-                  <Button onClick={initializePuzzle} variant="outline" size="sm">
-                    <Shuffle className="w-4 h-4 mr-1" />
-                    Mezclar
-                  </Button>
-                </div>
-                
-                <div
-                  className="grid gap-2 min-h-[200px] p-3 bg-emerald-50 rounded-lg border-2 border-dashed border-emerald-300"
-                  style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))' }}
-                  onDragOver={handleDragOver}
-                  onDrop={handleDropOnPieces}
-                >
-                  {pieces.map((piece) => (
+        {/* Nueva distribución estilo referencia */}
+        <div className="flex justify-center">
+          <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border-2 border-gray-300" 
+               style={{ width: '900px', height: '650px' }}>
+            
+            {/* Tablero central */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-200 rounded-lg border-4 border-gray-400 shadow-inner"
+                 style={{ width: '400px', height: selectedLevel.level === 'hard' ? '320px' : '400px' }}>
+              <div 
+                className="grid gap-0 w-full h-full p-2"
+                style={{ 
+                  gridTemplateColumns: `repeat(${selectedLevel.cols}, 1fr)`,
+                  gridTemplateRows: `repeat(${selectedLevel.rows}, 1fr)`
+                }}
+              >
+                {Array.from({ length: selectedLevel.totalPieces }, (_, index) => {
+                  const pieceId = boardPieces[index];
+                  const piece = pieces.find(p => p.id === pieceId);
+                  
+                  return (
+                    <div
+                      key={`board-${index}`}
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleDropOnBoard(e, index)}
+                      className={`aspect-square transition-all duration-200 overflow-hidden ${
+                        pieceId !== null
+                          ? 'shadow-md'
+                          : 'border-2 border-dashed border-gray-400 hover:border-emerald-300 hover:bg-emerald-50/30'
+                      } ${isComplete ? 'animate-pulse' : ''}`}
+                    >
+                      {piece && (
+                        <div 
+                          className="w-full h-full cursor-move"
+                          style={{
+                            backgroundImage: `url(${piece.imageUrl})`,
+                            backgroundSize: piece.backgroundSize,
+                            backgroundPosition: piece.backgroundPosition,
+                            backgroundRepeat: 'no-repeat',
+                            clipPath: piece.clipPath
+                          }}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Piezas dispersas alrededor */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div 
+                className="w-full h-full relative pointer-events-auto"
+                onDragOver={handleDragOver}
+                onDrop={handleDropOnPieces}
+              >
+                {pieces.map((piece, index) => {
+                  // Posicionar piezas alrededor del tablero
+                  const angle = (index / pieces.length) * 2 * Math.PI;
+                  const radius = 280;
+                  const x = 450 + radius * Math.cos(angle) - 40;
+                  const y = 325 + radius * Math.sin(angle) - 40;
+                  
+                  return (
                     <div
                       key={`piece-${piece.id}`}
                       draggable
                       onDragStart={(e) => handleDragStart(e, piece.id)}
-                      className={`aspect-square rounded border-2 border-emerald-400 cursor-move transition-all duration-200 hover:scale-105 hover:shadow-lg overflow-hidden bg-white ${
+                      className={`absolute w-20 h-20 cursor-move transition-all duration-200 hover:scale-110 hover:z-10 ${
                         draggedPiece === piece.id ? 'opacity-50 scale-95' : ''
                       }`}
+                      style={{
+                        left: `${x}px`,
+                        top: `${y}px`,
+                        transform: `rotate(${Math.random() * 60 - 30}deg)`
+                      }}
                     >
                       <div 
-                        className="w-full h-full"
+                        className="w-full h-full shadow-lg hover:shadow-xl"
                         style={{
                           backgroundImage: `url(${piece.imageUrl})`,
                           backgroundSize: piece.backgroundSize,
                           backgroundPosition: piece.backgroundPosition,
-                          backgroundRepeat: 'no-repeat'
+                          backgroundRepeat: 'no-repeat',
+                          clipPath: piece.clipPath
                         }}
                       />
                     </div>
-                  ))}
-                </div>
-                
-                <p className="text-xs text-gray-600 mt-2 text-center">
-                  Arrastra las piezas al tablero para completar la imagen
-                </p>
-              </CardContent>
-            </Card>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Botón de mezclar */}
+            <Button 
+              onClick={initializePuzzle} 
+              className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg"
+              size="sm"
+            >
+              <Shuffle className="w-4 h-4 mr-1" />
+              Mezclar
+            </Button>
+
+            {/* Contador de piezas restantes */}
+            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-lg border">
+              <span className="text-sm font-medium text-emerald-700">
+                🧩 {pieces.length} piezas restantes
+              </span>
+            </div>
           </div>
+        </div>
 
-          {/* Tablero de juego */}
-          <div className="lg:col-span-2">
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-emerald-200 shadow-xl">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-bold text-emerald-700 mb-4 text-center">
-                  🎯 Tablero del Rompecabezas
-                </h3>
-                
-                <div className="flex justify-center">
-                  <div 
-                    className={`grid gap-1 p-4 bg-gray-100 rounded-lg border-4 border-dashed border-gray-300 ${
-                      selectedLevel.level === 'hard' ? 'aspect-[4/5]' : 'aspect-square'
-                    } max-w-md`}
-                    style={{ 
-                      gridTemplateColumns: `repeat(${selectedLevel.cols}, 1fr)`,
-                      gridTemplateRows: `repeat(${selectedLevel.rows}, 1fr)`
-                    }}
-                  >
-                    {Array.from({ length: selectedLevel.totalPieces }, (_, index) => {
-                      const pieceId = boardPieces[index];
-                      const piece = pieces.find(p => p.id === pieceId);
-                      
-                      return (
-                        <div
-                          key={`board-${index}`}
-                          onDragOver={handleDragOver}
-                          onDrop={(e) => handleDropOnBoard(e, index)}
-                          className={`aspect-square rounded border-2 transition-all duration-200 overflow-hidden ${
-                            pieceId !== null
-                              ? 'border-emerald-400 bg-white shadow-md'
-                              : 'border-gray-300 bg-gray-50 border-dashed hover:border-emerald-300 hover:bg-emerald-50'
-                          } ${isComplete ? 'animate-pulse border-green-500' : ''}`}
-                        >
-                          {piece && (
-                            <div 
-                              className="w-full h-full"
-                              style={{
-                                backgroundImage: `url(${piece.imageUrl})`,
-                                backgroundSize: piece.backgroundSize,
-                                backgroundPosition: piece.backgroundPosition,
-                                backgroundRepeat: 'no-repeat'
-                              }}
-                            />
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Imagen de referencia */}
-                <div className="mt-6 text-center">
-                  <h4 className="text-sm font-medium text-gray-600 mb-2">Imagen de referencia:</h4>
-                  <div className={`mx-auto rounded-lg overflow-hidden border-2 border-emerald-300 ${
-                    selectedLevel.level === 'hard' ? 'aspect-[4/5] max-w-[200px]' : 'aspect-square max-w-[150px]'
-                  }`}>
-                    <img 
-                      src={selectedImage.url} 
-                      alt={selectedImage.name}
-                      className="w-full h-full object-cover opacity-70"
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+        {/* Imagen de referencia */}
+        <div className="mt-8 text-center">
+          <h4 className="text-lg font-medium text-gray-700 mb-4">Imagen de referencia:</h4>
+          <div className={`mx-auto rounded-lg overflow-hidden border-4 border-emerald-300 shadow-lg ${
+            selectedLevel.level === 'hard' ? 'aspect-[4/5] max-w-[240px]' : 'aspect-square max-w-[200px]'
+          }`}>
+            <img 
+              src={selectedImage.url} 
+              alt={selectedImage.name}
+              className="w-full h-full object-cover opacity-80"
+            />
           </div>
         </div>
       </div>
