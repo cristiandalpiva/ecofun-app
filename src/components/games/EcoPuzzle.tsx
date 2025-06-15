@@ -42,7 +42,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const [selectedImage, setSelectedImage] = useState<PuzzleImage | null>(null);
   const [pieces, setPieces] = useState<PuzzlePiece[]>([]);
   const [boardPieces, setBoardPieces] = useState<(number | null)[]>([]);
-  const [draggedPiece, setDraggedPiece] = useState<number | null>(null);
+  const [draggedPieceId, setDraggedPieceId] = useState<number | null>(null);
   const [isComplete, setIsComplete] = useState(false);
   const [moves, setMoves] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
@@ -145,7 +145,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const newPieces: PuzzlePiece[] = [];
     const { rows, cols, totalPieces } = selectedLevel;
 
-    // Create pieces in order (0 to totalPieces-1)
+    // Create pieces in order
     for (let i = 0; i < totalPieces; i++) {
       const row = Math.floor(i / cols);
       const col = i % cols;
@@ -160,7 +160,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       });
     }
 
-    // Shuffle the pieces array for display
+    // Shuffle pieces for display
     const shuffledPieces = [...newPieces];
     for (let i = shuffledPieces.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -175,12 +175,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     setGameStarted(false);
     setShowCelebration(false);
 
-    console.log('Puzzle initialized:', {
-      totalPieces,
-      rows,
-      cols,
-      pieces: newPieces.map(p => ({ id: p.id, row: p.row, col: p.col, correctPosition: p.correctPosition }))
-    });
+    console.log('Puzzle initialized with pieces:', shuffledPieces.map(p => ({ id: p.id, correctPosition: p.correctPosition })));
   };
 
   const checkCompletion = (newBoardPieces: (number | null)[]) => {
@@ -189,15 +184,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       return pieceId === boardIndex;
     });
     
-    console.log('Checking completion:', {
-      allPiecesPlaced,
-      allPiecesCorrect,
-      boardState: newBoardPieces.map((pieceId, index) => ({
-        boardIndex: index,
-        pieceId,
-        isCorrect: pieceId === index
-      }))
-    });
+    console.log('Checking completion:', { allPiecesPlaced, allPiecesCorrect });
     
     if (allPiecesPlaced && allPiecesCorrect && !isComplete) {
       setIsComplete(true);
@@ -211,8 +198,10 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   };
 
   const handleDragStart = (e: React.DragEvent, pieceId: number) => {
-    setDraggedPiece(pieceId);
+    console.log('Drag start:', pieceId);
+    setDraggedPieceId(pieceId);
     e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', pieceId.toString());
     if (!gameStarted) setGameStarted(true);
   };
 
@@ -224,9 +213,10 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const handleDropOnBoard = (e: React.DragEvent, boardIndex: number) => {
     e.preventDefault();
     
-    if (draggedPiece === null) return;
+    const pieceId = parseInt(e.dataTransfer.getData('text/plain'));
+    console.log('Drop on board:', { pieceId, boardIndex });
 
-    console.log('Dropping piece:', draggedPiece, 'on board position:', boardIndex);
+    if (isNaN(pieceId)) return;
 
     const newBoardPieces = [...boardPieces];
     
@@ -245,36 +235,40 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     }
     
     // Place the dragged piece on the board
-    newBoardPieces[boardIndex] = draggedPiece;
+    newBoardPieces[boardIndex] = pieceId;
     
     // Remove the piece from loose pieces
-    setPieces(prev => prev.filter(p => p.id !== draggedPiece));
+    setPieces(prev => prev.filter(p => p.id !== pieceId));
     
     setBoardPieces(newBoardPieces);
     setMoves(moves + 1);
-    setDraggedPiece(null);
+    setDraggedPieceId(null);
     
     checkCompletion(newBoardPieces);
   };
 
   const handleDropOnPieces = (e: React.DragEvent) => {
     e.preventDefault();
-    if (draggedPiece === null) return;
+    
+    const pieceId = parseInt(e.dataTransfer.getData('text/plain'));
+    console.log('Drop on pieces area:', pieceId);
+
+    if (isNaN(pieceId)) return;
 
     // Find if the piece is currently on the board
-    const pieceIndexInBoard = boardPieces.indexOf(draggedPiece);
+    const pieceIndexInBoard = boardPieces.indexOf(pieceId);
     if (pieceIndexInBoard !== -1) {
       // Remove piece from board and add back to loose pieces
       const newBoardPieces = [...boardPieces];
       newBoardPieces[pieceIndexInBoard] = null;
       
       const draggedPieceData = {
-        id: draggedPiece,
-        correctPosition: draggedPiece,
+        id: pieceId,
+        correctPosition: pieceId,
         currentPosition: null,
         imageUrl: selectedImage!.url,
-        row: Math.floor(draggedPiece / selectedLevel!.cols),
-        col: draggedPiece % selectedLevel!.cols
+        row: Math.floor(pieceId / selectedLevel!.cols),
+        col: pieceId % selectedLevel!.cols
       };
       
       setPieces(prev => [...prev, draggedPieceData]);
@@ -282,7 +276,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       setMoves(moves + 1);
     }
     
-    setDraggedPiece(null);
+    setDraggedPieceId(null);
   };
 
   const formatTime = (seconds: number) => {
@@ -308,7 +302,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     if (!selectedLevel) return {};
     
     const { rows, cols } = selectedLevel;
-    const pieceSize = 80; // Size of loose pieces
+    const pieceSize = 80;
     
     return {
       backgroundImage: `url(${piece.imageUrl})`,
@@ -523,10 +517,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                           onDragStart={(e) => handleDragStart(e, pieceId)}
                         />
                       )}
-                      {/* Debug info */}
-                      <div className="absolute top-0 left-0 text-xs text-gray-500 bg-white/80 px-1">
-                        {boardIndex}
-                      </div>
                     </div>
                   );
                 })}
@@ -553,7 +543,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                       draggable
                       onDragStart={(e) => handleDragStart(e, piece.id)}
                       className={`absolute w-20 h-20 cursor-move transition-all duration-200 hover:scale-110 hover:z-10 border-2 border-emerald-300 rounded-md overflow-hidden shadow-lg hover:shadow-xl ${
-                        draggedPiece === piece.id ? 'opacity-50 scale-95' : ''
+                        draggedPieceId === piece.id ? 'opacity-50 scale-95' : ''
                       }`}
                       style={{
                         left: `${x}px`,
@@ -566,10 +556,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                         className="w-full h-full"
                         style={getPieceStyle(piece)}
                       />
-                      {/* Debug info */}
-                      <div className="absolute top-0 left-0 text-xs text-white bg-black/50 px-1">
-                        {piece.id}
-                      </div>
                     </div>
                   );
                 })}
