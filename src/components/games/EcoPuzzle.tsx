@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -50,22 +51,24 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const [moves, setMoves] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [selectedPieceId, setSelectedPieceId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (gameStarted && !isComplete) {
+    if (gameStarted && !isPaused && !isComplete) {
       const intervalId = setInterval(() => {
         setTimeElapsed((prevTime) => prevTime + 1);
       }, 1000);
 
       return () => clearInterval(intervalId);
     }
-  }, [gameStarted, isComplete]);
+  }, [gameStarted, isPaused, isComplete]);
 
   const puzzleGridSize = Math.sqrt(puzzles[currentPuzzleIndex].totalPieces);
 
   const initializePuzzle = () => {
     setGameStarted(true);
+    setIsPaused(false);
     const selectedLevel = puzzles[currentPuzzleIndex];
     const newPieces: Piece[] = [];
     for (let i = 0; i < selectedLevel.totalPieces; i++) {
@@ -158,7 +161,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
            </h1>
            <div className="space-x-2">
              <Button
-               onClick={() => setGameStarted(false)}
+               onClick={initializePuzzle}
                variant="outline"
                size="sm"
              >
@@ -166,19 +169,20 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                Reiniciar
              </Button>
              <Button
-               onClick={() => setGameStarted(!gameStarted)}
+               onClick={() => setIsPaused(!isPaused)}
                variant="outline"
                size="sm"
+               disabled={!gameStarted || isComplete}
              >
-               {gameStarted ? (
+               {isPaused ? (
                  <>
-                   <Pause className="w-4 h-4 mr-2" />
-                   Pausar
+                   <Play className="w-4 h-4 mr-2" />
+                   Continuar
                  </>
                ) : (
                  <>
-                   <Play className="w-4 h-4 mr-2" />
-                   Comenzar
+                   <Pause className="w-4 h-4 mr-2" />
+                   Pausar
                  </>
                )}
              </Button>
@@ -208,7 +212,15 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
              </Button>
            </div>
          ) : (
-           <div className="flex flex-col lg:flex-row items-start justify-center gap-6">
+           <div className="relative flex flex-col lg:flex-row items-start justify-center gap-6">
+             {isPaused && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 rounded-2xl">
+                    <div className="text-center text-white p-8 bg-black/70 rounded-lg">
+                        <h2 className="text-3xl font-bold">Pausado</h2>
+                        <Button onClick={() => setIsPaused(false)} className="mt-4 bg-green-500 hover:bg-green-600">Continuar Juego</Button>
+                    </div>
+                </div>
+            )}
              {/* Estadísticas del juego - left side */}
              <div className="order-2 lg:order-2 bg-white/90 backdrop-blur-sm rounded-2xl p-3 sm:p-6 shadow-2xl border-2 border-gray-300 w-full max-w-sm lg:max-w-xs">
                <h3 className="text-sm sm:text-lg font-semibold text-blue-700 mb-3 sm:mb-4 text-center">
@@ -229,7 +241,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
               <h3 className="text-sm sm:text-lg font-semibold text-emerald-700 mb-3 sm:mb-4 text-center">
                 🧩 Piezas disponibles ({pieces.filter(p => !p.isLocked).length})
               </h3>
-              <div className="grid grid-cols-4 sm:grid-cols-3 gap-1">
+              <div className="grid grid-cols-3 gap-1">
                 {pieces.map(piece =>
                   !piece.isLocked ? (
                     <div
@@ -256,7 +268,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                  style={{
                    gridTemplateColumns: `repeat(${puzzleGridSize}, 1fr)`,
                    width: '100%',
-                   maxWidth: `${puzzleGridSize * 80}px`,
+                   maxWidth: `${puzzleGridSize * 120}px`,
                  }}
                >
                  {slots.map((slot, index) => (
