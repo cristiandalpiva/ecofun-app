@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,9 +34,8 @@ interface PuzzlePiece {
   correctPosition: number;
   currentPosition: number | null;
   imageUrl: string;
-  backgroundPosition: string;
-  backgroundSize: string;
-  clipPath: string;
+  row: number;
+  col: number;
 }
 
 const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
@@ -130,67 +130,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     return puzzleImages.filter(img => img.aspectRatio === '1:1');
   };
 
-  // Generar formas de piezas realistas
-  const generatePuzzlePieceShape = (row: number, col: number, rows: number, cols: number) => {
-    const isTopEdge = row === 0;
-    const isBottomEdge = row === rows - 1;
-    const isLeftEdge = col === 0;
-    const isRightEdge = col === cols - 1;
-    
-    // Crear un clipPath SVG para formas de piezas realistas
-    let path = `M 10 10`;
-    
-    // Lado superior
-    if (isTopEdge) {
-      path += ` L 90 10`;
-    } else {
-      const hasTab = Math.random() > 0.5;
-      if (hasTab) {
-        path += ` L 35 10 Q 40 5 45 10 Q 50 0 55 10 Q 60 5 65 10 L 90 10`;
-      } else {
-        path += ` L 35 10 Q 40 15 45 10 Q 50 20 55 10 Q 60 15 65 10 L 90 10`;
-      }
-    }
-    
-    // Lado derecho
-    if (isRightEdge) {
-      path += ` L 90 90`;
-    } else {
-      const hasTab = Math.random() > 0.5;
-      if (hasTab) {
-        path += ` L 90 35 Q 95 40 90 45 Q 100 50 90 55 Q 95 60 90 65 L 90 90`;
-      } else {
-        path += ` L 90 35 Q 85 40 90 45 Q 80 50 90 55 Q 85 60 90 65 L 90 90`;
-      }
-    }
-    
-    // Lado inferior
-    if (isBottomEdge) {
-      path += ` L 10 90`;
-    } else {
-      const hasTab = Math.random() > 0.5;
-      if (hasTab) {
-        path += ` L 65 90 Q 60 95 55 90 Q 50 100 45 90 Q 40 95 35 90 L 10 90`;
-      } else {
-        path += ` L 65 90 Q 60 85 55 90 Q 50 80 45 90 Q 40 85 35 90 L 10 90`;
-      }
-    }
-    
-    // Lado izquierdo
-    if (isLeftEdge) {
-      path += ` L 10 10 Z`;
-    } else {
-      const hasTab = Math.random() > 0.5;
-      if (hasTab) {
-        path += ` L 10 65 Q 5 60 10 55 Q 0 50 10 45 Q 5 40 10 35 L 10 10 Z`;
-      } else {
-        path += ` L 10 65 Q 15 60 10 55 Q 20 50 10 45 Q 15 40 10 35 L 10 10 Z`;
-      }
-    }
-    
-    return `polygon(${path})`;
-  };
-
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (gameStarted && !isComplete) {
@@ -216,12 +155,12 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
         correctPosition: i,
         currentPosition: null,
         imageUrl: selectedImage.url,
-        backgroundPosition: `-${(col * 100) / (cols - 1)}% -${(row * 100) / (rows - 1)}%`,
-        backgroundSize: `${cols * 100}% ${rows * 100}%`,
-        clipPath: generatePuzzlePieceShape(row, col, rows, cols)
+        row,
+        col
       });
     }
 
+    // Mezclar las piezas
     const shuffledPieces = [...newPieces];
     for (let i = shuffledPieces.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -271,8 +210,10 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const newBoardPieces = [...boardPieces];
     const newPieces = pieces.filter(p => p.id !== draggedPiece);
     
+    // Si ya hay una pieza en esa posición, devolverla a las piezas sueltas
     if (newBoardPieces[boardIndex] !== null) {
-      const returnedPiece = pieces.find(p => p.id === newBoardPieces[boardIndex]);
+      const returnedPieceId = newBoardPieces[boardIndex];
+      const returnedPiece = [...pieces, ...newPieces].find(p => p.id === returnedPieceId);
       if (returnedPiece) {
         newPieces.push(returnedPiece);
       }
@@ -295,7 +236,15 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const pieceIndexInBoard = boardPieces.indexOf(draggedPiece);
     if (pieceIndexInBoard !== -1) {
       const newBoardPieces = [...boardPieces];
-      const draggedPieceData = pieces.find(p => p.id === draggedPiece);
+      const draggedPieceData = [...pieces].find(p => p.id === draggedPiece) || 
+                               newBoardPieces.map((id, idx) => id === draggedPiece ? { 
+                                 id: draggedPiece, 
+                                 correctPosition: draggedPiece, 
+                                 currentPosition: null, 
+                                 imageUrl: selectedImage!.url,
+                                 row: Math.floor(draggedPiece / selectedLevel!.cols),
+                                 col: draggedPiece % selectedLevel!.cols
+                               } : null).filter(Boolean)[0];
       
       newBoardPieces[pieceIndexInBoard] = null;
       
@@ -326,6 +275,22 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     setTimeElapsed(0);
     setGameStarted(false);
     setShowCelebration(false);
+  };
+
+  // Función para obtener el estilo de la pieza
+  const getPieceStyle = (piece: PuzzlePiece) => {
+    if (!selectedLevel) return {};
+    
+    const { rows, cols } = selectedLevel;
+    const pieceWidth = 100 / cols;
+    const pieceHeight = 100 / rows;
+    
+    return {
+      backgroundImage: `url(${piece.imageUrl})`,
+      backgroundSize: `${cols * 100}% ${rows * 100}%`,
+      backgroundPosition: `-${piece.col * pieceWidth}% -${piece.row * pieceHeight}%`,
+      backgroundRepeat: 'no-repeat'
+    };
   };
 
   // Pantalla de selección de nivel
@@ -482,7 +447,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-200 rounded-lg border-4 border-gray-400 shadow-inner"
                  style={{ width: '400px', height: selectedLevel.level === 'hard' ? '320px' : '400px' }}>
               <div 
-                className="grid gap-0 w-full h-full p-2"
+                className="grid gap-1 w-full h-full p-2"
                 style={{ 
                   gridTemplateColumns: `repeat(${selectedLevel.cols}, 1fr)`,
                   gridTemplateRows: `repeat(${selectedLevel.rows}, 1fr)`
@@ -490,29 +455,32 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
               >
                 {Array.from({ length: selectedLevel.totalPieces }, (_, index) => {
                   const pieceId = boardPieces[index];
-                  const piece = pieces.find(p => p.id === pieceId);
+                  const piece = pieces.find(p => p.id === pieceId) || 
+                              (pieceId !== null ? {
+                                id: pieceId,
+                                correctPosition: pieceId,
+                                currentPosition: index,
+                                imageUrl: selectedImage.url,
+                                row: Math.floor(pieceId / selectedLevel.cols),
+                                col: pieceId % selectedLevel.cols
+                              } : null);
                   
                   return (
                     <div
                       key={`board-${index}`}
                       onDragOver={handleDragOver}
                       onDrop={(e) => handleDropOnBoard(e, index)}
-                      className={`aspect-square transition-all duration-200 overflow-hidden ${
+                      className={`transition-all duration-200 overflow-hidden rounded-md ${
                         pieceId !== null
-                          ? 'shadow-md'
+                          ? 'shadow-md border-2 border-emerald-300'
                           : 'border-2 border-dashed border-gray-400 hover:border-emerald-300 hover:bg-emerald-50/30'
                       } ${isComplete ? 'animate-pulse' : ''}`}
+                      style={{ aspectRatio: selectedLevel.level === 'hard' ? '4/5' : '1' }}
                     >
                       {piece && (
                         <div 
                           className="w-full h-full cursor-move"
-                          style={{
-                            backgroundImage: `url(${piece.imageUrl})`,
-                            backgroundSize: piece.backgroundSize,
-                            backgroundPosition: piece.backgroundPosition,
-                            backgroundRepeat: 'no-repeat',
-                            clipPath: piece.clipPath
-                          }}
+                          style={getPieceStyle(piece)}
                         />
                       )}
                     </div>
@@ -540,24 +508,19 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                       key={`piece-${piece.id}`}
                       draggable
                       onDragStart={(e) => handleDragStart(e, piece.id)}
-                      className={`absolute w-20 h-20 cursor-move transition-all duration-200 hover:scale-110 hover:z-10 ${
+                      className={`absolute w-20 h-20 cursor-move transition-all duration-200 hover:scale-110 hover:z-10 border-2 border-emerald-300 rounded-md overflow-hidden shadow-lg hover:shadow-xl ${
                         draggedPiece === piece.id ? 'opacity-50 scale-95' : ''
                       }`}
                       style={{
                         left: `${x}px`,
                         top: `${y}px`,
-                        transform: `rotate(${Math.random() * 60 - 30}deg)`
+                        transform: `rotate(${Math.random() * 60 - 30}deg)`,
+                        aspectRatio: selectedLevel.level === 'hard' ? '4/5' : '1'
                       }}
                     >
                       <div 
-                        className="w-full h-full shadow-lg hover:shadow-xl"
-                        style={{
-                          backgroundImage: `url(${piece.imageUrl})`,
-                          backgroundSize: piece.backgroundSize,
-                          backgroundPosition: piece.backgroundPosition,
-                          backgroundRepeat: 'no-repeat',
-                          clipPath: piece.clipPath
-                        }}
+                        className="w-full h-full"
+                        style={getPieceStyle(piece)}
                       />
                     </div>
                   );
