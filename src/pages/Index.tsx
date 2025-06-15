@@ -23,6 +23,7 @@ import InteractiveStories from "@/components/games/InteractiveStories";
 import EcoComparison from "@/components/games/EcoComparison";
 import LightOffGame from "@/components/games/LightOffGame";
 import AventuraSubmarina from "@/components/games/AventuraSubmarina";
+import GuardianesDelHabitat from "@/components/games/GuardianesDelHabitat";
 
 import EcoMascot from "@/components/EcoMascot";
 import Footer from "@/components/Footer";
@@ -74,6 +75,17 @@ const Index = () => {
   }, [userPoints]);
 
   const games: Game[] = [
+    {
+      id: "guardianes-del-habitat",
+      title: "Guardianes del Hábitat",
+      description: "Rescata animales resolviendo problemas ambientales",
+      icon: "🌍",
+      difficulty: "Medio",
+      category: "Naturaleza",
+      component: GuardianesDelHabitat,
+      estimatedTime: "15-25 min",
+      points: 120
+    },
     {
       id: "aventura-submarina",
       title: "Aventura Submarina",

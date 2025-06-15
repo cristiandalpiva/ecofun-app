@@ -18,6 +18,7 @@ import EcoComparison from '@/components/games/EcoComparison';
 import InteractiveStories from '@/components/games/InteractiveStories';
 import LightOffGame from '@/components/games/LightOffGame';
 import AventuraSubmarina from '@/components/games/AventuraSubmarina';
+import GuardianesDelHabitat from '@/components/games/GuardianesDelHabitat';
 import { toast } from "@/hooks/use-toast";
 
 const Games = () => {
@@ -28,6 +29,16 @@ const Games = () => {
   });
 
   const games = [
+    {
+      id: 'guardianes-del-habitat',
+      title: 'Guardianes del Hábitat',
+      description: 'Rescata animales resolviendo problemas ambientales',
+      icon: '🌍',
+      difficulty: 'Medio',
+      points: '50-200 pts',
+      category: 'Aventura',
+      component: GuardianesDelHabitat
+    },
     {
       id: 'aventura-submarina',
       title: 'Aventura Submarina',
