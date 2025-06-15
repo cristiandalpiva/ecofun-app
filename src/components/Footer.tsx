@@ -1,5 +1,5 @@
-
 import { Leaf, Heart, Shield, Mail, Phone, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -30,24 +30,24 @@ const Footer = () => {
             <nav aria-label="Enlaces de contenido">
               <ul className="space-y-2 text-green-100">
                 <li>
-                  <a href="#juegos" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                  <Link to="/educational-games" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded block">
                     Juegos Educativos
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#retos" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                  <Link to="/weekly-challenges" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded block">
                     Retos Semanales
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#aprender" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                  <Link to="/educational-content" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded block">
                     Contenido Educativo
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#consejos" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                  <Link to="/daily-tips" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded block">
                     Consejos Diarios
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>

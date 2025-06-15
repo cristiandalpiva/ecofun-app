@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -128,6 +127,28 @@
     button, [role="button"], .cursor-pointer {
       min-height: 44px;
       min-width: 44px;
+    }
+  }
+
+  /* Extra: Margin and spacing on mobile for all interactive blocks */
+  @media (max-width: 640px) {
+    button, [role="button"], .shadcn-ui-button, .card, .form-group, .badge, .shadcn-ui-input, .block {
+      margin-bottom: 0.6rem;
+    }
+    .card, .shadcn-ui-card {
+      padding: 1em !important;
+    }
+    .container, .mx-auto, .px-4 {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+    /* Footer and nav spacing */
+    nav ul, .footer-links {
+      gap: 0.8rem !important;
+      flex-direction: column !important;
+    }
+    .footer-links li {
+      margin-bottom: 0.5rem !important;
     }
   }
 }

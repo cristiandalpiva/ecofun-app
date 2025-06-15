@@ -10,6 +10,12 @@ import Achievements from "./pages/Achievements";
 import Community from "./pages/Community";
 import Suggestions from "./pages/Suggestions";
 import NotFound from "./pages/NotFound";
+// Footer links
+import EducationalGames from "./pages/EducationalGames";
+import WeeklyChallenges from "./pages/WeeklyChallenges";
+import EducationalContent from "./pages/EducationalContent";
+import DailyTips from "./pages/DailyTips";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +24,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <LanguageSwitcher />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -25,6 +32,10 @@ const App = () => (
           <Route path="/achievements" element={<Achievements />} />
           <Route path="/community" element={<Community />} />
           <Route path="/suggestions" element={<Suggestions />} />
+          <Route path="/educational-games" element={<EducationalGames />} />
+          <Route path="/weekly-challenges" element={<WeeklyChallenges />} />
+          <Route path="/educational-content" element={<EducationalContent />} />
+          <Route path="/daily-tips" element={<DailyTips />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
