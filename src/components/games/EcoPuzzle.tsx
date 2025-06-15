@@ -26,75 +26,75 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const puzzles = [
     {
       id: 0,
-      name: "Bosque Mágico",
-      description: "Un hermoso bosque lleno de vida donde los animales viven en armonía con las plantas.",
-      educationalContent: "Los bosques son el hogar de millones de especies. Cada árbol produce oxígeno que necesitamos para respirar y ayuda a limpiar el aire. ¡Un solo árbol grande puede producir oxígeno para 2 personas por día!",
-      completionMessage: "¡Fantástico! Has completado el bosque mágico. Los bosques como este son súper importantes porque limpian el aire y nos dan oxígeno fresco para respirar.",
-      image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=400&fit=crop",
+      name: "Gato Dormilón",
+      description: "Un adorable gatito durmiendo plácidamente en un cojín colorido.",
+      educationalContent: "Los gatos duermen entre 12-16 horas al día porque son cazadores naturales que necesitan conservar energía. En la naturaleza, esto les ayuda a mantener el equilibrio del ecosistema controlando poblaciones de roedores.",
+      completionMessage: "¡Excelente! Los gatos como este ayudan a mantener el equilibrio natural cazando ratones y otros pequeños animales.",
+      image: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop",
       difficulty: "Fácil",
       gridSize: 3,
       points: 50
     },
     {
       id: 1,
-      name: "Jardín de Mariposas",
-      description: "Un colorido jardín donde las mariposas vuelan entre flores hermosas y brillantes.",
-      educationalContent: "Las mariposas son polinizadoras súper importantes. Cuando vuelan de flor en flor, ayudan a las plantas a crear semillas para nuevas plantas. ¡Las flores necesitan a las mariposas para reproducirse!",
-      completionMessage: "¡Excelente! Las mariposas que acabas de ver ayudan a que crezcan las flores llevando polen de una flor a otra. ¡Son pequeñas jardineras voladoras!",
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
+      name: "Cachorro Juguetón",
+      description: "Un tierno cachorro de labrador jugando felizmente en el jardín.",
+      educationalContent: "Los perros son compañeros leales que también ayudan en la conservación. Algunos perros especiales trabajan detectando especies en peligro de extinción y ayudando a los científicos a proteger la vida silvestre.",
+      completionMessage: "¡Fantástico! Los perros pueden ser grandes aliados en la protección del medio ambiente cuando son entrenados adecuadamente.",
+      image: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop",
       difficulty: "Fácil",
       gridSize: 3,
       points: 50
     },
     {
       id: 2,
-      name: "Océano Cristalino",
-      description: "Aguas azules y cristalinas donde viven peces de colores y corales hermosos.",
-      educationalContent: "Los océanos son súper importantes porque producen más de la mitad del oxígeno que respiramos. Los peces y corales trabajan juntos para mantener el agua limpia y saludable.",
-      completionMessage: "¡Increíble! Los océanos limpios como este nos dan oxígeno y son el hogar de miles de especies marinas. ¡Cuidar el océano es cuidar nuestro planeta!",
-      image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=400&fit=crop",
+      name: "Panda Gigante",
+      description: "Un hermoso panda gigante comiendo bambú en su hábitat natural.",
+      educationalContent: "Los pandas gigantes son una especie protegida que come principalmente bambú. Gracias a los esfuerzos de conservación, su población ha aumentado de 1,000 a más de 1,800 pandas en vida silvestre.",
+      completionMessage: "¡Increíble! Los pandas como este han sido salvados de la extinción gracias a programas de conservación y protección de su hábitat.",
+      image: "https://images.unsplash.com/photo-1539685043687-c946862e8b8b?w=400&h=400&fit=crop",
       difficulty: "Fácil",
       gridSize: 3,
       points: 50
     },
     {
       id: 3,
-      name: "Amigos del Bosque",
-      description: "Lindos animalitos como ciervos y conejos que viven felices entre los árboles.",
-      educationalContent: "Los animales del bosque son súper importantes porque cada uno tiene un trabajo especial. Los ciervos ayudan a esparcir semillas, y todos juntos mantienen el bosque saludable y equilibrado.",
-      completionMessage: "¡Perfecto! Los animales del bosque como estos ciervos ayudan a plantar nuevos árboles llevando semillas en su pelaje a otros lugares.",
-      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=400&fit=crop",
+      name: "Mariposas Coloridas",
+      description: "Hermosas mariposas de colores brillantes volando entre flores silvestres.",
+      educationalContent: "Las mariposas son polinizadores esenciales que ayudan a las plantas a reproducirse. Una sola mariposa puede visitar hasta 1,000 flores en un día, transportando polen y ayudando a crear nuevas plantas.",
+      completionMessage: "¡Perfecto! Las mariposas que acabas de completar son pequeñas trabajadoras que mantienen nuestros jardines y bosques llenos de flores.",
+      image: "https://images.unsplash.com/photo-1444927714506-8492d94b5ba0?w=400&h=400&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
       points: 75
     },
     {
       id: 4,
-      name: "Montañas Nevadas",
-      description: "Hermosas montañas cubiertas de nieve que guardan agua fresca para todos los seres vivos.",
-      educationalContent: "Las montañas son como grandes depósitos de agua. La nieve y el hielo se derriten lentamente y nos dan agua fresca todo el año. ¡Sin montañas no tendríamos suficiente agua dulce!",
-      completionMessage: "¡Genial! Las montañas que armaste son súper importantes porque guardan agua en forma de nieve y hielo, y nos la dan poco a poco durante todo el año.",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
+      name: "Tortugas Marinas",
+      description: "Majestuosas tortugas marinas nadando en aguas cristalinas del océano.",
+      educationalContent: "Las tortugas marinas han existido por más de 100 millones de años. Ayudan a mantener los arrecifes de coral saludables y las praderas marinas equilibradas, pero necesitan playas limpias para poner sus huevos.",
+      completionMessage: "¡Genial! Las tortugas marinas como estas son guardianas de los océanos, pero necesitan nuestro cuidado para sobrevivir.",
+      image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=400&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
       points: 75
     },
     {
       id: 5,
-      name: "Arcoíris de Flores",
-      description: "Un prado lleno de flores de todos los colores que forman un hermoso arcoíris natural.",
-      educationalContent: "Las flores de diferentes colores atraen a distintos polinizadores. Cada color tiene un propósito especial para atraer abejas, mariposas y otros insectos que ayudan a las plantas a reproducirse.",
-      completionMessage: "¡Excelente trabajo! Este campo de flores coloridas es un ejemplo perfecto de cómo la naturaleza usa los colores para mantener el equilibrio ecológico.",
-      image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=400&h=400&fit=crop",
-      difficulty: "Difícil",
-      gridSize: 5,
-      points: 100
+      name: "Jardín de Girasoles",
+      description: "Un campo dorado lleno de girasoles grandes y brillantes mirando hacia el sol.",
+      educationalContent: "Los girasoles siempre giran para seguir al sol durante el día. Sus semillas alimentan a muchos pájaros y sus raíces ayudan a limpiar el suelo de contaminantes. ¡Un girasol puede producir hasta 2,000 semillas!",
+      completionMessage: "¡Excelente trabajo! Los girasoles no solo son hermosos, también limpian el ambiente y alimentan a muchos animales.",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+      difficulty: "Medio",
+      gridSize: 4,
+      points: 75
     },
     {
       id: 6,
       name: "Familia de Elefantes",
       description: "Una hermosa familia de elefantes caminando juntos por la sabana africana.",
-      educationalContent: "Los elefantes son animales muy inteligentes que viven en familias. Son importantes para su ecosistema porque ayudan a dispersar semillas y crean caminos que otros animales usan.",
+      educationalContent: "Los elefantes son arquitectos de la naturaleza. Crean caminos que otros animales usan, dispersan semillas en sus deposiciones creando nuevos bosques, y excavan pozos de agua que salvan vidas durante las sequías.",
       completionMessage: "¡Increíble! Los elefantes como estos son fundamentales para mantener el equilibrio en su hábitat y ayudar a que crezcan nuevas plantas.",
       image: "https://images.unsplash.com/photo-1551969014-7d2c4cddf0b6?w=400&h=400&fit=crop",
       difficulty: "Difícil",
@@ -103,14 +103,14 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     },
     {
       id: 7,
-      name: "Pingüinos Juguetones",
-      description: "Adorables pingüinos deslizándose y jugando en el hielo de la Antártida.",
-      educationalContent: "Los pingüinos son indicadores del cambio climático. Viven en lugares muy fríos y nos ayudan a entender cómo está cambiando nuestro planeta. ¡Cuidar su hogar helado es muy importante!",
+      name: "Pingüinos en la Antártida",
+      description: "Adorables pingüinos emperadores cuidando a sus crías en el hielo antártico.",
+      educationalContent: "Los pingüinos emperadores son termómetros vivientes del cambio climático. Pueden bucear hasta 500 metros de profundidad y aguantar la respiración por 20 minutos. Su supervivencia depende del hielo marino estable.",
       completionMessage: "¡Fantástico! Los pingüinos que acabas de armar nos recuerdan la importancia de cuidar los polos y luchar contra el cambio climático.",
       image: "https://images.unsplash.com/photo-1551986782-d0169b3f8fa7?w=400&h=400&fit=crop",
-      difficulty: "Medio",
-      gridSize: 4,
-      points: 75
+      difficulty: "Difícil",
+      gridSize: 5,
+      points: 100
     }
   ];
 
@@ -153,8 +153,11 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   };
 
   const checkCompletion = (newBoardPieces: (number | null)[]) => {
-    const completed = newBoardPieces.every((piece, index) => piece === index);
-    if (completed && !isComplete) {
+    // Check if ALL pieces are placed AND in correct positions
+    const allPiecesPlaced = newBoardPieces.every(piece => piece !== null);
+    const allPiecesCorrect = newBoardPieces.every((piece, index) => piece === index);
+    
+    if (allPiecesPlaced && allPiecesCorrect && !isComplete) {
       setIsComplete(true);
       setGameStarted(false);
       setTimeout(() => {
@@ -274,6 +277,11 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     }
   };
 
+  const getCompletionPercentage = () => {
+    const placedPieces = boardPieces.filter(piece => piece !== null).length;
+    return Math.round((placedPieces / totalPieces) * 100);
+  };
+
   // If no puzzle is selected, show puzzle selection screen
   if (selectedPuzzle === null) {
     return (
@@ -369,6 +377,15 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
             <div className="text-gray-500">Tiempo: {formatTime(timeElapsed)}</div>
             <div className="text-emerald-600 font-medium">Movimientos: {moves}</div>
           </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-gray-700">Progreso</span>
+            <span className="text-sm font-medium text-emerald-600">{getCompletionPercentage()}%</span>
+          </div>
+          <Progress value={getCompletionPercentage()} className="h-2" />
         </div>
 
         {/* Educational Content */}
