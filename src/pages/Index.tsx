@@ -7,6 +7,7 @@ import { Menu, TreePine, Leaf, Award, Users, BookOpen, Heart } from "lucide-reac
 import { toast } from "@/hooks/use-toast";
 import { Link } from 'react-router-dom';
 
+// ... keep existing code (game imports)
 import AnimalQuiz from "@/components/games/AnimalQuiz";
 import EcoQuiz from "@/components/games/EcoQuiz";
 import EcoTetris from "@/components/games/EcoTetris";
@@ -353,7 +354,7 @@ const Index = () => {
             <Link to="/" className="flex items-center space-x-3">
               <div className="relative">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-400 via-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
-                  
+                  <TreePine className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
                 <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg">
                   <Leaf className="w-3 h-3 text-white" />
