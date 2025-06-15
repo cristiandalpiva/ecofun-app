@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, RotateCcw, BookOpen, AlertCircle } from 'lucide-react';
+import { ArrowLeft, RotateCcw, BookOpen, AlertCircle, Volume2, VolumeX } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
 
 interface InteractiveStoriesProps {
@@ -47,6 +47,8 @@ const InteractiveStories: React.FC<InteractiveStoriesProps> = ({ onComplete, onB
   const [correctChoices, setCorrectChoices] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   const [lastChoice, setLastChoice] = useState<StoryChoice | null>(null);
+  const [isReading, setIsReading] = useState(false);
+  const [speechSynthesis, setSpeechSynthesis] = useState<SpeechSynthesis | null>(null);
 
   const stories: Story[] = [
     {
@@ -482,6 +484,51 @@ const InteractiveStories: React.FC<InteractiveStoriesProps> = ({ onComplete, onB
     }
   ];
 
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      setSpeechSynthesis(window.speechSynthesis);
+    }
+  }, []);
+
+  const readText = (text: string) => {
+    if (!speechSynthesis) {
+      toast({
+        title: "Lector no disponible",
+        description: "Tu navegador no soporta la función de lectura de texto.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (isReading) {
+      speechSynthesis.cancel();
+      setIsReading(false);
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'es-ES';
+    utterance.rate = 0.8;
+    utterance.pitch = 1;
+    
+    utterance.onstart = () => setIsReading(true);
+    utterance.onend = () => setIsReading(false);
+    utterance.onerror = () => {
+      setIsReading(false);
+      toast({
+        title: "Error en la lectura",
+        description: "No se pudo leer el texto. Intenta de nuevo.",
+        variant: "destructive"
+      });
+    };
+
+    speechSynthesis.speak(utterance);
+  };
+
+  const readChoice = (choice: StoryChoice) => {
+    readText(choice.text);
+  };
+
   const startStory = (story: Story) => {
     setCurrentStory(story);
     setCurrentScene(0);
@@ -561,11 +608,23 @@ const InteractiveStories: React.FC<InteractiveStoriesProps> = ({ onComplete, onB
                 <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
                 Cuentos Ecológicos Interactivos
               </h1>
-              {gameState === 'playing' && (
-                <Button variant="outline" size="sm" onClick={resetStory}>
-                  <RotateCcw className="w-4 h-4" />
-                </Button>
-              )}
+              <div className="flex items-center space-x-2">
+                {gameState === 'playing' && currentStory && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => readText(currentStory.scenes[currentScene]?.description || '')}
+                    className="border-green-300 text-green-600 hover:bg-green-50"
+                  >
+                    {isReading ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                  </Button>
+                )}
+                {gameState === 'playing' && (
+                  <Button variant="outline" size="sm" onClick={resetStory}>
+                    <RotateCcw className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
             </div>
 
             {gameState === 'storySelect' && (
@@ -674,14 +733,23 @@ const InteractiveStories: React.FC<InteractiveStoriesProps> = ({ onComplete, onB
                         ¿Qué decisión tomas?
                       </p>
                       {currentStory.scenes[currentScene]?.choices.map((choice, index) => (
-                        <Button
-                          key={index}
-                          onClick={() => makeChoice(choice)}
-                          variant="outline"
-                          className="w-full text-left text-xs sm:text-sm p-3 sm:p-4 h-auto border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50"
-                        >
-                          {choice.text}
-                        </Button>
+                        <div key={index} className="flex items-center space-x-2">
+                          <Button
+                            onClick={() => makeChoice(choice)}
+                            variant="outline"
+                            className="flex-1 text-left text-xs sm:text-sm p-3 sm:p-4 h-auto border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50"
+                          >
+                            {choice.text}
+                          </Button>
+                          <Button
+                            onClick={() => readChoice(choice)}
+                            variant="outline"
+                            size="sm"
+                            className="flex-shrink-0 border-green-300 text-green-600 hover:bg-green-50"
+                          >
+                            {isReading ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+                          </Button>
+                        </div>
                       ))}
                     </div>
                   </div>
