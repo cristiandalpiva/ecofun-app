@@ -348,87 +348,120 @@ const Index = () => {
 
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-md border-b-2 border-emerald-200 sticky top-0 z-50 shadow-lg">
-        <div className="container mx-auto px-4 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo EcoFun mejorado */}
-            <Link to="/" className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-400 via-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
-                  <TreePine className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg">
-                  <Leaf className="w-3 h-3 text-white" />
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight">
-                  EcoFun
-                </h1>
-                <p className="text-xs sm:text-sm text-emerald-600 font-semibold -mt-1">
-                  Aprende Jugando
-                </p>
-              </div>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/games">
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  Juegos
-                </Button>
-              </Link>
-              <Link to="/achievements">
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                  <Award className="w-4 h-4 mr-2" />
-                  Logros
-                </Button>
-              </Link>
-              <Link to="/community">
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                  <Users className="w-4 h-4 mr-2" />
-                  Comunidad
-                </Button>
-              </Link>
-              <Link to="/suggestions">
-                <Button 
-                  variant="ghost" 
-                  className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold"
-                >
-                  <Heart className="w-4 h-4 mr-2" />
-                  Sugerencias
-                </Button>
-              </Link>
-            </nav>
-
-            {/* User Level */}
-            <div className="hidden sm:flex items-center space-x-4">
-              <div className="text-right">
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">{plantLevel.emoji}</span>
-                  <div>
-                    <p className="font-bold text-emerald-700 text-sm">{plantLevel.stage}</p>
-                    <p className="text-xs text-emerald-600">{userPoints} puntos</p>
-                  </div>
-                </div>
-              </div>
+        {/* MOBILE HEADER */}
+        <div className="md:hidden flex items-center justify-between px-3 py-2">
+          {/* SVG logo (a la izquierda) */}
+          <div className="flex-shrink-0 flex items-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 via-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
+              {/* Icono SVG, ejemplo: semilla/árbol. Puedes cambiarlo por otro svg si tienes uno específico */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={28}
+                height={28}
+                viewBox="0 0 24 24"
+                fill="none"
+                className="text-white"
+              >
+                <circle cx="12" cy="12" r="10" fill="#16a34a" />
+                <path d="M14 10c1.5-2.5 1-6-2-7.5C7.5 4.5 7 8 8.5 10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
+                <ellipse cx="12" cy="16" rx="5" ry="3" fill="#fff" opacity="0.15"/>
+              </svg>
             </div>
+          </div>
 
-            {/* Mobile Menu Button */}
+          {/* Texto centrado */}
+          <div className="flex-1 flex flex-col items-center justify-center px-2">
+            <h1 className="text-xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight leading-none">
+              EcoFun
+            </h1>
+            <p className="text-xs text-emerald-600 font-semibold leading-none">
+              Aprende Jugando
+            </p>
+          </div>
+          
+          {/* Botón menú hamburguesa a la derecha */}
+          <div className="flex-shrink-0 flex items-center">
             <Button
               variant="ghost"
-              className="md:hidden p-3 hover:bg-emerald-100"
+              className="p-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               <Menu className="h-8 w-8 text-emerald-700" />
             </Button>
           </div>
+        </div>
 
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden mt-4 py-4 border-t border-emerald-200 bg-white/95 rounded-b-lg">
-              <div className="flex flex-col space-y-3">
-                <div className="px-4 py-2 border-b border-emerald-100">
+        {/* DESKTOP HEADER */}
+        <div className="hidden md:block">
+          <div className="container mx-auto px-4 py-3 sm:py-4">
+            <div className="flex items-center justify-between">
+              {/* Logo EcoFun mejorado */}
+              <Link to="/" className="flex items-center space-x-3">
+                <div className="relative">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-400 via-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={34}
+                      height={34}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="text-white"
+                    >
+                      <circle cx="12" cy="12" r="10" fill="#16a34a" />
+                      <path d="M14 10c1.5-2.5 1-6-2-7.5C7.5 4.5 7 8 8.5 10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
+                      <ellipse cx="12" cy="16" rx="5" ry="3" fill="#fff" opacity="0.15"/>
+                    </svg>
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg">
+                    {/* Hoja decorativa */}
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M6 1C8.21 1 10 2.79 10 5C10 7.21 8.21 9 6 9C3.79 9 2 7.21 2 5C2 2.79 3.79 1 6 1Z" fill="white" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight">
+                    EcoFun
+                  </h1>
+                  <p className="text-xs sm:text-sm text-emerald-600 font-semibold -mt-1">
+                    Aprende Jugando
+                  </p>
+                </div>
+              </Link>
+              {/* Desktop Navigation */}
+              <nav className="hidden md:flex items-center space-x-6">
+                <Link to="/games">
+                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Juegos
+                  </Button>
+                </Link>
+                <Link to="/achievements">
+                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
+                    <Award className="w-4 h-4 mr-2" />
+                    Logros
+                  </Button>
+                </Link>
+                <Link to="/community">
+                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
+                    <Users className="w-4 h-4 mr-2" />
+                    Comunidad
+                  </Button>
+                </Link>
+                <Link to="/suggestions">
+                  <Button 
+                    variant="ghost" 
+                    className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold"
+                  >
+                    <Heart className="w-4 h-4 mr-2" />
+                    Sugerencias
+                  </Button>
+                </Link>
+              </nav>
+
+              {/* User Level */}
+              <div className="hidden sm:flex items-center space-x-4">
+                <div className="text-right">
                   <div className="flex items-center space-x-2">
                     <span className="text-lg">{plantLevel.emoji}</span>
                     <div>
@@ -437,36 +470,62 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-                <Link to="/games" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    Juegos
-                  </Button>
-                </Link>
-                <Link to="/achievements" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
-                    <Award className="w-4 h-4 mr-2" />
-                    Logros
-                  </Button>
-                </Link>
-                <Link to="/community" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
-                    <Users className="w-4 h-4 mr-2" />
-                    Comunidad
-                  </Button>
-                </Link>
-                <Link to="/suggestions" onClick={() => setMobileMenuOpen(false)}>
-                  <Button 
-                    variant="ghost" 
-                    className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full"
-                  >
-                    <Heart className="w-4 h-4 mr-2" />
-                    Sugerencias
-                  </Button>
-                </Link>
               </div>
+
+              {/* Mobile Menu Button */}
+              <Button
+                variant="ghost"
+                className="md:hidden p-3 hover:bg-emerald-100"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                <Menu className="h-8 w-8 text-emerald-700" />
+              </Button>
             </div>
-          )}
+
+            {/* Mobile Menu */}
+            {mobileMenuOpen && (
+              <div className="md:hidden mt-4 py-4 border-t border-emerald-200 bg-white/95 rounded-b-lg">
+                <div className="flex flex-col space-y-3">
+                  <div className="px-4 py-2 border-b border-emerald-100">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-lg">{plantLevel.emoji}</span>
+                      <div>
+                        <p className="font-bold text-emerald-700 text-sm">{plantLevel.stage}</p>
+                        <p className="text-xs text-emerald-600">{userPoints} puntos</p>
+                      </div>
+                    </div>
+                  </div>
+                  <Link to="/games" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
+                      <BookOpen className="w-4 h-4 mr-2" />
+                      Juegos
+                    </Button>
+                  </Link>
+                  <Link to="/achievements" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
+                      <Award className="w-4 h-4 mr-2" />
+                      Logros
+                    </Button>
+                  </Link>
+                  <Link to="/community" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
+                      <Users className="w-4 h-4 mr-2" />
+                      Comunidad
+                    </Button>
+                  </Link>
+                  <Link to="/suggestions" onClick={() => setMobileMenuOpen(false)}>
+                    <Button 
+                      variant="ghost" 
+                      className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full"
+                    >
+                      <Heart className="w-4 h-4 mr-2" />
+                      Sugerencias
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
