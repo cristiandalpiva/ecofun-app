@@ -377,12 +377,12 @@ const Index = () => {
           <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between gap-4">
             {/* Logo EcoFun */}
             <Link to="/" className="flex items-center space-x-3 flex-shrink-0 min-w-0">
-              {/* Solo texto, logo SVG eliminado */}
-              <div className="flex flex-col min-w-0">
+              {/* Cambiado de flex-col a flex-row y centrado verticalmente */}
+              <div className="flex flex-row items-center min-w-0 space-x-2">
                 <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight truncate">
                   EcoFun
                 </h1>
-                <p className="text-xs sm:text-sm text-emerald-600 font-semibold -mt-1 truncate">
+                <p className="text-xs sm:text-sm text-emerald-600 font-semibold -mt-0.5 truncate">
                   Aprende Jugando
                 </p>
               </div>
