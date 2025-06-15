@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Menu, TreePine, Leaf, Award, Users, BookOpen, Heart } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { Link } from 'react-router-dom';
 
 // ... keep existing code (game imports)
 import AnimalQuiz from "@/components/games/AnimalQuiz";
@@ -17,8 +18,8 @@ import SolarPanels from "@/components/games/SolarPanels";
 import TapGame from "@/components/games/TapGame";
 import TrashCatcher from "@/components/games/TrashCatcher";
 import EcoPuzzle from "@/components/games/EcoPuzzle";
-import EcoPlatformer from "@/components/games/EcoPlatformer";
 import EndangeredAnimals from "@/components/games/EndangeredAnimals";
+import InteractiveStories from "@/components/games/InteractiveStories";
 
 import EcoMascot from "@/components/EcoMascot";
 import Footer from "@/components/Footer";
@@ -165,15 +166,15 @@ const Index = () => {
       points: 75
     },
     {
-      id: "eco-platformer",
-      title: "EcoAventuras",
-      description: "Plataformero ecológico donde limpias diferentes ambientes",
-      icon: "🎮",
-      difficulty: "Difícil",
+      id: "interactive-stories",
+      title: "Cuentos Ecológicos",
+      description: "Vive aventuras interactivas y toma decisiones por el planeta",
+      icon: "📚",
+      difficulty: "Medio",
       category: "Educación",
-      component: EcoPlatformer,
-      estimatedTime: "15-25 min",
-      points: 150
+      component: InteractiveStories,
+      estimatedTime: "10-20 min",
+      points: 120
     },
     {
       id: "endangered-animals",
@@ -273,26 +274,33 @@ const Index = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Juegos
-              </Button>
-              <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                <Award className="w-4 h-4 mr-2" />
-                Logros
-              </Button>
-              <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                <Users className="w-4 h-4 mr-2" />
-                Comunidad
-              </Button>
-              <Button 
-                onClick={() => setShowSuggestions(true)}
-                variant="ghost" 
-                className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold"
-              >
-                <Heart className="w-4 h-4 mr-2" />
-                Sugerencias
-              </Button>
+              <Link to="/games">
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  Juegos
+                </Button>
+              </Link>
+              <Link to="/achievements">
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
+                  <Award className="w-4 h-4 mr-2" />
+                  Logros
+                </Button>
+              </Link>
+              <Link to="/community">
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
+                  <Users className="w-4 h-4 mr-2" />
+                  Comunidad
+                </Button>
+              </Link>
+              <Link to="/suggestions">
+                <Button 
+                  variant="ghost" 
+                  className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold"
+                >
+                  <Heart className="w-4 h-4 mr-2" />
+                  Sugerencias
+                </Button>
+              </Link>
             </nav>
 
             {/* User Level */}
@@ -331,29 +339,37 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold">
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  Juegos
-                </Button>
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold">
-                  <Award className="w-4 h-4 mr-2" />
-                  Logros
-                </Button>
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold">
-                  <Users className="w-4 h-4 mr-2" />
-                  Comunidad
-                </Button>
-                <Button 
-                  onClick={() => {
-                    setShowSuggestions(true);
-                    setMobileMenuOpen(false);
-                  }}
-                  variant="ghost" 
-                  className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold"
-                >
-                  <Heart className="w-4 h-4 mr-2" />
-                  Sugerencias
-                </Button>
+                <Link to="/games">
+                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Juegos
+                  </Button>
+                </Link>
+                <Link to="/achievements">
+                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
+                    <Award className="w-4 h-4 mr-2" />
+                    Logros
+                  </Button>
+                </Link>
+                <Link to="/community">
+                  <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
+                    <Users className="w-4 h-4 mr-2" />
+                    Comunidad
+                  </Button>
+                </Link>
+                <Link to="/suggestions">
+                  <Button 
+                    onClick={() => {
+                      setShowSuggestions(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    variant="ghost" 
+                    className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full"
+                  >
+                    <Heart className="w-4 h-4 mr-2" />
+                    Sugerencias
+                  </Button>
+                </Link>
               </div>
             </div>
           )}
