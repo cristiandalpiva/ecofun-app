@@ -21,95 +21,96 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [draggedOverIndex, setDraggedOverIndex] = useState<number | null>(null);
 
   const puzzles = [
     {
       id: 0,
-      name: "Bosque Encantado",
-      description: "Un hermoso bosque lleno de vida y biodiversidad que nos enseña sobre la importancia de los ecosistemas forestales.",
-      educationalContent: "Los bosques son fundamentales para la vida en la Tierra. Producen oxígeno, absorben CO2 y albergan el 80% de la biodiversidad terrestre.",
-      completionMessage: "¡Excelente! Los bosques como este absorben hasta 6 toneladas de CO2 por año. Cada árbol que protegemos es un paso hacia un planeta más saludable.",
+      name: "Bosque Mágico",
+      description: "Un hermoso bosque lleno de vida donde los animales viven en armonía con las plantas.",
+      educationalContent: "Los bosques son el hogar de millones de especies. Cada árbol produce oxígeno que necesitamos para respirar y ayuda a limpiar el aire. ¡Un solo árbol grande puede producir oxígeno para 2 personas por día!",
+      completionMessage: "¡Fantástico! Has completado el bosque mágico. Los bosques como este son súper importantes porque limpian el aire y nos dan oxígeno fresco para respirar.",
       image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=400&h=400&fit=crop",
       difficulty: "Fácil",
       gridSize: 3,
-      points: 40
+      points: 50
     },
     {
       id: 1,
-      name: "Océano Cristalino",
-      description: "Las aguas cristalinas de nuestro océano nos muestran la importancia de mantener limpios estos ecosistemas acuáticos.",
-      educationalContent: "Los océanos producen más del 50% del oxígeno que respiramos y absorben el 30% del CO2 que producimos. ¡Son vitales para nuestro clima!",
-      completionMessage: "¡Fantástico! Los océanos limpios como este sustentan la vida de millones de especies y regulan el clima mundial.",
-      image: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=400&h=400&fit=crop",
+      name: "Jardín de Mariposas",
+      description: "Un colorido jardín donde las mariposas vuelan entre flores hermosas y brillantes.",
+      educationalContent: "Las mariposas son polinizadoras súper importantes. Cuando vuelan de flor en flor, ayudan a las plantas a crear semillas para nuevas plantas. ¡Las flores necesitan a las mariposas para reproducirse!",
+      completionMessage: "¡Excelente! Las mariposas que acabas de ver ayudan a que crezcan las flores llevando polen de una flor a otra. ¡Son pequeñas jardineras voladoras!",
+      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=400&h=400&fit=crop",
       difficulty: "Fácil",
       gridSize: 3,
-      points: 40
+      points: 50
     },
     {
       id: 2,
-      name: "Montañas Majestuosas",
-      description: "Las montañas nos enseñan sobre la formación geológica y su rol como reservas de agua dulce para el planeta.",
-      educationalContent: "Las montañas almacenan agua en forma de nieve y hielo, proporcionando agua dulce a más de la mitad de la humanidad.",
-      completionMessage: "¡Increíble! Las montañas como estas son las 'torres de agua' del mundo, esenciales para el ciclo hidrológico global.",
-      image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=400&fit=crop",
-      difficulty: "Medio",
+      name: "Océano Cristalino",
+      description: "Aguas azules y cristalinas donde viven peces de colores y corales hermosos.",
+      educationalContent: "Los océanos son súper importantes porque producen más de la mitad del oxígeno que respiramos. Los peces y corales trabajan juntos para mantener el agua limpia y saludable.",
+      completionMessage: "¡Increíble! Los océanos limpios como este nos dan oxígeno y son el hogar de miles de especies marinas. ¡Cuidar el océano es cuidar nuestro planeta!",
+      image: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=400&h=400&fit=crop",
+      difficulty: "Fácil",
       gridSize: 3,
       points: 50
     },
     {
       id: 3,
-      name: "Flores Silvestres",
-      description: "Un campo de flores nos demuestra la importancia de los polinizadores y la biodiversidad de plantas nativas.",
-      educationalContent: "Las flores y sus polinizadores son responsables de 1 de cada 3 bocados de comida que consumimos. ¡Sin abejas no habría muchas frutas!",
-      completionMessage: "¡Perfecto! Ecosistemas como este sustentan a los polinizadores que hacen posible el 75% de nuestros cultivos alimentarios.",
-      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=400&h=400&fit=crop",
+      name: "Amigos del Bosque",
+      description: "Lindos animalitos como ciervos y conejos que viven felices entre los árboles.",
+      educationalContent: "Los animales del bosque son súper importantes porque cada uno tiene un trabajo especial. Los ciervos ayudan a esparcir semillas, y todos juntos mantienen el bosque saludable y equilibrado.",
+      completionMessage: "¡Perfecto! Los animales del bosque como estos ciervos ayudan a plantar nuevos árboles llevando semillas en su pelaje a otros lugares.",
+      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=400&fit=crop",
       difficulty: "Medio",
-      gridSize: 3,
-      points: 50
+      gridSize: 4,
+      points: 75
     },
     {
       id: 4,
-      name: "Río Serpenteante",
-      description: "Los ríos son las arterias de nuestro planeta, transportando nutrientes y sosteniendo ecosistemas únicos.",
-      educationalContent: "Los ríos transportan sedimentos que fertilizan tierras, conectan ecosistemas y proporcionan agua dulce a billones de seres vivos.",
-      completionMessage: "¡Excelente! Los ríos saludables como este son esenciales para mantener el equilibrio de los ecosistemas terrestres.",
-      image: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=400&h=400&fit=crop",
+      name: "Montañas Nevadas",
+      description: "Hermosas montañas cubiertas de nieve que guardan agua fresca para todos los seres vivos.",
+      educationalContent: "Las montañas son como grandes depósitos de agua. La nieve y el hielo se derriten lentamente y nos dan agua fresca todo el año. ¡Sin montañas no tendríamos suficiente agua dulce!",
+      completionMessage: "¡Genial! Las montañas que armaste son súper importantes porque guardan agua en forma de nieve y hielo, y nos la dan poco a poco durante todo el año.",
+      image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=400&fit=crop",
       difficulty: "Medio",
-      gridSize: 3,
-      points: 50
+      gridSize: 4,
+      points: 75
     },
     {
       id: 5,
-      name: "Vida Silvestre",
-      description: "Los animales en su hábitat natural nos recuerdan la importancia de conservar espacios protegidos para la fauna.",
-      educationalContent: "La vida silvestre mantiene el equilibrio de los ecosistemas. Cada especie tiene un rol único e irreemplazable en la cadena alimentaria.",
-      completionMessage: "¡Magnífico! La conservación de hábitats como este protege especies que han evolucionado durante millones de años.",
-      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=400&fit=crop",
-      difficulty: "Difícil",
+      name: "Río Serpenteante",
+      description: "Un río que serpentea entre rocas y plantas, llevando agua fresca a todos los seres vivos.",
+      educationalContent: "Los ríos son como las venas de nuestro planeta. Llevan agua fresca desde las montañas hasta el mar, y en su camino dan de beber a plantas, animales y personas.",
+      completionMessage: "¡Excelente trabajo! Los ríos como este son súper importantes porque transportan agua fresca y limpia a todos los lugares donde se necesita.",
+      image: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=400&h=400&fit=crop",
+      difficulty: "Medio",
       gridSize: 4,
-      points: 70
+      points: 75
     },
     {
       id: 6,
-      name: "Cascada Natural",
-      description: "Las cascadas representan el poder del agua y su capacidad de moldear paisajes a lo largo del tiempo.",
-      educationalContent: "Las cascadas generan iones negativos que purifican el aire y crean microclimas únicos que sustentan especies especializadas.",
-      completionMessage: "¡Increíble! Las cascadas como esta crean ecosistemas únicos y ayudan a oxigenar los cuerpos de agua.",
+      name: "Cascada Arcoíris",
+      description: "Una hermosa cascada que forma un arcoíris cuando los rayos del sol tocan las gotas de agua.",
+      educationalContent: "Las cascadas son súper especiales porque hacen que el agua se mueva y se llene de oxígeno, lo que ayuda a que los peces y plantas acuáticas estén más saludables. ¡Y a veces forman arcoíris mágicos!",
+      completionMessage: "¡Increíble! Las cascadas como esta oxigenan el agua y crean pequeños ecosistemas únicos donde viven especies muy especiales.",
       image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&h=400&fit=crop",
       difficulty: "Difícil",
-      gridSize: 4,
-      points: 70
+      gridSize: 5,
+      points: 100
     },
     {
       id: 7,
-      name: "Bosque de Pinos",
-      description: "Los bosques de coníferas son ecosistemas resistentes que nos enseñan sobre adaptación y supervivencia.",
-      educationalContent: "Los bosques de coníferas almacenan enormes cantidades de carbono y proporcionan madera sostenible cuando se manejan responsablemente.",
-      completionMessage: "¡Fantástico! Los bosques de coníferas como este son fundamentales para combatir el cambio climático y conservar suelos.",
-      image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=400&h=400&fit=crop",
+      name: "Praderas Verdes",
+      description: "Extensas praderas verdes donde las vacas y otros animales pastan felizmente bajo el sol.",
+      educationalContent: "Las praderas son ecosistemas súper importantes donde las hierbas y pastos crecen naturalmente. Los animales que pastan aquí ayudan a mantener el pasto saludable y fertilizan la tierra de forma natural.",
+      completionMessage: "¡Fantástico! Las praderas como esta son fundamentales para la agricultura sustentable y ayudan a mantener el suelo fértil y saludable.",
+      image: "https://images.unsplash.com/photo-1465379944081-7f47de8d74ac?w=400&h=400&fit=crop",
       difficulty: "Difícil",
-      gridSize: 4,
-      points: 80
+      gridSize: 5,
+      points: 100
     }
   ];
 
@@ -146,6 +147,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     setTimeElapsed(0);
     setGameStarted(false);
     setShowPreview(false);
+    setDraggedOverIndex(null);
   };
 
   const checkCompletion = (newBoardPieces: (number | null)[]) => {
@@ -170,14 +172,33 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     if (!gameStarted) setGameStarted(true);
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent, boardIndex: number) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
+    // Only allow drop if the piece belongs to this position
+    if (draggedPiece === boardIndex) {
+      e.dataTransfer.dropEffect = 'move';
+      setDraggedOverIndex(boardIndex);
+    } else {
+      e.dataTransfer.dropEffect = 'none';
+      setDraggedOverIndex(null);
+    }
+  };
+
+  const handleDragLeave = () => {
+    setDraggedOverIndex(null);
   };
 
   const handleDropOnBoard = (e: React.DragEvent, boardIndex: number) => {
     e.preventDefault();
+    setDraggedOverIndex(null);
+    
     if (draggedPiece === null) return;
+
+    // Only allow dropping if the piece matches the correct position
+    if (draggedPiece !== boardIndex) {
+      setDraggedPiece(null);
+      return;
+    }
 
     const newBoardPieces = [...boardPieces];
     const newPieces = pieces.filter(p => p !== draggedPiece);
@@ -281,7 +302,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
               </div>
               <div className="text-right">
                 <Badge className={`${getDifficultyColor(currentPuzzleData.difficulty)} border text-xs mb-1`}>
-                  {currentPuzzleData.difficulty}
+                  {currentPuzzleData.difficulty} ({totalPieces} piezas)
                 </Badge>
                 <div className="text-xs text-emerald-600 font-medium">+{currentPuzzleData.points} pts</div>
               </div>
@@ -289,7 +310,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
               <p className="text-sm text-blue-800">
-                💡 <strong>Dato Ecológico:</strong> {currentPuzzleData.educationalContent}
+                💡 <strong>¿Sabías que...?</strong> {currentPuzzleData.educationalContent}
               </p>
             </div>
 
@@ -298,7 +319,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-5 h-5 text-green-600" />
                   <div>
-                    <span className="text-green-800 font-medium">¡Puzzle completado! 🎉</span>
+                    <span className="text-green-800 font-medium">¡Rompecabezas completado! 🎉</span>
                     <p className="text-sm text-green-700">{currentPuzzleData.completionMessage}</p>
                   </div>
                 </div>
@@ -329,10 +350,12 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
           {/* Pieces Area */}
           <Card className="bg-white/90 backdrop-blur-sm border-2 border-emerald-200 shadow-xl">
             <CardContent className="p-4">
-              <h3 className="text-lg font-bold text-emerald-700 mb-3">🧩 Piezas</h3>
+              <h3 className="text-lg font-bold text-emerald-700 mb-3">🧩 Piezas ({pieces.length})</h3>
               <div
-                className="grid grid-cols-3 gap-2 min-h-[200px] p-3 bg-emerald-50 rounded-lg border-2 border-dashed border-emerald-300"
-                onDragOver={handleDragOver}
+                className={`grid gap-2 min-h-[200px] p-3 bg-emerald-50 rounded-lg border-2 border-dashed border-emerald-300 ${
+                  gridSize === 3 ? 'grid-cols-3' : gridSize === 4 ? 'grid-cols-4' : 'grid-cols-5'
+                }`}
+                onDragOver={(e) => e.preventDefault()}
                 onDrop={handleDropOnPieces}
               >
                 {pieces.map((pieceNumber) => (
@@ -348,7 +371,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                 ))}
               </div>
               <p className="text-xs text-gray-600 mt-2 text-center">
-                Arrastra las piezas al tablero
+                Arrastra cada pieza a su lugar correcto en el tablero
               </p>
             </CardContent>
           </Card>
@@ -364,11 +387,14 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                 {boardPieces.map((piece, index) => (
                   <div
                     key={`board-${index}`}
-                    onDragOver={handleDragOver}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDragLeave={handleDragLeave}
                     onDrop={(e) => handleDropOnBoard(e, index)}
                     className={`aspect-square rounded border-2 transition-all duration-200 ${
                       piece !== null
                         ? 'border-emerald-400 shadow-md'
+                        : draggedOverIndex === index
+                        ? 'border-green-500 bg-green-100 border-solid'
                         : 'border-gray-300 bg-gray-100 border-dashed'
                     } ${isComplete ? 'animate-pulse' : ''}`}
                     style={piece !== null ? getPieceStyle(piece) : {}}
@@ -376,7 +402,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
                 ))}
               </div>
               <p className="text-xs text-gray-600 mt-2 text-center">
-                Coloca las piezas en orden
+                Solo puedes colocar cada pieza en su lugar correcto
               </p>
             </CardContent>
           </Card>
