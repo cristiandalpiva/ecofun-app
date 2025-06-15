@@ -1,11 +1,12 @@
 
 import { Leaf, Heart, Shield, Mail, Phone, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-r from-green-600 to-blue-600 text-white mt-auto">
+    <footer className="bg-gradient-to-r from-green-600 to-blue-600 text-white mt-auto w-full max-w-full overflow-x-hidden">
       <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Logo y descripción */}
@@ -30,24 +31,36 @@ const Footer = () => {
             <nav aria-label="Enlaces de contenido">
               <ul className="space-y-2 text-green-100">
                 <li>
-                  <a href="#juegos" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                  <Link
+                    to="/educational-games"
+                    className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded block"
+                  >
                     Juegos Educativos
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#retos" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                  <Link
+                    to="/weekly-challenges"
+                    className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded block"
+                  >
                     Retos Semanales
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#aprender" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                  <Link
+                    to="/educational-content"
+                    className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded block"
+                  >
                     Contenido Educativo
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#consejos" className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded">
+                  <Link
+                    to="/daily-tips"
+                    className="hover:text-white transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-600 rounded block"
+                  >
                     Consejos Diarios
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
@@ -117,7 +130,6 @@ const Footer = () => {
                 <span>Educación sostenible</span>
               </div>
             </div>
-            
             <div className="text-sm text-green-100 text-center md:text-right">
               <p>© {currentYear} EcoFun. Todos los derechos reservados.</p>
               <p className="text-xs text-green-200 mt-1">
@@ -132,3 +144,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

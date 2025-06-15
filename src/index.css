@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -182,5 +181,54 @@
   }
   .text-responsive-lg {
     font-size: 1.25rem;
+  }
+}
+
+/* Ajuste general para evitar elementos fuera de la pantalla */
+html, body, #root {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
+
+/* Footer ajustes: asegura que los elementos se mantengan visibles y responsivos */
+footer, .footer {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
+
+/* Grids y flex responsivos para evitar overflow */
+.grid, .flex {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+/* Elementos y tarjetas en páginas personalizadas */
+.card, .rounded-xl, .rounded-lg {
+  min-width: 0;
+  word-break: break-word;
+}
+
+/* Ajustes adicionales para pantallas pequeñas */
+@media (max-width: 640px) {
+  .sm\\:gap-8 {
+    gap: 1.25rem !important;
+  }
+  .sm\\:py-8 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  .w-full, .max-w-full {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+  .overflow-x-hidden {
+    overflow-x: hidden !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .px-4, .sm\\:px-8 {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
 }
