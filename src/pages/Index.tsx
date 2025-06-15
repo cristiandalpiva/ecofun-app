@@ -497,21 +497,28 @@ const Index = () => {
                   </div>
                 </div>
                 {/* Progreso */}
-                <div className="flex-1 w-full min-w-[0px] max-w-full sm:max-w-md">
-                  <div className="flex justify-between items-center mb-2 w-full gap-2">
-                    <span className="text-xs sm:text-sm font-semibold text-emerald-700 truncate">{userPoints} puntos</span>
+                <div 
+                  className="flex-1 w-full min-w-0 max-w-full sm:max-w-md"
+                  style={{ maxWidth: "100vw", overflow: "hidden" }}
+                >
+                  <div className="flex justify-between items-center mb-2 w-full gap-2 flex-wrap">
+                    <span className="text-xs sm:text-sm font-semibold text-emerald-700 truncate block max-w-[100px] min-w-0 overflow-hidden">
+                      {userPoints} puntos
+                    </span>
                     {plantLevel.level < 6 && (
-                      <span className="text-xs sm:text-sm text-emerald-600 truncate text-right block max-w-[105px]">
+                      <span className="text-xs sm:text-sm text-emerald-600 truncate text-right block max-w-[90px] min-w-0 overflow-hidden">
                         Meta: {plantLevel.nextGoal}
                       </span>
                     )}
                   </div>
-                  <Progress 
-                    value={progressPercentage} 
-                    className="h-3 bg-emerald-100"
-                  />
+                  <div className="w-full overflow-hidden" style={{ minWidth: 0, maxWidth: "100%" }}>
+                    <Progress 
+                      value={progressPercentage} 
+                      className="h-3 bg-emerald-100 max-w-full overflow-hidden"
+                    />
+                  </div>
                   {plantLevel.level < 6 && (
-                    <p className="text-xs text-emerald-600 mt-1 break-words max-w-full whitespace-normal">
+                    <p className="text-xs text-emerald-600 mt-1 break-words max-w-full whitespace-normal overflow-hidden truncate block">
                       {plantLevel.nextGoal - userPoints} puntos para el siguiente nivel
                     </p>
                   )}
