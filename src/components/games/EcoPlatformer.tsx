@@ -56,7 +56,7 @@ interface Level {
 const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => {
   const [gameState, setGameState] = useState<'levelSelect' | 'playing' | 'levelComplete' | 'gameOver'>('levelSelect');
   const [currentLevel, setCurrentLevel] = useState(0);
-  const [player, setPlayer] = useState<Player>({ x: 50, y: 50, velocityX: 0, velocityY: 0, onGround: false });
+  const [player, setPlayer] = useState<Player>({ x: 50, y: 350, velocityX: 0, velocityY: 0, onGround: false });
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [collectibles, setCollectibles] = useState<Collectible[]>([]);
   const [enemies, setEnemies] = useState<Enemy[]>([]);
@@ -84,24 +84,24 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
       emoji: "🌳",
       bgGradient: "from-green-200 to-emerald-100",
       platforms: [
-        { x: 0, y: 0, width: 800, height: 20 },
+        { x: 0, y: 380, width: 800, height: 20 },
         { x: 0, y: 0, width: 20, height: 400 },
         { x: 780, y: 0, width: 20, height: 400 },
-        { x: 100, y: 100, width: 200, height: 20 },
-        { x: 400, y: 150, width: 200, height: 20 },
-        { x: 200, y: 250, width: 200, height: 20 },
-        { x: 500, y: 300, width: 200, height: 20 },
+        { x: 100, y: 300, width: 200, height: 20 },
+        { x: 400, y: 250, width: 200, height: 20 },
+        { x: 200, y: 150, width: 200, height: 20 },
+        { x: 500, y: 100, width: 200, height: 20 },
       ],
       collectibles: [
-        { id: 1, x: 150, y: 150, emoji: "🗑️", collected: false },
-        { id: 2, x: 450, y: 200, emoji: "📦", collected: false },
-        { id: 3, x: 250, y: 300, emoji: "🥤", collected: false },
-        { id: 4, x: 550, y: 350, emoji: "📄", collected: false },
-        { id: 5, x: 700, y: 50, emoji: "🧴", collected: false },
+        { id: 1, x: 150, y: 280, emoji: "🗑️", collected: false },
+        { id: 2, x: 450, y: 230, emoji: "📦", collected: false },
+        { id: 3, x: 250, y: 130, emoji: "🥤", collected: false },
+        { id: 4, x: 550, y: 80, emoji: "📄", collected: false },
+        { id: 5, x: 700, y: 360, emoji: "🧴", collected: false },
       ],
       enemies: [
-        { id: 1, x: 300, y: 50, velocityX: 1, emoji: "🦝" },
-        { id: 2, x: 600, y: 200, velocityX: -1, emoji: "🦊" },
+        { id: 1, x: 300, y: 360, velocityX: 1, emoji: "🦝" },
+        { id: 2, x: 600, y: 230, velocityX: -1, emoji: "🦊" },
       ],
       targetScore: 5,
       educationalMessage: "¡Mantener los bosques limpios ayuda a proteger los hábitats de muchos animales y plantas! Cada pieza de basura que recoges marca la diferencia."
@@ -190,7 +190,7 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
       setEnemies(level.enemies);
       setScore(0);
       setTimeLeft(60);
-      setPlayer({ x: 50, y: 50, velocityX: 0, velocityY: 0, onGround: false });
+      setPlayer({ x: 50, y: 350, velocityX: 0, velocityY: 0, onGround: false });
       
       // Start game loop
       const gameLoop = setInterval(() => {
@@ -259,21 +259,21 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
       for (const platform of platforms) {
         // Check if player is on platform
         if (newX + 15 > platform.x && newX - 15 < platform.x + platform.width &&
-            newY <= platform.y + platform.height && newY > platform.y && newVelocityY <= 0) {
+            newY >= platform.y - 30 && newY < platform.y && newVelocityY <= 0) {
           onGround = true;
-          newY = platform.y + platform.height;
+          newY = platform.y - 30;
           newVelocityY = 0;
         }
         
         // Check if player hits platform from below
         if (newX + 15 > platform.x && newX - 15 < platform.x + platform.width &&
-            newY + 30 >= platform.y && newY < platform.y && newVelocityY > 0) {
+            newY <= platform.y + platform.height && newY > platform.y && newVelocityY > 0) {
           newVelocityY = -1;
-          newY = platform.y - 30;
+          newY = platform.y + platform.height;
         }
         
         // Check side collisions
-        if (newY + 30 > platform.y && newY < platform.y + platform.height) {
+        if (newY > platform.y - 30 && newY < platform.y + platform.height) {
           // From left
           if (newX + 15 >= platform.x && prev.x + 15 <= platform.x) {
             newX = platform.x - 15;
@@ -297,7 +297,7 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
       newX = Math.max(20, Math.min(newX, 780));
       
       // If player falls off the bottom
-      if (newY < 0) {
+      if (newY > 400) {
         setLives(l => {
           const newLives = l - 1;
           if (newLives <= 0) {
@@ -312,7 +312,7 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
           }
           return newLives;
         });
-        return { x: 50, y: 50, velocityX: 0, velocityY: 0, onGround: false };
+        return { x: 50, y: 350, velocityX: 0, velocityY: 0, onGround: false };
       }
       
       return { 
@@ -372,7 +372,7 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
               duration: 1500,
             });
             // Reset player position after hit
-            setPlayer(prev => ({ ...prev, x: 50, y: 50, velocityX: 0, velocityY: 0 }));
+            setPlayer(prev => ({ ...prev, x: 50, y: 350, velocityX: 0, velocityY: 0 }));
           }
           return newLives;
         });
@@ -422,6 +422,7 @@ const EcoPlatformer: React.FC<EcoPlatformerProps> = ({ onComplete, onBack }) => 
   const startLevel = (levelIndex: number) => {
     setCurrentLevel(levelIndex);
     setLives(3);
+    setScore(0);
     setGameState('playing');
   };
 

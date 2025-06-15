@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, TreePine, Waves, Mountain, Sun, CheckCircle, AlertTriangle } from "lucide-react";
+import { ArrowLeft, TreePine, Waves, Mountain, Sun, CheckCircle, AlertTriangle, Snowflake, TreePalm } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface EndangeredAnimalsProps {
@@ -16,7 +16,7 @@ interface Animal {
   id: number;
   name: string;
   emoji: string;
-  habitat: 'forest' | 'ocean' | 'mountain' | 'desert';
+  habitat: 'forest' | 'ocean' | 'mountain' | 'desert' | 'arctic' | 'jungle';
   dangerLevel: 'critical' | 'endangered' | 'vulnerable';
   threats: string[];
   conservation: string;
@@ -43,6 +43,7 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
   const [showInfo, setShowInfo] = useState<Animal | null>(null);
 
   const animals: Animal[] = [
+    // Nivel 1 - Animales básicos
     {
       id: 1,
       name: "Oso Panda Gigante",
@@ -65,11 +66,13 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
       population: "Entre 10,000-25,000 individuos",
       placed: false
     },
+    
+    // Nivel 2
     {
       id: 3,
       name: "Tigre de Bengala",
       emoji: "🐅",
-      habitat: 'forest',
+      habitat: 'jungle',
       dangerLevel: 'endangered',
       threats: ["Caza furtiva", "Conflicto humano-animal", "Pérdida de hábitat"],
       conservation: "Parques nacionales y programas anti-caza furtiva",
@@ -87,6 +90,8 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
       population: "Varias especies en peligro crítico",
       placed: false
     },
+    
+    // Nivel 3
     {
       id: 5,
       name: "Leopardo de las Nieves",
@@ -109,11 +114,13 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
       population: "Menos de 5,500 individuos",
       placed: false
     },
+    
+    // Nivel 4
     {
       id: 7,
       name: "Orangután de Sumatra",
       emoji: "🦧",
-      habitat: 'forest',
+      habitat: 'jungle',
       dangerLevel: 'critical',
       threats: ["Deforestación", "Plantaciones de aceite de palma"],
       conservation: "Protección de bosques tropicales y rehabilitación",
@@ -122,13 +129,61 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
     },
     {
       id: 8,
-      name: "Pingüino Emperador",
-      emoji: "🐧",
-      habitat: 'mountain',
+      name: "Oso Polar",
+      emoji: "🐻‍❄️",
+      habitat: 'arctic',
       dangerLevel: 'vulnerable',
-      threats: ["Derretimiento de hielo", "Cambio climático", "Sobrepesca"],
-      conservation: "Protección de áreas antárticas y acción climática",
-      population: "Aproximadamente 595,000 individuos",
+      threats: ["Derretimiento de hielo", "Cambio climático", "Contaminación"],
+      conservation: "Protección de áreas árticas y acción climática urgente",
+      population: "Aproximadamente 22,000-31,000 individuos",
+      placed: false
+    },
+    
+    // Nivel 5
+    {
+      id: 9,
+      name: "Elefante Africano",
+      emoji: "🐘",
+      habitat: 'desert',
+      dangerLevel: 'endangered',
+      threats: ["Caza furtiva por marfil", "Conflicto humano-animal", "Fragmentación del hábitat"],
+      conservation: "Patrullas anti-caza furtiva y corredores de vida silvestre",
+      population: "Aproximadamente 415,000 individuos",
+      placed: false
+    },
+    {
+      id: 10,
+      name: "Gorila de Montaña",
+      emoji: "🦍",
+      habitat: 'forest',
+      dangerLevel: 'critical',
+      threats: ["Caza furtiva", "Guerra civil", "Enfermedades humanas"],
+      conservation: "Ecoturismo sostenible y protección comunitaria",
+      population: "Más de 1,000 individuos",
+      placed: false
+    },
+    
+    // Nivel 6
+    {
+      id: 11,
+      name: "Vaquita Marina",
+      emoji: "🐬",
+      habitat: 'ocean',
+      dangerLevel: 'critical',
+      threats: ["Pesca accidental", "Totoaba ilegal", "Contaminación"],
+      conservation: "Prohibición de pesca en áreas protegidas",
+      population: "Menos de 10 individuos",
+      placed: false
+    },
+    {
+      id: 12,
+      name: "Jaguar",
+      emoji: "🐆",
+      habitat: 'jungle',
+      dangerLevel: 'vulnerable',
+      threats: ["Deforestación", "Caza de represalia", "Fragmentación del hábitat"],
+      conservation: "Corredores ecológicos y programas de coexistencia",
+      population: "Aproximadamente 173,000 individuos",
       placed: false
     }
   ];
@@ -136,11 +191,11 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
   const habitats: Habitat[] = [
     {
       id: 'forest',
-      name: 'Bosque',
-      emoji: '🌳',
+      name: 'Bosque Templado',
+      emoji: '🌲',
       icon: TreePine,
       color: 'bg-green-100 border-green-400',
-      description: 'Hogar de primates, felinos y osos que dependen de los árboles',
+      description: 'Bosques templados para osos panda y gorilas',
       animals: []
     },
     {
@@ -149,16 +204,16 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
       emoji: '🌊',
       icon: Waves,
       color: 'bg-blue-100 border-blue-400',
-      description: 'Hábitat marino para ballenas, tortugas y vida acuática',
+      description: 'Hábitat marino para ballenas, tortugas y vaquitas',
       animals: []
     },
     {
       id: 'mountain',
-      name: 'Montaña/Polar',
+      name: 'Montaña',
       emoji: '🏔️',
       icon: Mountain,
       color: 'bg-gray-100 border-gray-400',
-      description: 'Regiones frías para leopardos de nieve y pingüinos',
+      description: 'Regiones montañosas para leopardos de las nieves',
       animals: []
     },
     {
@@ -167,12 +222,30 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
       emoji: '🏜️',
       icon: Sun,
       color: 'bg-yellow-100 border-yellow-400',
-      description: 'Tierras áridas para rinocerontes y otros grandes mamíferos',
+      description: 'Tierras áridas para rinocerontes y elefantes',
+      animals: []
+    },
+    {
+      id: 'arctic',
+      name: 'Ártico',
+      emoji: '🧊',
+      icon: Snowflake,
+      color: 'bg-cyan-100 border-cyan-400',
+      description: 'Regiones polares para osos polares',
+      animals: []
+    },
+    {
+      id: 'jungle',
+      name: 'Selva Tropical',
+      emoji: '🌴',
+      icon: TreePalm,
+      color: 'bg-emerald-100 border-emerald-400',
+      description: 'Selvas tropicales para tigres, orangutanes y jaguares',
       animals: []
     }
   ];
 
-  const [gameAnimals, setGameAnimals] = useState<Animal[]>(animals.slice(0, 4));
+  const [gameAnimals, setGameAnimals] = useState<Animal[]>([]);
   const [gameHabitats, setGameHabitats] = useState<Habitat[]>(habitats);
 
   useEffect(() => {
@@ -216,12 +289,12 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
       // Check if level is complete
       if (gameAnimals.length === 1) {
         setTimeout(() => {
-          if (currentLevel < 3) {
+          if (currentLevel < 5) { // Ahora tenemos 6 niveles (0-5)
             setCurrentLevel(currentLevel + 1);
             nextLevel();
           } else {
             setGameComplete(true);
-            setTimeout(() => onComplete(90), 2000);
+            setTimeout(() => onComplete(120), 2000); // Más puntos por más niveles
           }
         }, 1500);
       }
@@ -270,7 +343,7 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
           </Button>
           <div className="text-center">
             <h1 className="text-xl font-bold text-purple-700">🐼 Salva la Fauna</h1>
-            <p className="text-sm text-gray-600">Nivel {currentLevel + 1} de 4</p>
+            <p className="text-sm text-gray-600">Nivel {currentLevel + 1} de 6</p>
           </div>
           <div className="text-right text-sm">
             <div className="text-purple-600 font-medium">Correctos: {score}</div>
@@ -279,7 +352,7 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
         </div>
 
         {/* Progress */}
-        <Progress value={((currentLevel + 1) / 4) * 100} className="mb-6 h-2" />
+        <Progress value={((currentLevel + 1) / 6) * 100} className="mb-6 h-2" />
 
         {!gameComplete ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
