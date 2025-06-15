@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,6 @@ import PlantCare from '@/components/games/PlantCare';
 import PlantQuiz from '@/components/games/PlantQuiz';
 import AnimalQuiz from '@/components/games/AnimalQuiz';
 import EndangeredAnimals from '@/components/games/EndangeredAnimals';
-import RecycleBench from '@/components/games/RecycleBench';
 import EcoPlatformer from '@/components/games/EcoPlatformer';
 import EcoComparison from '@/components/games/EcoComparison';
 import InteractiveStories from '@/components/games/InteractiveStories';
@@ -139,16 +137,6 @@ const Games = () => {
       points: '25-80 pts',
       category: 'Animales',
       component: EndangeredAnimals
-    },
-    {
-      id: 'recycle-bench',
-      title: 'Banco de Reciclaje',
-      description: 'Gestiona un centro de reciclaje y aprende sobre clasificación',
-      icon: '♻️',
-      difficulty: 'Difícil',
-      points: '30-100 pts',
-      category: 'Reciclaje',
-      component: RecycleBench
     },
     {
       id: 'eco-platformer',

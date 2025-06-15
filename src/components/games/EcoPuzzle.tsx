@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,9 +27,9 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     {
       id: 0,
       name: "Reciclaje Básico",
-      description: "Aprende sobre los diferentes materiales reciclables y su importancia.",
-      educationalContent: "El reciclaje es fundamental para reducir los residuos. Cada material reciclable puede convertirse en nuevos productos: el papel se convierte en papel nuevo, el plástico en fibras textiles, y el vidrio puede reciclarse infinitas veces sin perder calidad.",
-      completionMessage: "¡Excelente! Ahora sabes cómo identificar los diferentes materiales reciclables. Cada vez que reciclas, ayudas a conservar recursos naturales.",
+      description: "Aprende sobre los diferentes contenedores de reciclaje y su importancia.",
+      educationalContent: "Los contenedores de reciclaje están codificados por colores: azul para papel y cartón, amarillo para plásticos y latas, verde para vidrio, y marrón para residuos orgánicos. Separar correctamente los residuos puede reducir hasta 80% de lo que enviamos a vertederos.",
+      completionMessage: "¡Excelente! Ahora sabes cómo identificar los diferentes contenedores de reciclaje. Cada vez que reciclas correctamente, ayudas a conservar recursos naturales.",
       image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&h=400&fit=crop",
       difficulty: "Fácil",
       gridSize: 3,
@@ -37,9 +38,9 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     {
       id: 1,
       name: "Paneles Solares",
-      description: "Descubre cómo la energía solar puede iluminar nuestro futuro.",
-      educationalContent: "Los paneles solares convierten la luz del sol en electricidad limpia. Una instalación solar doméstica puede generar toda la energía que necesita una casa y reducir las emisiones de CO2 hasta en 100,000 libras durante 20 años.",
-      completionMessage: "¡Fantástico! Los paneles solares como estos pueden generar energía limpia durante más de 25 años, ayudando a combatir el cambio climático.",
+      description: "Descubre cómo la energía solar puede iluminar nuestro futuro sostenible.",
+      educationalContent: "Los paneles solares convierten la luz del sol directamente en electricidad limpia mediante células fotovoltaicas. Una instalación solar doméstica puede generar toda la energía que necesita una casa y reducir las emisiones de CO2 hasta en 100,000 libras durante 20 años.",
+      completionMessage: "¡Fantástico! Los paneles solares como estos pueden generar energía limpia durante más de 25 años, siendo una inversión clave para combatir el cambio climático.",
       image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=400&fit=crop",
       difficulty: "Fácil",
       gridSize: 3,
@@ -49,8 +50,8 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       id: 2,
       name: "Jardín de Girasoles",
       description: "Un hermoso campo de girasoles que siguen al sol durante todo el día.",
-      educationalContent: "Los girasoles son maestros de la eficiencia energética: rotan para seguir al sol maximizando la fotosíntesis. Sus semillas alimentan aves y sus raíces pueden absorber toxinas del suelo, limpiando el ambiente naturalmente.",
-      completionMessage: "¡Increíble! Los girasoles no solo son hermosos, también son purificadores naturales del suelo y proveen alimento para la fauna silvestre.",
+      educationalContent: "Los girasoles practican el heliotropismo, rotando para seguir al sol y maximizar la fotosíntesis. Sus semillas alimentan aves, sus raíces pueden absorber toxinas del suelo, y una hectárea de girasoles puede producir suficiente aceite para biodiesel ecológico.",
+      completionMessage: "¡Increíble! Los girasoles no solo son hermosos, también son purificadores naturales del suelo y una fuente renovable de biocombustible.",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
@@ -58,10 +59,10 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     },
     {
       id: 3,
-      name: "Tigre en Peligro",
-      description: "Un majestuoso tigre en su hábitat natural, una especie que necesita nuestra protección.",
-      educationalContent: "Los tigres son cazadores apex que mantienen el equilibrio en sus ecosistemas. Quedan menos de 4,000 tigres salvajes en el mundo. Cada tigre necesita un territorio de hasta 100 km² para sobrevivir y cazar adecuadamente.",
-      completionMessage: "¡Perfecto! Los tigres como este son indicadores de la salud del ecosistema. Proteger su hábitat significa proteger bosques enteros.",
+      name: "Tigre en su Hábitat",
+      description: "Un majestuoso tigre en la selva, una especie que necesita nuestra protección urgente.",
+      educationalContent: "Los tigres son cazadores apex que mantienen el equilibrio en sus ecosistemas. Quedan menos de 4,000 tigres salvajes en el mundo. Cada tigre necesita un territorio de hasta 100 km² para sobrevivir, y su presencia indica un ecosistema selvático saludable.",
+      completionMessage: "¡Perfecto! Los tigres como este son indicadores de la salud del ecosistema. Proteger su hábitat significa proteger selvas enteras y la biodiversidad que albergan.",
       image: "https://images.unsplash.com/photo-1551969014-7d2c4cddf0b6?w=400&h=400&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
@@ -70,9 +71,9 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     {
       id: 4,
       name: "Planta Creciendo",
-      description: "Una pequeña planta emergiendo de la tierra, símbolo de nueva vida y esperanza.",
-      educationalContent: "Una sola semilla puede convertirse en un árbol que produzca oxígeno para dos personas durante toda su vida. Las plantas absorben CO2 del aire y lo convierten en oxígeno mediante la fotosíntesis, siendo fundamentales para la vida en la Tierra.",
-      completionMessage: "¡Genial! Esta pequeña planta representa el poder de la naturaleza para regenerarse y limpiar nuestro aire.",
+      description: "Una pequeña planta emergiendo de la tierra, símbolo de nueva vida y esperanza ecológica.",
+      educationalContent: "Una sola semilla contiene el potencial de convertirse en un árbol que produzca oxígeno para dos personas durante toda su vida. Las plantas absorben CO2 del aire y lo convierten en oxígeno mediante la fotosíntesis, siendo los pulmones verdes de nuestro planeta.",
+      completionMessage: "¡Genial! Esta pequeña planta representa el poder de la naturaleza para regenerarse y limpiar nuestro aire, recordándonos la importancia de cuidar cada semilla de vida.",
       image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=400&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
@@ -80,10 +81,10 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     },
     {
       id: 5,
-      name: "Persona Cuidando una Planta",
+      name: "Cuidando una Planta",
       description: "Una persona cuidando amorosamente una pequeña planta, mostrando la conexión humano-naturaleza.",
-      educationalContent: "Cuando cuidamos plantas, no solo embellecemos nuestro entorno. Las plantas de interior purifican el aire, reducen el estrés y mejoran nuestra salud mental. Cuidar un jardín nos conecta con la naturaleza y nos enseña paciencia y responsabilidad.",
-      completionMessage: "¡Excelente! El cuidado de las plantas nos enseña a ser responsables con la naturaleza y a valorar la vida en todas sus formas.",
+      educationalContent: "Cuando cuidamos plantas, creamos un vínculo especial con la naturaleza. Las plantas de interior purifican el aire eliminando toxinas, reducen el estrés y mejoran nuestra salud mental. Cuidar un jardín nos enseña paciencia, responsabilidad y respeto por los ciclos naturales.",
+      completionMessage: "¡Excelente! El cuidado de las plantas nos conecta con la naturaleza y nos enseña a ser guardianes responsables del medio ambiente, valorando la vida en todas sus formas.",
       image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=400&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
@@ -92,9 +93,9 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     {
       id: 6,
       name: "Animales en Extinción",
-      description: "Especies únicas que necesitan nuestra protección urgente para no desaparecer.",
-      educationalContent: "Cada especie que se extingue rompe una cadena alimentaria y afecta todo el ecosistema. Más de 28,000 especies están en peligro de extinción. La conservación no solo salva animales, sino que preserva la biodiversidad necesaria para un planeta saludable.",
-      completionMessage: "¡Increíble! Cada especie que proteges ayuda a mantener el equilibrio natural que necesitamos para un planeta saludable.",
+      description: "Especies únicas que necesitan nuestra protección urgente para no desaparecer para siempre.",
+      educationalContent: "Cada especie que se extingue rompe una cadena alimentaria y afecta todo el ecosistema. Más de 28,000 especies están en peligro de extinción actualmente. La conservación no solo salva animales individuales, sino que preserva la biodiversidad necesaria para un planeta saludable y equilibrado.",
+      completionMessage: "¡Increíble! Cada especie que proteges ayuda a mantener el equilibrio natural que necesitamos para un planeta saludable. Tu conciencia es el primer paso hacia la conservación.",
       image: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=400&h=400&fit=crop",
       difficulty: "Difícil",
       gridSize: 5,
@@ -102,10 +103,10 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     },
     {
       id: 7,
-      name: "Basural Contaminante",
-      description: "Un basural que muestra el impacto negativo de la mala gestión de residuos.",
-      educationalContent: "Los basurales liberan gases tóxicos y contaminan el suelo y agua subterránea. Un solo basural puede contaminar el agua potable de miles de personas. La correcta separación y reciclaje de residuos puede reducir hasta 80% de lo que enviamos a basurales.",
-      completionMessage: "¡Fantástico! Ahora entiendes por qué es tan importante reducir, reutilizar y reciclar para evitar la contaminación.",
+      name: "Contaminación por Basura",
+      description: "Un basural que muestra el impacto devastador de la mala gestión de residuos.",
+      educationalContent: "Los basurales liberan gases tóxicos como metano y CO2, contaminan el suelo y las aguas subterráneas. Un solo basural puede contaminar el agua potable de miles de personas durante décadas. La correcta separación y reciclaje de residuos puede reducir hasta 80% de lo que enviamos a estos sitios.",
+      completionMessage: "¡Fantástico! Ahora entiendes por qué es tan importante reducir, reutilizar y reciclar para evitar que nuestros residuos se conviertan en focos de contaminación.",
       image: "https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=400&h=400&fit=crop",
       difficulty: "Difícil",
       gridSize: 5,
@@ -114,9 +115,9 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     {
       id: 8,
       name: "Incendios Forestales",
-      description: "La devastación de los incendios forestales y su impacto en el ecosistema.",
-      educationalContent: "Los incendios forestales pueden liberar tanto CO2 como millones de autos en un año. Destruyen hábitats, contaminan el aire y afectan el clima global. La prevención y el manejo sostenible de bosques son clave para reducir estos desastres naturales.",
-      completionMessage: "¡Excelente! Entender los incendios forestales nos ayuda a valorar la importancia de cuidar nuestros bosques y prevenir estos desastres.",
+      description: "La devastación de los incendios forestales y su impacto destructivo en el ecosistema.",
+      educationalContent: "Los incendios forestales pueden liberar tanto CO2 como millones de autos en un año, destruyendo hábitats que tardaron décadas en formarse. Contaminan el aire, afectan el clima global y pueden destruir comunidades enteras. La prevención y el manejo sostenible de bosques son claves para reducir estos desastres.",
+      completionMessage: "¡Excelente! Entender los incendios forestales nos ayuda a valorar la importancia de cuidar nuestros bosques y tomar medidas preventivas para proteger estos ecosistemas vitales.",
       image: "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400&h=400&fit=crop",
       difficulty: "Medio",
       gridSize: 4,
@@ -145,8 +146,11 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
   }, [gameStarted, isComplete, selectedPuzzle]);
 
   const initializePuzzle = () => {
-    const shuffledPieces = Array.from({ length: totalPieces }, (_, i) => i);
-    // Shuffle the pieces properly
+    // Create array of piece numbers from 0 to totalPieces-1
+    const allPieces = Array.from({ length: totalPieces }, (_, i) => i);
+    
+    // Shuffle the pieces properly using Fisher-Yates algorithm
+    const shuffledPieces = [...allPieces];
     for (let i = shuffledPieces.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffledPieces[i], shuffledPieces[j]] = [shuffledPieces[j], shuffledPieces[i]];
@@ -162,6 +166,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
       attempts++;
     }
     
+    // All pieces start in the pieces area (not on the board)
     setPieces(shuffledPieces);
     setBoardPieces(Array(totalPieces).fill(null));
     setIsComplete(false);
@@ -194,6 +199,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
 
   const handleDragOver = (e: React.DragEvent, boardIndex: number) => {
     e.preventDefault();
+    // Only allow dropping a piece in its correct position
     if (draggedPiece === boardIndex) {
       e.dataTransfer.dropEffect = 'move';
       setDraggedOverIndex(boardIndex);
@@ -213,6 +219,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     
     if (draggedPiece === null) return;
 
+    // Only allow dropping if the piece matches the correct position
     if (draggedPiece !== boardIndex) {
       setDraggedPiece(null);
       return;
@@ -221,6 +228,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     const newBoardPieces = [...boardPieces];
     const newPieces = pieces.filter(p => p !== draggedPiece);
     
+    // If there's already a piece in this position, return it to pieces
     if (newBoardPieces[boardIndex] !== null) {
       newPieces.push(newBoardPieces[boardIndex] as number);
     }
@@ -239,6 +247,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     e.preventDefault();
     if (draggedPiece === null) return;
 
+    // Find if this piece is currently on the board
     const pieceIndexInBoard = boardPieces.indexOf(draggedPiece);
     if (pieceIndexInBoard !== -1) {
       const newBoardPieces = [...boardPieces];
@@ -455,7 +464,7 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
             <Card className="bg-white/90 backdrop-blur-sm border-2 border-emerald-200 shadow-xl">
               <CardContent className="p-4">
                 <h3 className="text-lg font-bold text-emerald-700 mb-3 flex items-center">
-                  🧩 Piezas ({pieces.length})
+                  🧩 Piezas ({pieces.length} de {totalPieces})
                 </h3>
                 <div
                   className={`grid gap-2 min-h-[300px] p-3 bg-emerald-50 rounded-lg border-2 border-dashed border-emerald-300`}
