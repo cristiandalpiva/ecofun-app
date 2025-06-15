@@ -276,7 +276,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             {/* Logo EcoFun mejorado */}
-            <div className="flex items-center space-x-3">
+            <Link to="/" className="flex items-center space-x-3">
               <div className="relative">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-400 via-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
                   <TreePine className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -293,7 +293,7 @@ const Index = () => {
                   Aprende Jugando
                 </p>
               </div>
-            </div>
+            </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
@@ -339,7 +339,7 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Mobile Menu Button - MEJORADO */}
+            {/* Mobile Menu Button */}
             <Button
               variant="ghost"
               className="md:hidden p-3 hover:bg-emerald-100"
@@ -362,30 +362,26 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-                <Link to="/games">
+                <Link to="/games" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
                     <BookOpen className="w-4 h-4 mr-2" />
                     Juegos
                   </Button>
                 </Link>
-                <Link to="/achievements">
+                <Link to="/achievements" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
                     <Award className="w-4 h-4 mr-2" />
                     Logros
                   </Button>
                 </Link>
-                <Link to="/community">
+                <Link to="/community" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
                     <Users className="w-4 h-4 mr-2" />
                     Comunidad
                   </Button>
                 </Link>
-                <Link to="/suggestions">
+                <Link to="/suggestions" onClick={() => setMobileMenuOpen(false)}>
                   <Button 
-                    onClick={() => {
-                      setShowSuggestions(true);
-                      setMobileMenuOpen(false);
-                    }}
                     variant="ghost" 
                     className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full"
                   >

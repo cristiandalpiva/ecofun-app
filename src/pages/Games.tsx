@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Star, Zap, ArrowLeft } from 'lucide-react';
+import { Trophy, Star, Zap, ArrowLeft, Home, Award, Users, Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import EcoTetris from '@/components/games/EcoTetris';
 import EcoQuiz from '@/components/games/EcoQuiz';
 import RecycleMemory from '@/components/games/RecycleMemory';
@@ -238,10 +240,46 @@ const Games = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
       <div className="max-w-7xl mx-auto">
+        {/* Header con navegación */}
+        <div className="bg-white/90 backdrop-blur-sm border-2 border-green-200 rounded-lg shadow-lg mb-6 p-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center space-x-4">
+              <Link to="/">
+                <Button variant="outline" className="border-green-400 text-green-700 hover:bg-green-50">
+                  <Home className="w-4 h-4 mr-2" />
+                  Inicio
+                </Button>
+              </Link>
+              <h1 className="text-2xl sm:text-3xl font-bold text-green-800">
+                🎮 Juegos Ecológicos
+              </h1>
+            </div>
+            
+            {/* Navegación adicional */}
+            <div className="flex flex-wrap gap-2">
+              <Link to="/achievements">
+                <Button variant="ghost" size="sm" className="text-green-700 hover:text-green-900 hover:bg-green-100">
+                  <Award className="w-4 h-4 mr-1" />
+                  Logros
+                </Button>
+              </Link>
+              <Link to="/community">
+                <Button variant="ghost" size="sm" className="text-green-700 hover:text-green-900 hover:bg-green-100">
+                  <Users className="w-4 h-4 mr-1" />
+                  Comunidad
+                </Button>
+              </Link>
+              <Link to="/suggestions">
+                <Button variant="ghost" size="sm" className="text-green-700 hover:text-green-900 hover:bg-green-100">
+                  <Heart className="w-4 h-4 mr-1" />
+                  Sugerencias
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-800 mb-4">
-            🎮 Juegos Ecológicos
-          </h1>
           <p className="text-xl text-gray-600 mb-6">
             ¡Aprende sobre el medio ambiente mientras te diviertes!
           </p>
