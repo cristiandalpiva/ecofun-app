@@ -8,6 +8,10 @@ import { ArrowLeft, Award, Star, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Achievements = () => {
+  // Leer puntos del localStorage para determinar progreso real
+  const userPoints = parseInt(localStorage.getItem('ecoPoints') || '0');
+  const hasPlayedGames = userPoints > 0;
+
   const achievements = [
     {
       id: 1,
@@ -15,7 +19,7 @@ const Achievements = () => {
       description: "Completa tu primer juego",
       icon: "🎯",
       points: 10,
-      unlocked: true,
+      unlocked: hasPlayedGames,
       category: "Principiante"
     },
     {
@@ -24,7 +28,7 @@ const Achievements = () => {
       description: "Completa 5 juegos diferentes",
       icon: "🌱",
       points: 50,
-      unlocked: true,
+      unlocked: userPoints >= 200,
       category: "Explorador"
     },
     {
@@ -33,7 +37,7 @@ const Achievements = () => {
       description: "Alcanza 500 puntos",
       icon: "🌿",
       points: 100,
-      unlocked: false,
+      unlocked: userPoints >= 500,
       category: "Guardián"
     },
     {
@@ -69,7 +73,7 @@ const Achievements = () => {
       description: "Alcanza 1000 puntos totales",
       icon: "👑",
       points: 200,
-      unlocked: false,
+      unlocked: userPoints >= 1000,
       category: "Maestro"
     },
     {
@@ -83,18 +87,19 @@ const Achievements = () => {
     }
   ];
 
-  const categories = [
-    { name: "Principiante", color: "bg-green-100 text-green-800", count: 1 },
-    { name: "Explorador", color: "bg-blue-100 text-blue-800", count: 1 },
-    { name: "Guardián", color: "bg-purple-100 text-purple-800", count: 0 },
-    { name: "Especialista", color: "bg-orange-100 text-orange-800", count: 0 },
-    { name: "Héroe", color: "bg-red-100 text-red-800", count: 0 },
-    { name: "Maestro", color: "bg-yellow-100 text-yellow-800", count: 0 },
-    { name: "Leyenda", color: "bg-pink-100 text-pink-800", count: 0 }
-  ];
+  const unlockedAchievements = achievements.filter(a => a.unlocked);
+  const unlockedCount = unlockedAchievements.length;
+  const totalPoints = unlockedAchievements.reduce((sum, a) => sum + a.points, 0);
 
-  const unlockedCount = achievements.filter(a => a.unlocked).length;
-  const totalPoints = achievements.filter(a => a.unlocked).reduce((sum, a) => sum + a.points, 0);
+  const categories = [
+    { name: "Principiante", color: "bg-green-100 text-green-800", count: achievements.filter(a => a.category === "Principiante" && a.unlocked).length },
+    { name: "Explorador", color: "bg-blue-100 text-blue-800", count: achievements.filter(a => a.category === "Explorador" && a.unlocked).length },
+    { name: "Guardián", color: "bg-purple-100 text-purple-800", count: achievements.filter(a => a.category === "Guardián" && a.unlocked).length },
+    { name: "Especialista", color: "bg-orange-100 text-orange-800", count: achievements.filter(a => a.category === "Especialista" && a.unlocked).length },
+    { name: "Héroe", color: "bg-red-100 text-red-800", count: achievements.filter(a => a.category === "Héroe" && a.unlocked).length },
+    { name: "Maestro", color: "bg-yellow-100 text-yellow-800", count: achievements.filter(a => a.category === "Maestro" && a.unlocked).length },
+    { name: "Leyenda", color: "bg-pink-100 text-pink-800", count: achievements.filter(a => a.category === "Leyenda" && a.unlocked).length }
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50">

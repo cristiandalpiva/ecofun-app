@@ -10,6 +10,9 @@ import Achievements from "./pages/Achievements";
 import Community from "./pages/Community";
 import Suggestions from "./pages/Suggestions";
 import NotFound from "./pages/NotFound";
+import WeeklyChallenges from "./pages/WeeklyChallenges";
+import EducationalContent from "./pages/EducationalContent";
+import DailyTips from "./pages/DailyTips";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +28,9 @@ const App = () => (
           <Route path="/achievements" element={<Achievements />} />
           <Route path="/community" element={<Community />} />
           <Route path="/suggestions" element={<Suggestions />} />
+          <Route path="/weekly-challenges" element={<WeeklyChallenges />} />
+          <Route path="/educational-content" element={<EducationalContent />} />
+          <Route path="/daily-tips" element={<DailyTips />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

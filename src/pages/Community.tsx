@@ -1,67 +1,54 @@
-
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Users, MessageSquare, Heart, Share2, Trophy, Target } from 'lucide-react';
+import { ArrowLeft, Users, Sparkles, Bell, Clock, Rocket } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Community = () => {
-  const topPlayers = [
-    { name: "EcoMaestro92", points: 1250, level: "👑 Leyenda", badge: "🌍 Guardián Global" },
-    { name: "PlantLover", points: 980, level: "🌟 Héroe", badge: "🌱 Jardinero Experto" },
-    { name: "RecycleKing", points: 875, level: "🏆 Maestro", badge: "♻️ Rey del Reciclaje" },
-    { name: "WaterSaver", points: 720, level: "🌿 Guardián", badge: "💧 Protector del Agua" },
-    { name: "AnimalFriend", points: 650, level: "🌱 Explorador", badge: "🦋 Amigo de Animales" }
-  ];
-
-  const recentActivity = [
-    { user: "EcoMaestro92", action: "completó", game: "Salva la Fauna", time: "Hace 2 horas", icon: "🦋" },
-    { user: "PlantLover", action: "alcanzó", game: "500 puntos", time: "Hace 3 horas", icon: "🏆" },
-    { user: "RecycleKing", action: "desbloqueó", game: "Maestro del Reciclaje", time: "Hace 5 horas", icon: "♻️" },
-    { user: "WaterSaver", action: "completó", game: "Guardián del Agua", time: "Hace 1 día", icon: "💧" },
-    { user: "AnimalFriend", action: "se unió a", game: "EcoFun", time: "Hace 2 días", icon: "🌱" }
-  ];
-
-  const challenges = [
+  const upcomingFeatures = [
     {
-      title: "Semana del Reciclaje",
-      description: "Completa 3 juegos de reciclaje esta semana",
-      progress: 67,
-      reward: "Badge especial + 100 puntos",
-      deadline: "3 días restantes",
-      icon: "♻️"
+      title: "Ranking de EcoHéroes",
+      description: "Compite con otros jugadores y sube en el ranking global",
+      icon: "🏆",
+      status: "En desarrollo"
     },
     {
-      title: "Protector de Animales",
-      description: "Salva 25 animales en los juegos de fauna",
-      progress: 40,
-      reward: "Título 'Amigo de la Fauna'",
-      deadline: "1 semana restante",
-      icon: "🦋"
+      title: "Desafíos en Equipo",
+      description: "Únete a equipos y completa misiones juntos",
+      icon: "👥",
+      status: "Próximamente"
     },
     {
-      title: "Eco Estudiante",
-      description: "Completa todos los cuentos interactivos",
-      progress: 25,
-      reward: "200 puntos + badge de sabiduría",
-      deadline: "2 semanas restantes",
-      icon: "📚"
+      title: "Chat Comunitario",
+      description: "Comparte consejos y experiencias con otros EcoHéroes",
+      icon: "💬",
+      status: "Próximamente"
+    },
+    {
+      title: "Eventos Especiales",
+      description: "Participa en eventos temáticos con recompensas exclusivas",
+      icon: "🎉",
+      status: "Próximamente"
+    },
+    {
+      title: "Compartir Consejos",
+      description: "Publica tus mejores consejos ecológicos para la comunidad",
+      icon: "💡",
+      status: "Próximamente"
+    },
+    {
+      title: "Perfil Público",
+      description: "Personaliza tu perfil y muestra tus logros",
+      icon: "🌟",
+      status: "Próximamente"
     }
-  ];
-
-  const ecoTips = [
-    { tip: "Usa ambos lados del papel antes de reciclarlo", author: "EcoMaestro92", likes: 24 },
-    { tip: "Apaga las luces cuando salgas de una habitación", author: "PlantLover", likes: 18 },
-    { tip: "Lleva tu propia bolsa de tela cuando vayas de compras", author: "RecycleKing", likes: 31 },
-    { tip: "Cierra el grifo mientras te cepillas los dientes", author: "WaterSaver", likes: 22 }
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <div className="flex items-center mb-6">
             <Link to="/">
               <Button variant="outline" size="sm">
@@ -81,163 +68,97 @@ const Community = () => {
             </p>
           </div>
 
-          {/* Estadísticas de la Comunidad */}
-          <div className="grid md:grid-cols-4 gap-4 mb-8">
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-purple-200 shadow-xl">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl mb-2">👥</div>
-                <div className="text-xl font-bold text-purple-600">1,247</div>
-                <div className="text-sm text-purple-700">EcoHéroes</div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-blue-200 shadow-xl">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl mb-2">🎮</div>
-                <div className="text-xl font-bold text-blue-600">15,892</div>
-                <div className="text-sm text-blue-700">Juegos Completados</div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-green-200 shadow-xl">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl mb-2">🌱</div>
-                <div className="text-xl font-bold text-green-600">89,234</div>
-                <div className="text-sm text-green-700">Árboles Virtuales</div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-pink-200 shadow-xl">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl mb-2">💡</div>
-                <div className="text-xl font-bold text-pink-600">2,156</div>
-                <div className="text-sm text-pink-700">Consejos Compartidos</div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8 mb-8">
-            {/* Ranking de Jugadores */}
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-purple-200 shadow-xl">
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-bold text-purple-700 mb-4 flex items-center">
-                  <Trophy className="w-6 h-6 mr-2" />
-                  Top EcoHéroes
-                </h2>
-                <div className="space-y-3">
-                  {topPlayers.map((player, index) => (
-                    <div key={player.name} className="flex items-center p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg">
-                      <div className="text-2xl mr-3">
-                        {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}°`}
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-semibold text-gray-800">{player.name}</div>
-                        <div className="text-sm text-gray-600">{player.badge}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-bold text-purple-600">{player.points} pts</div>
-                        <div className="text-sm">{player.level}</div>
-                      </div>
-                    </div>
-                  ))}
+          {/* Banner de Próximamente */}
+          <Card className="bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 text-white border-0 shadow-2xl mb-8 overflow-hidden relative">
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxjaXJjbGUgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjEiIGN4PSIyMCIgY3k9IjIwIiByPSIyIi8+PC9nPjwvc3ZnPg==')] opacity-30"></div>
+            <CardContent className="p-8 relative z-10">
+              <div className="flex flex-col items-center text-center">
+                <div className="flex items-center mb-4">
+                  <Sparkles className="w-8 h-8 mr-2 animate-pulse" />
+                  <span className="text-2xl font-bold">¡Muy Pronto!</span>
+                  <Sparkles className="w-8 h-8 ml-2 animate-pulse" />
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Actividad Reciente */}
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-blue-200 shadow-xl">
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-bold text-blue-700 mb-4 flex items-center">
-                  <MessageSquare className="w-6 h-6 mr-2" />
-                  Actividad Reciente
+                <div className="text-6xl mb-4">🚀</div>
+                <h2 className="text-3xl font-bold mb-4">
+                  La Comunidad EcoFun está en camino
                 </h2>
-                <div className="space-y-3">
-                  {recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-center p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg">
-                      <div className="text-xl mr-3">{activity.icon}</div>
-                      <div className="flex-1">
-                        <div className="text-sm">
-                          <span className="font-semibold text-blue-700">{activity.user}</span>
-                          <span className="text-gray-600"> {activity.action} </span>
-                          <span className="font-semibold text-gray-800">{activity.game}</span>
-                        </div>
-                        <div className="text-xs text-gray-500">{activity.time}</div>
-                      </div>
-                    </div>
-                  ))}
+                <p className="text-lg text-white/90 max-w-2xl mb-6">
+                  Estamos trabajando para crear el mejor espacio donde todos los EcoHéroes puedan conectarse, 
+                  compartir logros y trabajar juntos por un planeta más verde.
+                </p>
+                <div className="flex items-center space-x-2 bg-white/20 rounded-full px-6 py-3">
+                  <Clock className="w-5 h-5" />
+                  <span className="font-semibold">Lanzamiento: Próximamente en 2025</span>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Desafíos Comunitarios */}
-          <Card className="bg-white/90 backdrop-blur-sm border-2 border-green-200 shadow-xl mb-8">
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-bold text-green-700 mb-4 flex items-center">
-                <Target className="w-6 h-6 mr-2" />
-                Desafíos Comunitarios
-              </h2>
-              <div className="grid md:grid-cols-3 gap-4">
-                {challenges.map((challenge, index) => (
-                  <div key={index} className="p-4 bg-gradient-to-b from-green-50 to-emerald-50 rounded-lg border border-green-200">
-                    <div className="text-center mb-3">
-                      <div className="text-2xl mb-2">{challenge.icon}</div>
-                      <h3 className="font-bold text-gray-800">{challenge.title}</h3>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">{challenge.description}</p>
-                    <div className="mb-3">
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Progreso</span>
-                        <span>{challenge.progress}%</span>
-                      </div>
-                      <Progress value={challenge.progress} className="h-2" />
-                    </div>
-                    <div className="text-xs text-green-700 mb-2">
-                      🎁 {challenge.reward}
-                    </div>
-                    <div className="text-xs text-orange-600">
-                      ⏰ {challenge.deadline}
-                    </div>
-                  </div>
-                ))}
               </div>
             </CardContent>
           </Card>
 
-          {/* Consejos Eco */}
-          <Card className="bg-white/90 backdrop-blur-sm border-2 border-pink-200 shadow-xl">
+          {/* Notificación de suscripción */}
+          <Card className="bg-white/90 backdrop-blur-sm border-2 border-purple-200 shadow-xl mb-8">
             <CardContent className="p-6">
-              <h2 className="text-2xl font-bold text-pink-700 mb-4 flex items-center">
-                <Heart className="w-6 h-6 mr-2" />
-                Consejos EcoFriendly
-              </h2>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {ecoTips.map((tip, index) => (
-                  <div key={index} className="p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg border border-pink-200">
-                    <p className="text-sm text-gray-700 mb-2">💡 {tip.tip}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-gray-500">Por {tip.author}</span>
-                      <div className="flex items-center text-red-500">
-                        <Heart className="w-4 h-4 mr-1" />
-                        <span className="text-xs">{tip.likes}</span>
-                      </div>
-                    </div>
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center">
+                  <div className="bg-purple-100 rounded-full p-3 mr-4">
+                    <Bell className="w-6 h-6 text-purple-600" />
                   </div>
-                ))}
-              </div>
-              <div className="text-center mt-6">
-                <Button variant="outline" className="border-2 border-pink-400 text-pink-600 hover:bg-pink-50">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Compartir tu Consejo
+                  <div>
+                    <h3 className="font-bold text-gray-800">¿Quieres ser el primero en enterarte?</h3>
+                    <p className="text-sm text-gray-600">Te avisaremos cuando la comunidad esté lista</p>
+                  </div>
+                </div>
+                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
+                  <Bell className="w-4 h-4 mr-2" />
+                  Avisarme
                 </Button>
               </div>
             </CardContent>
           </Card>
 
-          <div className="text-center mt-8">
-            <Link to="/">
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg">
-                ¡Unirse a la Aventura!
-              </Button>
-            </Link>
-          </div>
+          {/* Funcionalidades que vienen */}
+          <Card className="bg-white/90 backdrop-blur-sm border-2 border-indigo-200 shadow-xl mb-8">
+            <CardContent className="p-6">
+              <div className="flex items-center mb-6">
+                <Rocket className="w-6 h-6 text-indigo-600 mr-2" />
+                <h2 className="text-2xl font-bold text-indigo-700">Funcionalidades en Desarrollo</h2>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {upcomingFeatures.map((feature, index) => (
+                  <div 
+                    key={index}
+                    className="p-4 rounded-lg bg-gradient-to-b from-indigo-50 to-purple-50 border border-indigo-200 hover:shadow-md transition-shadow"
+                  >
+                    <div className="text-center">
+                      <div className="text-4xl mb-3">{feature.icon}</div>
+                      <h3 className="font-bold text-gray-800 mb-2">{feature.title}</h3>
+                      <p className="text-sm text-gray-600 mb-3">{feature.description}</p>
+                      <Badge className="bg-purple-100 text-purple-700">
+                        {feature.status}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Mensaje motivacional */}
+          <Card className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 shadow-xl">
+            <CardContent className="p-6 text-center">
+              <div className="text-5xl mb-4">🌱</div>
+              <h3 className="text-xl font-bold text-emerald-700 mb-2">
+                Mientras tanto, ¡sigue jugando!
+              </h3>
+              <p className="text-emerald-600 mb-4">
+                Cada juego que completas hace crecer tu planta y te prepara para ser un líder de la comunidad
+              </p>
+              <Link to="/">
+                <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold">
+                  ¡Seguir Jugando!
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
