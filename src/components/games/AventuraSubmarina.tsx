@@ -31,10 +31,21 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
   const [objects, setObjects] = useState<GameObject[]>([]);
   const [gameLevel, setGameLevel] = useState(1);
 
-  const gameWidth = 700;
-  const gameHeight = 500;
+  const [gameWidth, setGameWidth] = useState(700);
+  const gameHeight = 400;
   const playerWidth = 60;
   const playerHeight = 40;
+
+  // Responsive game width
+  useEffect(() => {
+    const updateWidth = () => {
+      const containerWidth = Math.min(window.innerWidth - 32, 700);
+      setGameWidth(containerWidth);
+    };
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
 
   // Generar objetos (plástico y peces)
   const generateObject = useCallback(() => {
@@ -238,27 +249,27 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-200 via-blue-400 to-blue-900 p-4">
+    <div className="min-h-screen bg-gradient-to-b from-blue-200 via-blue-400 to-blue-900 p-2 sm:p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header del juego */}
-        <div className="flex items-center justify-between mb-4">
-          <Button onClick={onBack} variant="outline" className="text-blue-700 hover:text-blue-900">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Salir
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <Button onClick={onBack} variant="outline" className="text-blue-700 hover:text-blue-900 text-sm">
+            <ArrowLeft className="w-4 h-4 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">Salir</span>
           </Button>
           
-          <div className="flex items-center space-x-6 text-white">
+          <div className="flex items-center space-x-2 sm:space-x-6 text-white text-sm sm:text-base">
             <div className="text-center">
-              <p className="text-sm">Puntos</p>
-              <p className="text-2xl font-bold">{score}</p>
+              <p className="text-xs sm:text-sm">Puntos</p>
+              <p className="text-lg sm:text-2xl font-bold">{score}</p>
             </div>
             <div className="text-center">
-              <p className="text-sm">Vidas</p>
-              <p className="text-2xl font-bold text-red-300">{'❤️'.repeat(lives)}</p>
+              <p className="text-xs sm:text-sm">Vidas</p>
+              <p className="text-lg sm:text-2xl font-bold text-red-300">{'❤️'.repeat(lives)}</p>
             </div>
             <div className="text-center">
-              <p className="text-sm">Tiempo</p>
-              <p className="text-2xl font-bold">{timeLeft}s</p>
+              <p className="text-xs sm:text-sm">Tiempo</p>
+              <p className="text-lg sm:text-2xl font-bold">{timeLeft}s</p>
             </div>
           </div>
 
@@ -266,11 +277,12 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
             <Button 
               onClick={() => setPaused(!paused)} 
               variant="outline"
+              size="sm"
               className="text-blue-700 hover:text-blue-900"
             >
               {paused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
             </Button>
-            <Button onClick={initializeGame} variant="outline" className="text-blue-700 hover:text-blue-900">
+            <Button onClick={initializeGame} variant="outline" size="sm" className="text-blue-700 hover:text-blue-900">
               <RotateCcw className="w-4 h-4" />
             </Button>
           </div>
@@ -278,10 +290,10 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
 
         {/* Área de juego */}
         <Card className="bg-white/10 backdrop-blur-sm border-2 border-blue-300 shadow-xl">
-          <CardContent className="p-4">
+          <CardContent className="p-2 sm:p-4">
             <div 
-              className="relative bg-gradient-to-b from-blue-300 to-blue-800 rounded-lg overflow-hidden"
-              style={{ width: gameWidth, height: gameHeight, margin: '0 auto' }}
+              className="relative bg-gradient-to-b from-blue-300 to-blue-800 rounded-lg overflow-hidden mx-auto"
+              style={{ width: gameWidth, height: gameHeight, maxWidth: '100%' }}
             >
               {paused && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -375,21 +387,23 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
             {/* Controles móviles */}
             <div className="flex justify-center mt-4 space-x-4">
               <Button
+                onTouchStart={() => movePlayer('left')}
                 onMouseDown={() => movePlayer('left')}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-3 text-lg"
               >
-                ← Izquierda
+                ←
               </Button>
               <Button
+                onTouchStart={() => movePlayer('right')}
                 onMouseDown={() => movePlayer('right')}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-3 text-lg"
               >
-                Derecha →
+                →
               </Button>
             </div>
 
-            <p className="text-center text-blue-200 text-sm mt-2">
-              Usa las flechas del teclado, A/D o los botones para moverte
+            <p className="text-center text-blue-200 text-xs sm:text-sm mt-2">
+              Usa los botones o las flechas del teclado para moverte
             </p>
           </CardContent>
         </Card>

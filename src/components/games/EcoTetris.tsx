@@ -335,7 +335,7 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
         {row.map((cell, x) => (
           <div
             key={x}
-            className={`w-6 h-6 border border-gray-400 flex items-center justify-center text-xs ${
+            className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 border border-gray-400 flex items-center justify-center text-[8px] sm:text-[10px] md:text-xs ${
               cell ? getCellStyle(cell) : 'bg-gray-100'
             }`}
           >
@@ -399,7 +399,7 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-2 sm:p-4">
       <div className="max-w-6xl mx-auto">
         <Card className="bg-white/90 backdrop-blur-sm border-2 border-green-200 shadow-xl">
           <CardContent className="p-6">
@@ -439,7 +439,7 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
               </Card>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6">
               {/* Game Board */}
               <div className="lg:col-span-3">
                 <Card className="bg-gray-50 border-2 border-gray-300">
@@ -463,8 +463,53 @@ const EcoTetris: React.FC<EcoTetrisProps> = ({ onComplete, onBack }) => {
                   </CardContent>
                 </Card>
                 
-                {/* Controls */}
-                <Card className="mt-4 bg-blue-50 border-2 border-blue-300">
+                {/* Mobile Controls */}
+                <Card className="mt-4 bg-blue-50 border-2 border-blue-300 lg:hidden">
+                  <CardContent className="p-4">
+                    <h4 className="font-bold text-blue-700 mb-3 text-center">🎮 Controles</h4>
+                    <div className="flex justify-center space-x-3">
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        className="w-16 h-16 text-2xl"
+                        onClick={() => movePiece(-1, 0)}
+                        disabled={gameOver || isPaused}
+                      >
+                        ←
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        className="w-16 h-16 text-2xl"
+                        onClick={handleRotate}
+                        disabled={gameOver || isPaused}
+                      >
+                        ↻
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        className="w-16 h-16 text-2xl"
+                        onClick={() => movePiece(0, 1)}
+                        disabled={gameOver || isPaused}
+                      >
+                        ↓
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        className="w-16 h-16 text-2xl"
+                        onClick={() => movePiece(1, 0)}
+                        disabled={gameOver || isPaused}
+                      >
+                        →
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Desktop Controls */}
+                <Card className="mt-4 bg-blue-50 border-2 border-blue-300 hidden lg:block">
                   <CardContent className="p-4">
                     <h4 className="font-bold text-blue-700 mb-2">🎮 Controles</h4>
                     <div className="text-sm text-blue-600 space-y-1">
