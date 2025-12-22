@@ -371,31 +371,31 @@ const Index = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
+            <nav className="hidden md:flex items-center space-x-4">
               <Link to="/games">
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                  <BookOpen className="w-4 h-4 mr-2" />
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-4 py-2 text-base">
+                  <BookOpen className="w-5 h-5 mr-2" />
                   Juegos
                 </Button>
               </Link>
               <Link to="/achievements">
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                  <Award className="w-4 h-4 mr-2" />
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-4 py-2 text-base">
+                  <Award className="w-5 h-5 mr-2" />
                   Logros
                 </Button>
               </Link>
               <Link to="/community">
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold">
-                  <Users className="w-4 h-4 mr-2" />
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-4 py-2 text-base">
+                  <Users className="w-5 h-5 mr-2" />
                   Comunidad
                 </Button>
               </Link>
               <Link to="/suggestions">
                 <Button 
                   variant="ghost" 
-                  className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold"
+                  className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-4 py-2 text-base"
                 >
-                  <Heart className="w-4 h-4 mr-2" />
+                  <Heart className="w-5 h-5 mr-2" />
                   Sugerencias
                 </Button>
               </Link>
