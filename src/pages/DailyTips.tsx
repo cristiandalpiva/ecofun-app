@@ -174,17 +174,17 @@ const DailyTips = () => {
             </Link>
           </div>
 
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-amber-700 mb-4 flex items-center justify-center">
-              <Lightbulb className="w-10 h-10 mr-3" />
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-4xl font-bold text-amber-700 mb-2 sm:mb-4 flex items-center justify-center">
+              <Lightbulb className="w-6 h-6 sm:w-10 sm:h-10 mr-2 sm:mr-3" />
               Consejos Diarios
             </h1>
-            <p className="text-lg text-amber-600">
+            <p className="text-sm sm:text-lg text-amber-600">
               Pequeñas acciones que hacen grandes diferencias
             </p>
             <div className="flex items-center justify-center mt-2 text-amber-500">
-              <Calendar className="w-4 h-4 mr-2" />
-              <span className="text-sm capitalize">{formattedDate}</span>
+              <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+              <span className="text-xs sm:text-sm capitalize">{formattedDate}</span>
             </div>
           </div>
 

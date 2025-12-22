@@ -200,33 +200,34 @@ const EducationalContent = () => {
             </Link>
           </div>
 
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-indigo-700 mb-4 flex items-center justify-center">
-              <BookOpen className="w-10 h-10 mr-3" />
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-4xl font-bold text-indigo-700 mb-2 sm:mb-4 flex items-center justify-center">
+              <BookOpen className="w-6 h-6 sm:w-10 sm:h-10 mr-2 sm:mr-3" />
               Contenido Educativo
             </h1>
-            <p className="text-lg text-indigo-600">
+            <p className="text-sm sm:text-lg text-indigo-600">
               Aprende sobre el medio ambiente mes a mes
             </p>
           </div>
 
           {/* Mes Actual Destacado */}
-          <Card className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-0 shadow-xl mb-8">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
+          <Card className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-0 shadow-xl mb-6 sm:mb-8">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center">
-                  <div className="text-5xl mr-4">{monthlyContent[currentMonth].emoji}</div>
+                  <div className="text-3xl sm:text-5xl mr-3 sm:mr-4">{monthlyContent[currentMonth].emoji}</div>
                   <div>
-                    <Badge className="bg-white/20 text-white mb-2">
+                    <Badge className="bg-white/20 text-white mb-1 sm:mb-2 text-xs">
                       <Calendar className="w-3 h-3 mr-1" />
                       Mes Actual
                     </Badge>
-                    <h2 className="text-2xl font-bold">{monthlyContent[currentMonth].month}</h2>
-                    <p className="text-indigo-100">{monthlyContent[currentMonth].theme}</p>
+                    <h2 className="text-lg sm:text-2xl font-bold">{monthlyContent[currentMonth].month}</h2>
+                    <p className="text-indigo-100 text-sm">{monthlyContent[currentMonth].theme}</p>
                   </div>
                 </div>
                 <Button 
                   variant="secondary" 
+                  size="sm"
                   className="bg-white/20 hover:bg-white/30 text-white border-0"
                   onClick={() => setExpandedMonth(currentMonth)}
                 >

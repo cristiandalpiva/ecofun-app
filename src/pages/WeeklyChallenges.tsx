@@ -104,34 +104,34 @@ const WeeklyChallenges = () => {
             </Link>
           </div>
 
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-blue-700 mb-4 flex items-center justify-center">
-              <Target className="w-10 h-10 mr-3" />
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-4xl font-bold text-blue-700 mb-2 sm:mb-4 flex items-center justify-center">
+              <Target className="w-6 h-6 sm:w-10 sm:h-10 mr-2 sm:mr-3" />
               Retos Semanales
             </h1>
-            <p className="text-lg text-blue-600">
+            <p className="text-sm sm:text-lg text-blue-600">
               ¡Completa retos cada semana y gana recompensas exclusivas!
             </p>
           </div>
 
           {/* Semana Actual */}
-          <Card className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 shadow-xl mb-8">
-            <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div className="flex items-center mb-4 md:mb-0">
-                  <div className="text-5xl mr-4">{currentWeek.emoji}</div>
+          <Card className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 shadow-xl mb-6 sm:mb-8">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center">
+                  <div className="text-3xl sm:text-5xl mr-3 sm:mr-4">{currentWeek.emoji}</div>
                   <div>
-                    <Badge className="bg-white/20 text-white mb-2">
+                    <Badge className="bg-white/20 text-white mb-1 sm:mb-2 text-xs">
                       <Calendar className="w-3 h-3 mr-1" />
                       Semana {currentWeek.number}
                     </Badge>
-                    <h2 className="text-2xl font-bold">{currentWeek.theme}</h2>
-                    <p className="text-blue-100">{currentWeek.startDate} - {currentWeek.endDate}</p>
+                    <h2 className="text-lg sm:text-2xl font-bold">{currentWeek.theme}</h2>
+                    <p className="text-blue-100 text-sm">{currentWeek.startDate} - {currentWeek.endDate}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Clock className="w-5 h-5" />
-                  <span className="font-semibold">{weeklyChallenge.timeRemaining}</span>
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="font-semibold text-sm sm:text-base">{weeklyChallenge.timeRemaining}</span>
                 </div>
               </div>
             </CardContent>
