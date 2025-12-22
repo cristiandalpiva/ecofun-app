@@ -183,7 +183,7 @@ const Achievements = () => {
                 {achievements.map((achievement) => (
                   <div 
                     key={achievement.id}
-                    className={`p-4 rounded-lg border-2 transition-all duration-300 ${
+                    className={`p-4 rounded-lg border-2 ${
                       achievement.unlocked 
                         ? 'bg-gradient-to-b from-yellow-50 to-orange-50 border-yellow-300 shadow-lg' 
                         : 'bg-gray-50 border-gray-200 opacity-60'
