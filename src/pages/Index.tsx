@@ -420,7 +420,7 @@ const Index = () => {
               className="md:hidden p-3 hover:bg-emerald-100"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              <Menu className="h-8 w-8 text-emerald-700" />
+              <Menu className="h-10 w-10 text-emerald-700" />
             </Button>
           </div>
 
