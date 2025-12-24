@@ -733,19 +733,19 @@ const InteractiveStories: React.FC<InteractiveStoriesProps> = ({ onComplete, onB
                         ¿Qué decisión tomas?
                       </p>
                       {currentStory.scenes[currentScene]?.choices.map((choice, index) => (
-                        <div key={index} className="flex items-center space-x-2">
+                        <div key={index} className="flex items-start gap-2">
                           <Button
                             onClick={() => makeChoice(choice)}
                             variant="outline"
-                            className="flex-1 text-left text-xs sm:text-sm p-3 sm:p-4 h-auto border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50"
+                            className="flex-1 text-left text-xs sm:text-sm p-3 sm:p-4 h-auto min-h-[48px] border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50 whitespace-normal break-words leading-relaxed"
                           >
-                            {choice.text}
+                            <span className="block w-full">{choice.text}</span>
                           </Button>
                           <Button
                             onClick={() => readChoice(choice)}
                             variant="outline"
                             size="sm"
-                            className="flex-shrink-0 border-green-300 text-green-600 hover:bg-green-50"
+                            className="flex-shrink-0 border-green-300 text-green-600 hover:bg-green-50 mt-1"
                           >
                             {isReading ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
                           </Button>
