@@ -229,7 +229,7 @@ const WeeklyChallenges = () => {
                         <p className="text-sm text-gray-600">{week.theme}</p>
                       </div>
                     </div>
-                    <Badge className="bg-gray-100 text-gray-500">
+                    <Badge className="bg-gray-100 text-gray-500 hover:bg-gray-100 cursor-default">
                       No participaste
                     </Badge>
                   </div>
