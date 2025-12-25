@@ -335,11 +335,11 @@ const EcoQuiz = ({ onComplete, onBack }: EcoQuizProps) => {
     <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <Button 
             onClick={onBack}
             variant="outline"
-            className="border-2 border-green-400 text-green-600 hover:bg-green-50 hover:border-green-500 hover:scale-105 transform transition-all duration-300"
+            className="border-2 border-green-400 text-green-600 hover:bg-green-50 hover:border-green-500 hover:scale-105 transform transition-all duration-300 w-fit"
           >
             ← Volver
           </Button>

@@ -220,11 +220,11 @@ const RecycleMemory = ({ onComplete, onBack }: RecycleMemoryProps) => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-4">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <Button 
               onClick={onBack}
               variant="outline"
-              className="border-2 border-green-400 text-green-600 hover:bg-green-50"
+              className="border-2 border-green-400 text-green-600 hover:bg-green-50 w-fit"
             >
               ← Volver
             </Button>

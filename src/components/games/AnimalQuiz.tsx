@@ -268,23 +268,25 @@ const AnimalQuiz = ({ onComplete, onBack }: AnimalQuizProps) => {
     <div className="min-h-screen bg-gradient-to-br from-orange-100 via-yellow-50 to-amber-100 p-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <Button
-            onClick={onBack}
-            variant="outline"
-            className="text-gray-600 hover:text-gray-800"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Volver
-          </Button>
-          <div className="flex items-center space-x-2">
-            <Binoculars className="w-5 h-5 text-orange-600" />
-            <span className="font-semibold text-orange-700">Safari Animal</span>
-          </div>
-          <div className="text-right">
-            <div className="text-sm text-gray-500">Puntos: {score}</div>
-            <div className="text-sm font-medium text-orange-600">
-              Tiempo: {timeLeft}s
+        <div className="flex flex-col gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <Button
+              onClick={onBack}
+              variant="outline"
+              className="text-gray-600 hover:text-gray-800 w-fit"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Volver
+            </Button>
+            <div className="flex items-center space-x-2">
+              <Binoculars className="w-5 h-5 text-orange-600" />
+              <span className="font-semibold text-orange-700">Safari Animal</span>
+            </div>
+            <div className="text-left sm:text-right">
+              <div className="text-sm text-gray-500">Puntos: {score}</div>
+              <div className="text-sm font-medium text-orange-600">
+                Tiempo: {timeLeft}s
+              </div>
             </div>
           </div>
         </div>

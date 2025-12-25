@@ -332,22 +332,24 @@ const EndangeredAnimals = ({ onComplete, onBack }: EndangeredAnimalsProps) => {
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-50 to-purple-100 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col gap-4 mb-6">
           <Button
             onClick={onBack}
             variant="outline"
-            className="text-gray-600 hover:text-gray-800"
+            className="text-gray-600 hover:text-gray-800 w-fit"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver
           </Button>
-          <div className="text-center">
-            <h1 className="text-xl font-bold text-purple-700">🐼 Salva la Fauna</h1>
-            <p className="text-sm text-gray-600">Nivel {currentLevel + 1} de 6</p>
-          </div>
-          <div className="text-right text-sm">
-            <div className="text-purple-600 font-medium">Correctos: {score}</div>
-            <div className="text-red-500">Errores: {mistakes}</div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div className="text-center sm:text-left">
+              <h1 className="text-xl font-bold text-purple-700">🐼 Salva la Fauna</h1>
+              <p className="text-sm text-gray-600">Nivel {currentLevel + 1} de 6</p>
+            </div>
+            <div className="text-left sm:text-right text-sm">
+              <div className="text-purple-600 font-medium">Correctos: {score}</div>
+              <div className="text-red-500">Errores: {mistakes}</div>
+            </div>
           </div>
         </div>
 

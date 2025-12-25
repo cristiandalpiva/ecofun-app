@@ -301,8 +301,8 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-green-50 to-cyan-100 p-2 sm:p-4">
         <div className="max-w-4xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-6 sm:mb-8 space-y-4 sm:space-y-0">
-            <Button onClick={onBack} variant="outline" className="text-gray-600 hover:text-gray-800 w-full sm:w-auto">
+          <div className="flex flex-col gap-4 mb-6 sm:mb-8">
+            <Button onClick={onBack} variant="outline" className="text-gray-600 hover:text-gray-800 w-fit">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Volver
             </Button>
@@ -320,7 +320,6 @@ const EcoPuzzle = ({ onComplete, onBack }: EcoPuzzleProps) => {
               </div>
               <p className="text-gray-600 text-sm sm:text-base">Elige tu nivel de dificultad</p>
             </div>
-            <div className="w-full sm:w-20"></div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
