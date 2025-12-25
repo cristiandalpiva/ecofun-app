@@ -195,13 +195,13 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-200 via-blue-300 to-blue-900 p-4">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <Button onClick={onBack} variant="outline" className="text-blue-700 hover:text-blue-900">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <Button onClick={onBack} variant="outline" className="text-blue-700 hover:text-blue-900 w-fit">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Volver
             </Button>
-            <h1 className="text-3xl font-bold text-blue-800">🌊 Aventura Submarina</h1>
-            <div className="w-20"></div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-blue-800">🌊 Aventura Submarina</h1>
+            <div className="hidden sm:block w-20"></div>
           </div>
 
           <Card className="bg-white/90 backdrop-blur-sm border-2 border-blue-200 shadow-xl">
@@ -252,10 +252,10 @@ const AventuraSubmarina = ({ onComplete, onBack }: AventuraSubmarinaProps) => {
     <div className="min-h-screen bg-gradient-to-b from-blue-200 via-blue-400 to-blue-900 p-2 sm:p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header del juego */}
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-          <Button onClick={onBack} variant="outline" className="text-blue-700 hover:text-blue-900 text-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <Button onClick={onBack} variant="outline" className="text-blue-700 hover:text-blue-900 text-sm w-fit">
             <ArrowLeft className="w-4 h-4 mr-1 sm:mr-2" />
-            <span className="hidden sm:inline">Salir</span>
+            Salir
           </Button>
           
           <div className="flex items-center space-x-2 sm:space-x-6 text-white text-sm sm:text-base">
