@@ -1,7 +1,6 @@
-
 import { Leaf, Heart, Shield, Mail, Phone, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import LogotipoEcoFun from "@/assets/LogotipoEcoFun.png";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -11,10 +10,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Logo y descripción */}
           <div className="space-y-3 sm:space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="text-xl sm:text-2xl font-bold text-transparent bg-gradient-to-r from-yellow-300 to-green-200 bg-clip-text">
-                EcoFun
-              </div>
+            <div className="flex items-center">
+              <img 
+                src={LogotipoEcoFun} 
+                alt="EcoFun" 
+                className="h-10 sm:h-12 w-auto"
+              />
             </div>
             <p className="text-green-100 text-base leading-relaxed">
               Plataforma educativa que enseña a cuidar el planeta de forma divertida y segura para toda la familia.
