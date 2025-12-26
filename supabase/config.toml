@@ -1,0 +1,4 @@
+project_id = "xbrenkxkcovxdjwmlwta"
+
+[functions.eco-guia-chat]
+verify_jwt = false
