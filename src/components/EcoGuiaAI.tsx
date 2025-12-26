@@ -234,22 +234,22 @@ export const EcoGuiaAI: React.FC = () => {
         initial={{ scale: 0 }}
         animate={{ 
           scale: 1,
-          opacity: isMinimized ? 0.7 : 1,
+          opacity: isMinimized ? 0.8 : 1,
         }}
         whileHover={{ scale: 1.1, opacity: 1 }}
         whileTap={{ scale: 0.95 }}
         transition={{ type: 'spring', damping: 15, stiffness: 300 }}
-        className={`fixed bottom-6 right-6 z-50 rounded-full shadow-lg flex items-center justify-center transition-all ${
+        className={`fixed bottom-6 right-6 z-50 rounded-full shadow-xl flex items-center justify-center transition-all ${
           isMinimized 
-            ? 'w-12 h-12 bg-primary/80' 
-            : 'w-14 h-14 bg-primary'
+            ? 'w-16 h-16 bg-primary/90' 
+            : 'w-20 h-20 bg-primary'
         } ${isOpen ? 'hidden' : ''}`}
         aria-label="Abrir Eco-Guía AI"
       >
         {isMinimized ? (
-          <Leaf className="w-5 h-5 text-primary-foreground" />
+          <Leaf className="w-7 h-7 text-primary-foreground" />
         ) : (
-          <MessageCircle className="w-6 h-6 text-primary-foreground" />
+          <MessageCircle className="w-9 h-9 text-primary-foreground" />
         )}
       </motion.button>
     </>
