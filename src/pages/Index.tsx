@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Menu, TreePine, Leaf, Award, Users, BookOpen, Heart } from "lucide-react";
+import { Menu, Award, Users, BookOpen, Heart } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Link } from 'react-router-dom';
-
+import EcoFunLogo from "@/assets/IconoEcoFun.png";
 // ... keep existing code (game imports)
 import AnimalQuiz from "@/components/games/AnimalQuiz";
 import EcoQuiz from "@/components/games/EcoQuiz";
@@ -351,23 +351,12 @@ const Index = () => {
         <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             {/* Logo EcoFun mejorado */}
-            <Link to="/" className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-400 via-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
-                  <TreePine className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg">
-                  <Leaf className="w-3 h-3 text-white" />
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-cyan-600 bg-clip-text text-transparent tracking-tight">
-                  EcoFun
-                </h1>
-                <p className="text-xs sm:text-sm text-emerald-600 font-semibold -mt-1">
-                  Aprende Jugando
-                </p>
-              </div>
+            <Link to="/" className="flex items-center">
+              <img 
+                src={EcoFunLogo} 
+                alt="EcoFun - Cuidemos el Planeta" 
+                className="h-14 sm:h-20 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation */}
