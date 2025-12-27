@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Leaf } from 'lucide-react';
+import { X, Send, Leaf, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'react-router-dom';
+import { useSpeechToText } from '@/hooks/useSpeechToText';
+import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 
 type Message = { role: 'user' | 'assistant'; content: string };
 
@@ -51,8 +53,12 @@ export const EcoGuiaAI: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [autoSpeak, setAutoSpeak] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  
+  const { isListening, transcript, startListening, stopListening, isSupported: sttSupported } = useSpeechToText();
+  const { speak, stop: stopSpeaking, isSpeaking, isSupported: ttsSupported } = useTextToSpeech();
 
   const isHiddenRoute = HIDDEN_ROUTES.some(route => location.pathname.startsWith(route));
 
@@ -60,14 +66,38 @@ export const EcoGuiaAI: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Update input when speech-to-text transcript changes
+  useEffect(() => {
+    if (transcript) {
+      setInput(transcript);
+    }
+  }, [transcript]);
+
   const handleClose = () => {
     setIsOpen(false);
     setIsMinimized(true);
+    stopSpeaking();
   };
 
   const handleOpen = () => {
     setIsOpen(true);
     setIsMinimized(false);
+  };
+
+  const handleMicToggle = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
+
+  const handleSpeakMessage = (content: string) => {
+    if (isSpeaking) {
+      stopSpeaking();
+    } else {
+      speak(content);
+    }
   };
 
   const sendMessage = async () => {
@@ -136,6 +166,12 @@ export const EcoGuiaAI: React.FC = () => {
           }
         }
       }
+
+      // Auto-speak the response if enabled
+      if (autoSpeak && assistantContent && ttsSupported) {
+        // Small delay to ensure the message is fully rendered
+        setTimeout(() => speak(assistantContent), 300);
+      }
     } catch (error) {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, { 
@@ -171,15 +207,29 @@ export const EcoGuiaAI: React.FC = () => {
                   <p className="text-xs text-muted-foreground">Tu asistente ecológico 🌱</p>
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleClose}
-                className="rounded-full hover:bg-destructive/10"
-                aria-label="Cerrar chat"
-              >
-                <X className="w-5 h-5" />
-              </Button>
+              <div className="flex items-center gap-1">
+                {ttsSupported && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setAutoSpeak(!autoSpeak)}
+                    className={`rounded-full ${autoSpeak ? 'text-primary' : 'text-muted-foreground'}`}
+                    aria-label={autoSpeak ? 'Desactivar lectura automática' : 'Activar lectura automática'}
+                    title={autoSpeak ? 'Lectura automática activada' : 'Lectura automática desactivada'}
+                  >
+                    {autoSpeak ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                  </Button>
+                )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleClose}
+                  className="rounded-full hover:bg-destructive/10"
+                  aria-label="Cerrar chat"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
             </div>
 
             {/* Messages */}
@@ -189,6 +239,9 @@ export const EcoGuiaAI: React.FC = () => {
                   <Leaf className="w-12 h-12 mx-auto mb-3 text-primary/50" />
                   <p className="text-sm">¡Hola! Soy Eco-Guía 🌍</p>
                   <p className="text-xs mt-1">Pregúntame sobre ecología y EcoFun</p>
+                  {sttSupported && (
+                    <p className="text-xs mt-2 text-primary/70">🎤 Puedes usar el micrófono para hablar</p>
+                  )}
                 </div>
               )}
               {messages.map((msg, i) => (
@@ -198,14 +251,31 @@ export const EcoGuiaAI: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div
-                    className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm ${
-                      msg.role === 'user'
-                        ? 'bg-primary text-primary-foreground rounded-br-md'
-                        : 'bg-muted text-foreground rounded-bl-md'
-                    }`}
-                  >
-                    {msg.content}
+                  <div className={`flex items-end gap-1 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                    <div
+                      className={`px-4 py-2 rounded-2xl text-sm ${
+                        msg.role === 'user'
+                          ? 'bg-primary text-primary-foreground rounded-br-md'
+                          : 'bg-muted text-foreground rounded-bl-md'
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+                    {msg.role === 'assistant' && ttsSupported && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleSpeakMessage(msg.content)}
+                        className="h-6 w-6 rounded-full hover:bg-primary/10 shrink-0"
+                        aria-label={isSpeaking ? 'Detener lectura' : 'Leer mensaje'}
+                      >
+                        {isSpeaking ? (
+                          <VolumeX className="w-3 h-3 text-primary" />
+                        ) : (
+                          <Volume2 className="w-3 h-3 text-muted-foreground hover:text-primary" />
+                        )}
+                      </Button>
+                    )}
                   </div>
                 </motion.div>
               ))}
@@ -222,24 +292,46 @@ export const EcoGuiaAI: React.FC = () => {
                 }}
                 className="flex gap-2"
               >
+                {sttSupported && (
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant={isListening ? 'default' : 'outline'}
+                    onClick={handleMicToggle}
+                    className={`rounded-full shrink-0 ${isListening ? 'bg-red-500 hover:bg-red-600 animate-pulse' : ''}`}
+                    aria-label={isListening ? 'Detener grabación' : 'Iniciar grabación de voz'}
+                    disabled={isLoading}
+                  >
+                    {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  </Button>
+                )}
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Escribe tu pregunta..."
+                  placeholder={isListening ? 'Escuchando...' : 'Escribe o usa el micrófono...'}
                   className="flex-1 px-4 py-2 rounded-full bg-muted border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  disabled={isLoading}
+                  disabled={isLoading || isListening}
                 />
                 <Button
                   type="submit"
                   size="icon"
                   disabled={!input.trim() || isLoading}
-                  className="rounded-full bg-primary hover:bg-primary/90"
+                  className="rounded-full bg-primary hover:bg-primary/90 shrink-0"
                   aria-label="Enviar mensaje"
                 >
                   <Send className="w-4 h-4" />
                 </Button>
               </form>
+              {isListening && (
+                <motion.p 
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-xs text-center text-red-500 mt-2"
+                >
+                  🎤 Grabando... Habla ahora
+                </motion.p>
+              )}
             </div>
           </motion.div>
         )}
