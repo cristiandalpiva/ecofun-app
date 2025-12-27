@@ -14,7 +14,7 @@ const Footer = () => {
               <img 
                 src={LogotipoEcoFun} 
                 alt="EcoFun" 
-                className="h-10 sm:h-12 w-auto"
+                className="h-10 lg:h-10 w-auto"
               />
             </div>
             <p className="text-emerald-700 text-base leading-relaxed">

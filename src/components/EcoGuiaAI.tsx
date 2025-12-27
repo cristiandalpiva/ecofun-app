@@ -1,12 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Leaf } from 'lucide-react';
+import { X, Send, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'react-router-dom';
 
 type Message = { role: 'user' | 'assistant'; content: string };
 
 const HIDDEN_ROUTES = ['/games'];
+
+// Seed mascot component for the chatbot button
+const SeedMascot = ({ size = 40 }: { size?: number }) => (
+  <motion.div 
+    className="relative"
+    animate={{ 
+      scale: [1, 1.05, 1],
+    }}
+    transition={{ 
+      duration: 2, 
+      repeat: Infinity,
+      ease: "easeInOut"
+    }}
+  >
+    <span style={{ fontSize: size * 0.6 }}>🌱</span>
+  </motion.div>
+);
 
 const TypingIndicator = () => (
   <div className="flex items-center gap-1 px-4 py-2">
@@ -231,26 +248,52 @@ export const EcoGuiaAI: React.FC = () => {
       {/* Floating Button */}
       <motion.button
         onClick={handleOpen}
-        initial={{ scale: 0 }}
+        initial={{ scale: 0, rotate: -180 }}
         animate={{ 
           scale: 1,
-          opacity: isMinimized ? 0.8 : 1,
+          rotate: 0,
+          opacity: isMinimized ? 0.85 : 1,
         }}
-        whileHover={{ scale: 1.1, opacity: 1 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: 'spring', damping: 15, stiffness: 300 }}
-        className={`fixed bottom-6 right-6 z-50 rounded-full shadow-xl flex items-center justify-center transition-all ${
+        whileHover={{ 
+          scale: 1.15, 
+          opacity: 1,
+          boxShadow: "0 0 25px rgba(16, 185, 129, 0.5)"
+        }}
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: 'spring', damping: 12, stiffness: 200 }}
+        className={`fixed bottom-6 right-6 z-50 rounded-full shadow-2xl flex items-center justify-center transition-all bg-gradient-to-br from-emerald-400 to-green-600 border-4 border-white/30 ${
           isMinimized 
-            ? 'w-16 h-16 bg-primary/90' 
-            : 'w-20 h-20 bg-primary'
+            ? 'w-16 h-16' 
+            : 'w-20 h-20'
         } ${isOpen ? 'hidden' : ''}`}
         aria-label="Abrir Eco-Guía AI"
       >
-        {isMinimized ? (
-          <Leaf className="w-7 h-7 text-primary-foreground" />
-        ) : (
-          <MessageCircle className="w-9 h-9 text-primary-foreground" />
-        )}
+        <motion.div
+          animate={{
+            y: [0, -3, 0],
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <SeedMascot size={isMinimized ? 36 : 44} />
+        </motion.div>
+        
+        {/* Pulse ring animation */}
+        <motion.div
+          className="absolute inset-0 rounded-full border-2 border-emerald-400"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.5, 0, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeOut"
+          }}
+        />
       </motion.button>
     </>
   );
