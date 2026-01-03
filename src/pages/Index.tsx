@@ -360,37 +360,32 @@ const Index = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-4">
+            <nav className="hidden md:flex items-center space-x-2">
               <Link to="/eco-resources">
-                <Button variant="ghost" className="text-amber-600 hover:text-amber-800 hover:bg-amber-50 font-semibold px-5 py-3 text-lg h-12 border border-amber-200">
-                  <Sparkles className="w-6 h-6 mr-2" />
+                <Button variant="ghost" className="text-amber-600 hover:text-amber-800 hover:bg-amber-50 font-semibold px-4 py-2 text-base h-10 border border-amber-200">
                   Recursos Eco-Educativos
                 </Button>
               </Link>
               <Link to="/games">
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-5 py-3 text-lg h-12">
-                  <BookOpen className="w-6 h-6 mr-2" />
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-4 py-2 text-base h-10">
                   Juegos
                 </Button>
               </Link>
               <Link to="/achievements">
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-5 py-3 text-lg h-12">
-                  <Award className="w-6 h-6 mr-2" />
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-4 py-2 text-base h-10">
                   Logros
                 </Button>
               </Link>
               <Link to="/community">
-                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-5 py-3 text-lg h-12">
-                  <Users className="w-6 h-6 mr-2" />
+                <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-4 py-2 text-base h-10">
                   Comunidad
                 </Button>
               </Link>
               <Link to="/suggestions">
                 <Button 
                   variant="ghost" 
-                  className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-5 py-3 text-lg h-12"
+                  className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-4 py-2 text-base h-10"
                 >
-                  <Heart className="w-6 h-6 mr-2" />
                   Sugerencias
                 </Button>
               </Link>
