@@ -3037,6 +3037,22 @@ Recuerda: No necesitamos unas pocas personas haciendo todo perfectamente, sino m
             })}
           </div>
 
+          {/* Recursos Eco-Educativos Section */}
+          <div className="mt-12 p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-200 shadow-lg">
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="text-4xl">📖</div>
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="text-xl font-bold text-amber-800 mb-1">Recursos Eco-Educativos Premium</h3>
+                <p className="text-amber-700">E-books con actividades para escuelas y familias. Material descargable creado por educadores.</p>
+              </div>
+              <Link to="/eco-resources">
+                <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-full shadow-lg whitespace-nowrap">
+                  Ver Recursos
+                </Button>
+              </Link>
+            </div>
+          </div>
+
           <div className="text-center mt-8">
             <Link to="/">
               <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg">
