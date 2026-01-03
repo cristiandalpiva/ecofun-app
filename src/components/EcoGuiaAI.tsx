@@ -349,15 +349,18 @@ export const EcoGuiaAI: React.FC = () => {
         whileHover={{ 
           scale: 1.15, 
           opacity: 1,
-          boxShadow: "0 0 25px rgba(16, 185, 129, 0.5)"
+          boxShadow: "0 0 30px rgba(16, 185, 129, 0.6)"
         }}
         whileTap={{ scale: 0.9 }}
         transition={{ type: 'spring', damping: 12, stiffness: 200 }}
-        className={`fixed bottom-6 right-6 z-50 rounded-full shadow-2xl flex items-center justify-center transition-all bg-gradient-to-br from-emerald-400 to-green-600 border-4 border-white/30 ${
+        className={`fixed bottom-6 right-6 z-50 rounded-full shadow-2xl flex items-center justify-center transition-all bg-white border-4 border-emerald-400 ${
           isMinimized 
             ? 'w-16 h-16' 
             : 'w-20 h-20'
         } ${isOpen ? 'hidden' : ''}`}
+        style={{
+          boxShadow: '0 4px 20px rgba(16, 185, 129, 0.3), 0 0 0 3px rgba(16, 185, 129, 0.15), inset 0 0 15px rgba(16, 185, 129, 0.1)'
+        }}
         aria-label="Abrir Eco-Guía AI"
       >
         <motion.div
@@ -377,13 +380,27 @@ export const EcoGuiaAI: React.FC = () => {
         <motion.div
           className="absolute inset-0 rounded-full border-2 border-emerald-400"
           animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.5, 0, 0.5],
+            scale: [1, 1.4, 1],
+            opacity: [0.6, 0, 0.6],
           }}
           transition={{
             duration: 2,
             repeat: Infinity,
             ease: "easeOut"
+          }}
+        />
+        
+        {/* Secondary glow ring */}
+        <motion.div
+          className="absolute inset-0 rounded-full bg-emerald-100/30"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.1, 0.3],
+          }}
+          transition={{
+            duration: 2.5,
+            repeat: Infinity,
+            ease: "easeInOut"
           }}
         />
       </motion.button>

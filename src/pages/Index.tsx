@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Menu, Award, Users, BookOpen, Heart } from "lucide-react";
+import { Menu, Award, Users, BookOpen, Heart, Sparkles } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Link } from 'react-router-dom';
 import EcoFunLogo from "@/assets/IconoEcoFun.png";
@@ -361,6 +361,12 @@ const Index = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-4">
+              <Link to="/eco-resources">
+                <Button variant="ghost" className="text-amber-600 hover:text-amber-800 hover:bg-amber-50 font-semibold px-5 py-3 text-lg h-12 border border-amber-200">
+                  <Sparkles className="w-6 h-6 mr-2" />
+                  Recursos Eco-Educativos
+                </Button>
+              </Link>
               <Link to="/games">
                 <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 font-semibold px-5 py-3 text-lg h-12">
                   <BookOpen className="w-6 h-6 mr-2" />
@@ -426,6 +432,12 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
+                <Link to="/eco-resources" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className="text-amber-600 hover:text-amber-800 hover:bg-amber-50 justify-start font-semibold w-full border border-amber-200">
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Recursos Eco-Educativos
+                  </Button>
+                </Link>
                 <Link to="/games" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100 justify-start font-semibold w-full">
                     <BookOpen className="w-4 h-4 mr-2" />

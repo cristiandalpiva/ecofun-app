@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import WeeklyChallenges from "./pages/WeeklyChallenges";
 import EducationalContent from "./pages/EducationalContent";
 import DailyTips from "./pages/DailyTips";
+import EcoResources from "./pages/EcoResources";
 import EcoGuiaAI from "./components/EcoGuiaAI";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/weekly-challenges" element={<WeeklyChallenges />} />
           <Route path="/educational-content" element={<EducationalContent />} />
           <Route path="/daily-tips" element={<DailyTips />} />
+          <Route path="/eco-resources" element={<EcoResources />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
