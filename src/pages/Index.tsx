@@ -418,15 +418,6 @@ const Index = () => {
           {mobileMenuOpen && (
             <div className="md:hidden mt-4 py-4 border-t border-emerald-200 bg-white/95 rounded-b-lg">
               <div className="flex flex-col space-y-3">
-                <div className="px-4 py-2 border-b border-emerald-100">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-lg">{plantLevel.emoji}</span>
-                    <div>
-                      <p className="font-bold text-emerald-700 text-sm">{plantLevel.stage}</p>
-                      <p className="text-xs text-emerald-600">{userPoints} puntos</p>
-                    </div>
-                  </div>
-                </div>
                 <Link to="/eco-resources" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className="text-amber-600 hover:text-amber-800 hover:bg-amber-50 justify-start font-semibold w-full border border-amber-200">
                     <Sparkles className="w-4 h-4 mr-2" />
