@@ -107,7 +107,7 @@ const Community = () => {
                     <p className="text-sm text-gray-600">Te avisaremos cuando la comunidad esté lista</p>
                   </div>
                 </div>
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
+                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white cursor-default">
                   <Bell className="w-4 h-4 mr-2" />
                   Avisarme
                 </Button>
@@ -126,7 +126,7 @@ const Community = () => {
                 {upcomingFeatures.map((feature, index) => (
                   <div 
                     key={index}
-                    className="p-4 rounded-lg bg-gradient-to-b from-indigo-50 to-purple-50 border border-indigo-200 hover:shadow-md transition-shadow"
+                    className="p-4 rounded-lg bg-gradient-to-b from-indigo-50 to-purple-50 border border-indigo-200"
                   >
                     <div className="text-center">
                       <div className="text-4xl mb-3">{feature.icon}</div>
