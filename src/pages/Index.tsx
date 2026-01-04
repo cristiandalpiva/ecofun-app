@@ -395,9 +395,9 @@ const Index = () => {
             <div className="hidden sm:flex items-center space-x-4">
               <div className="text-right">
                 <div className="flex items-center space-x-2">
-                  <span className="text-lg">{plantLevel.emoji}</span>
+                  <span className="text-xl">{plantLevel.emoji}</span>
                   <div>
-                    <p className="font-bold text-emerald-700 text-sm">{plantLevel.stage}</p>
+                    <p className="font-bold text-emerald-700 text-base">{plantLevel.stage}</p>
                     <p className="text-xs text-emerald-600">{userPoints} puntos</p>
                   </div>
                 </div>
