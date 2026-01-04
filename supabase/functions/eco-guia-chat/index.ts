@@ -19,18 +19,97 @@ Reglas:
 - Si preguntan sobre algo fuera del tema ecológico, redirige amablemente hacia temas de sostenibilidad
 - Sugiere actividades y juegos de la app cuando sea apropiado`;
 
+// Input validation constants
+const MAX_MESSAGES = 50;
+const MAX_MESSAGE_LENGTH = 1000;
+const MAX_TOTAL_LENGTH = 10000;
+const VALID_ROLES = ["user", "assistant"];
+
+// Sanitize text by removing control characters
+const sanitizeText = (text: string): string => {
+  return text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "").trim();
+};
+
+// Validate messages array
+const validateMessages = (messages: unknown): { valid: boolean; error?: string; sanitized?: Array<{role: string; content: string}> } => {
+  if (!Array.isArray(messages)) {
+    return { valid: false, error: "Los mensajes deben ser un array" };
+  }
+
+  if (messages.length === 0) {
+    return { valid: false, error: "Se requiere al menos un mensaje" };
+  }
+
+  if (messages.length > MAX_MESSAGES) {
+    return { valid: false, error: `Máximo ${MAX_MESSAGES} mensajes permitidos` };
+  }
+
+  let totalLength = 0;
+  const sanitized: Array<{role: string; content: string}> = [];
+
+  for (let i = 0; i < messages.length; i++) {
+    const msg = messages[i];
+
+    if (!msg || typeof msg !== "object") {
+      return { valid: false, error: `Mensaje ${i + 1} tiene formato inválido` };
+    }
+
+    if (!msg.role || !VALID_ROLES.includes(msg.role)) {
+      return { valid: false, error: `Mensaje ${i + 1} tiene rol inválido` };
+    }
+
+    if (typeof msg.content !== "string") {
+      return { valid: false, error: `Mensaje ${i + 1} debe tener contenido de texto` };
+    }
+
+    const sanitizedContent = sanitizeText(msg.content);
+
+    if (sanitizedContent.length === 0) {
+      return { valid: false, error: `Mensaje ${i + 1} está vacío` };
+    }
+
+    if (sanitizedContent.length > MAX_MESSAGE_LENGTH) {
+      return { valid: false, error: `Mensaje ${i + 1} excede ${MAX_MESSAGE_LENGTH} caracteres` };
+    }
+
+    totalLength += sanitizedContent.length;
+
+    if (totalLength > MAX_TOTAL_LENGTH) {
+      return { valid: false, error: `La conversación excede ${MAX_TOTAL_LENGTH} caracteres totales` };
+    }
+
+    sanitized.push({ role: msg.role, content: sanitizedContent });
+  }
+
+  return { valid: true, sanitized };
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { messages } = await req.json();
+    const body = await req.json();
+    
+    // Validate input
+    const validation = validateMessages(body.messages);
+    if (!validation.valid) {
+      console.warn("Input validation failed:", validation.error);
+      return new Response(JSON.stringify({ error: validation.error }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const messages = validation.sanitized!;
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
+
+    console.log(`Processing ${messages.length} validated messages`);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
