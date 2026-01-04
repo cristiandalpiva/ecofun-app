@@ -132,7 +132,7 @@ const Community = () => {
                       <div className="text-4xl mb-3">{feature.icon}</div>
                       <h3 className="font-bold text-gray-800 mb-2">{feature.title}</h3>
                       <p className="text-sm text-gray-600 mb-3">{feature.description}</p>
-                      <Badge className="bg-purple-100 text-purple-700">
+                      <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 cursor-default">
                         {feature.status}
                       </Badge>
                     </div>
