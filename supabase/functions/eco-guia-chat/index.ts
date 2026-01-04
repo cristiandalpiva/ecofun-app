@@ -25,6 +25,50 @@ const MAX_MESSAGE_LENGTH = 1000;
 const MAX_TOTAL_LENGTH = 10000;
 const VALID_ROLES = ["user", "assistant"];
 
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 10;
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+
+// Clean up expired rate limit entries periodically
+const cleanupRateLimitStore = () => {
+  const now = Date.now();
+  for (const [key, value] of rateLimitStore.entries()) {
+    if (now >= value.resetTime) {
+      rateLimitStore.delete(key);
+    }
+  }
+};
+
+// Check rate limit for a client
+const checkRateLimit = (clientIp: string): { allowed: boolean; remaining: number; resetIn: number } => {
+  const now = Date.now();
+  const record = rateLimitStore.get(clientIp);
+
+  if (!record || now >= record.resetTime) {
+    // New window - reset counter
+    rateLimitStore.set(clientIp, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    return { allowed: true, remaining: MAX_REQUESTS_PER_WINDOW - 1, resetIn: RATE_LIMIT_WINDOW_MS };
+  }
+
+  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
+    // Rate limit exceeded
+    return { allowed: false, remaining: 0, resetIn: record.resetTime - now };
+  }
+
+  // Increment counter
+  record.count++;
+  return { allowed: true, remaining: MAX_REQUESTS_PER_WINDOW - record.count, resetIn: record.resetTime - now };
+};
+
+// Get client IP from request headers
+const getClientIp = (req: Request): string => {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+         req.headers.get("x-real-ip") ||
+         req.headers.get("cf-connecting-ip") ||
+         "unknown";
+};
+
 // Sanitize text by removing control characters
 const sanitizeText = (text: string): string => {
   return text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "").trim();
@@ -85,11 +129,40 @@ const validateMessages = (messages: unknown): { valid: boolean; error?: string; 
 };
 
 serve(async (req) => {
+  // Periodically clean up rate limit store
+  if (Math.random() < 0.1) {
+    cleanupRateLimitStore();
+  }
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Rate limiting check
+    const clientIp = getClientIp(req);
+    const rateLimit = checkRateLimit(clientIp);
+
+    if (!rateLimit.allowed) {
+      console.warn(`Rate limit exceeded for IP: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Has enviado muchos mensajes. Espera un momento antes de intentar de nuevo. 🌿",
+          retryAfter: Math.ceil(rateLimit.resetIn / 1000)
+        }), 
+        {
+          status: 429,
+          headers: { 
+            ...corsHeaders, 
+            "Content-Type": "application/json",
+            "Retry-After": String(Math.ceil(rateLimit.resetIn / 1000)),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(Math.ceil(rateLimit.resetIn / 1000))
+          },
+        }
+      );
+    }
+
     const body = await req.json();
     
     // Validate input
@@ -109,7 +182,7 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    console.log(`Processing ${messages.length} validated messages`);
+    console.log(`Processing ${messages.length} validated messages from IP: ${clientIp}`);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -149,7 +222,12 @@ serve(async (req) => {
     }
 
     return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      headers: { 
+        ...corsHeaders, 
+        "Content-Type": "text/event-stream",
+        "X-RateLimit-Remaining": String(rateLimit.remaining),
+        "X-RateLimit-Reset": String(Math.ceil(rateLimit.resetIn / 1000))
+      },
     });
   } catch (error) {
     console.error("eco-guia-chat error:", error);

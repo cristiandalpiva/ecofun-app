@@ -27,14 +27,42 @@ interface GameProgress {
 const GuardianesDelHabitat: React.FC<GameProps> = ({ onComplete, onBack }) => {
   const [currentScreen, setCurrentScreen] = useState<GameScreen>('menu');
   const [selectedHabitat, setSelectedHabitat] = useState<string | null>(null);
+  const defaultProgress: GameProgress = {
+    unlockedHabitats: ['selva'], // Selva desbloqueada por defecto
+    completedHabitats: [],
+    earnedMedals: [],
+    totalScore: 0
+  };
+
   const [gameProgress, setGameProgress] = useState<GameProgress>(() => {
-    const saved = localStorage.getItem('guardianesProgress');
-    return saved ? JSON.parse(saved) : {
-      unlockedHabitats: ['selva'], // Selva desbloqueada por defecto
-      completedHabitats: [],
-      earnedMedals: [],
-      totalScore: 0
-    };
+    try {
+      const saved = localStorage.getItem('guardianesProgress');
+      if (!saved) return defaultProgress;
+      
+      const parsed = JSON.parse(saved);
+      
+      // Validate structure to prevent corrupted data from crashing the app
+      if (
+        typeof parsed === 'object' &&
+        parsed !== null &&
+        Array.isArray(parsed.unlockedHabitats) &&
+        Array.isArray(parsed.completedHabitats) &&
+        Array.isArray(parsed.earnedMedals) &&
+        typeof parsed.totalScore === 'number'
+      ) {
+        return parsed as GameProgress;
+      }
+      
+      // Invalid structure, return default and clear corrupted data
+      console.warn('Invalid game progress structure, resetting to default');
+      localStorage.removeItem('guardianesProgress');
+      return defaultProgress;
+    } catch (error) {
+      console.warn('Failed to load game progress:', error);
+      // Clear corrupted data
+      localStorage.removeItem('guardianesProgress');
+      return defaultProgress;
+    }
   });
 
   const saveProgress = (progress: GameProgress) => {
