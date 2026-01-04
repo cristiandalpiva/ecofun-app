@@ -392,23 +392,36 @@ const EcoQuiz = ({ onComplete, onBack }: EcoQuizProps) => {
             
             <div className="space-y-3 mb-6">
               {currentQ.options.map((option, index) => (
-                <Button
-                  key={index}
-                  onClick={() => handleAnswerSelect(index)}
-                  disabled={showExplanation}
-                  className={`w-full p-4 text-left justify-start text-wrap h-auto hover:scale-102 transform transition-all duration-300 ${
-                    showExplanation
-                      ? index === currentQ.correct
-                        ? 'bg-green-100 border-green-400 text-green-800 border-2 shadow-lg'
-                        : selectedAnswer === index
-                        ? 'bg-red-100 border-red-400 text-red-800 border-2'
-                        : 'bg-gray-100 text-gray-600'
-                      : 'bg-white hover:bg-green-50 border-2 border-gray-200 hover:border-green-400 hover:shadow-lg text-gray-800'
-                  }`}
-                  variant="outline"
-                >
-                  {option}
-                </Button>
+                <div key={index} className="flex items-center gap-2">
+                  <Button
+                    onClick={() => handleAnswerSelect(index)}
+                    disabled={showExplanation}
+                    className={`flex-1 p-4 text-left justify-start text-wrap h-auto hover:scale-102 transform transition-all duration-300 ${
+                      showExplanation
+                        ? index === currentQ.correct
+                          ? 'bg-green-100 border-green-400 text-green-800 border-2 shadow-lg'
+                          : selectedAnswer === index
+                          ? 'bg-red-100 border-red-400 text-red-800 border-2'
+                          : 'bg-gray-100 text-gray-600'
+                        : 'bg-white hover:bg-green-50 border-2 border-gray-200 hover:border-green-400 hover:shadow-lg text-gray-800'
+                    }`}
+                    variant="outline"
+                  >
+                    {option}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      speak(option);
+                    }}
+                    className="shrink-0 hover:scale-110 transform transition-all duration-300 hover:bg-blue-50"
+                    title="Escuchar opción"
+                  >
+                    <Volume2 className="w-4 h-4" />
+                  </Button>
+                </div>
               ))}
             </div>
 
