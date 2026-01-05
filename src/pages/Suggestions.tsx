@@ -13,58 +13,6 @@ const Suggestions = () => {
 
   const categories = ['juegos', 'educación', 'interfaz', 'comunidad', 'otros'];
 
-  const suggestions = [
-    {
-      id: 1,
-      title: "Juego de Energías Renovables",
-      description: "Un juego donde puedas construir tu propia ciudad sostenible con paneles solares, molinos de viento y otras energías limpias.",
-      author: "EcoMaestro92",
-      category: "juegos",
-      votes: 45,
-      status: "En Desarrollo",
-      date: "Hace 3 días"
-    },
-    {
-      id: 2,
-      title: "Sistema de Intercambio de Consejos",
-      description: "Una función donde los usuarios puedan intercambiar consejos ecológicos y ganar puntos por ayudar a otros.",
-      author: "PlantLover",
-      category: "comunidad",
-      votes: 32,
-      status: "Evaluando",
-      date: "Hace 1 semana"
-    },
-    {
-      id: 3,
-      title: "Modo Oscuro para la App",
-      description: "Agregar un tema oscuro para reducir el consumo de batería y ser más amigable con los ojos durante la noche.",
-      author: "RecycleKing",
-      category: "interfaz",
-      votes: 28,
-      status: "Planificado",
-      date: "Hace 2 semanas"
-    },
-    {
-      id: 4,
-      title: "Quiz sobre Cambio Climático",
-      description: "Un quiz educativo que enseñe sobre las causas y efectos del cambio climático con datos actuales.",
-      author: "WaterSaver",
-      category: "educación",
-      votes: 38,
-      status: "Implementado",
-      date: "Hace 1 mes"
-    },
-    {
-      id: 5,
-      title: "Jardín Virtual Personal",
-      description: "Un espacio donde cada usuario pueda mantener su propio jardín virtual, plantando árboles por cada juego completado.",
-      author: "AnimalFriend",
-      category: "juegos",
-      votes: 52,
-      status: "En Desarrollo",
-      date: "Hace 2 meses"
-    }
-  ];
 
   const handleSubmitSuggestion = () => {
     if (newSuggestion.trim()) {
@@ -177,84 +125,7 @@ const Suggestions = () => {
             </CardContent>
           </Card>
 
-          {/* Lista de Sugerencias */}
-          <Card className="bg-white/90 backdrop-blur-sm border-2 border-rose-200 shadow-xl">
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-bold text-rose-700 mb-6 flex items-center">
-                <ThumbsUp className="w-6 h-6 mr-2" />
-                Sugerencias de la Comunidad
-              </h2>
-              
-              <div className="space-y-4">
-                {suggestions.map((suggestion) => (
-                  <div key={suggestion.id} className="p-4 bg-gradient-to-r from-rose-50 to-pink-50 rounded-lg border border-rose-200 hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="text-lg font-bold text-gray-800">{suggestion.title}</h3>
-                      <Badge className={getStatusColor(suggestion.status)}>
-                        {suggestion.status}
-                      </Badge>
-                    </div>
-                    
-                    <p className="text-gray-700 mb-3">{suggestion.description}</p>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <Badge className={getCategoryColor(suggestion.category)}>
-                          {suggestion.category}
-                        </Badge>
-                        <span className="text-sm text-gray-600">
-                          Por {suggestion.author}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          {suggestion.date}
-                        </span>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Button variant="outline" size="sm" className="border-rose-300 text-rose-600 hover:bg-rose-50">
-                          <ThumbsUp className="w-4 h-4 mr-1" />
-                          {suggestion.votes}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Estadísticas */}
-          <div className="grid md:grid-cols-3 gap-4 mt-8">
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-rose-200 shadow-xl">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl mb-2">💡</div>
-                <div className="text-xl font-bold text-rose-600">127</div>
-                <div className="text-sm text-rose-700">Sugerencias Totales</div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-green-200 shadow-xl">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl mb-2">✅</div>
-                <div className="text-xl font-bold text-green-600">23</div>
-                <div className="text-sm text-green-700">Implementadas</div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-blue-200 shadow-xl">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl mb-2">🚀</div>
-                <div className="text-xl font-bold text-blue-600">15</div>
-                <div className="text-sm text-blue-700">En Desarrollo</div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="text-center mt-8">
-            <Link to="/">
-              <Button className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg">
-                ¡Seguir Explorando!
-              </Button>
-            </Link>
-          </div>
         </div>
       </div>
     </div>
