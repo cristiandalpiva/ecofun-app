@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Menu, Award, Users, BookOpen, Heart, Sparkles } from "lucide-react";
+import { Menu, Award, Users, BookOpen, Heart, Sparkles, Info } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Link } from 'react-router-dom';
 import EcoFunLogo from "@/assets/IconoEcoFun.png";
@@ -523,6 +524,42 @@ const Index = () => {
                     <p className="text-emerald-600 text-sm sm:text-base">Nivel {plantLevel.level}</p>
                     <p className="text-emerald-600 text-xs sm:text-sm italic">{plantLevel.description}</p>
                   </div>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100">
+                        <Info className="h-5 w-5" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-72 p-4" align="start">
+                      <h4 className="font-bold text-emerald-700 mb-3">🌱 Evoluciones de tu planta</h4>
+                      <div className="space-y-2 text-sm">
+                        <div className={`flex justify-between items-center p-2 rounded ${plantLevel.level >= 1 ? 'bg-emerald-50' : ''}`}>
+                          <span>🌰 Semilla</span>
+                          <span className="text-emerald-600 font-medium">0 pts</span>
+                        </div>
+                        <div className={`flex justify-between items-center p-2 rounded ${plantLevel.level >= 2 ? 'bg-emerald-50' : ''}`}>
+                          <span>🌱 Brote</span>
+                          <span className="text-emerald-600 font-medium">100 pts</span>
+                        </div>
+                        <div className={`flex justify-between items-center p-2 rounded ${plantLevel.level >= 3 ? 'bg-emerald-50' : ''}`}>
+                          <span>🌿 Plantita</span>
+                          <span className="text-emerald-600 font-medium">300 pts</span>
+                        </div>
+                        <div className={`flex justify-between items-center p-2 rounded ${plantLevel.level >= 4 ? 'bg-emerald-50' : ''}`}>
+                          <span>🪴 Planta</span>
+                          <span className="text-emerald-600 font-medium">600 pts</span>
+                        </div>
+                        <div className={`flex justify-between items-center p-2 rounded ${plantLevel.level >= 5 ? 'bg-emerald-50' : ''}`}>
+                          <span>🌳 Árbol</span>
+                          <span className="text-emerald-600 font-medium">1000 pts</span>
+                        </div>
+                        <div className={`flex justify-between items-center p-2 rounded ${plantLevel.level >= 6 ? 'bg-emerald-50' : ''}`}>
+                          <span>🌲 Bosque</span>
+                          <span className="text-emerald-600 font-medium">1500 pts</span>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 
                 <div className="flex-1 max-w-md w-full">
