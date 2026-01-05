@@ -60,6 +60,17 @@ const Index = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [previousLevel, setPreviousLevel] = useState<number>(() => {
+    const saved = localStorage.getItem('ecoPoints');
+    const points = saved ? parseInt(saved) : 0;
+    if (points < 100) return 1;
+    if (points < 300) return 2;
+    if (points < 600) return 3;
+    if (points < 1000) return 4;
+    if (points < 1500) return 5;
+    return 6;
+  });
+  const [showLevelUpAnimation, setShowLevelUpAnimation] = useState(false);
 
   // Check if onboarding has been completed
   useEffect(() => {
@@ -320,6 +331,34 @@ const Index = () => {
   const progressPercentage = plantLevel.level < 6 ? 
     (plantLevel.progress / (plantLevel.nextGoal - (plantLevel.level > 1 ? [0, 100, 300, 600, 1000][plantLevel.level - 2] : 0))) * 100 : 100;
 
+  // Detect level up and show celebration
+  useEffect(() => {
+    if (plantLevel.level > previousLevel) {
+      setShowLevelUpAnimation(true);
+      setPreviousLevel(plantLevel.level);
+      
+      const levelMessages: Record<number, { title: string; description: string }> = {
+        2: { title: "¡Tu semilla germinó! 🌱", description: "¡Has alcanzado el nivel Brote! Tu dedicación está dando frutos." },
+        3: { title: "¡Estás creciendo! 🌿", description: "¡Nivel Plantita desbloqueado! Sigue cuidando el planeta." },
+        4: { title: "¡Eres increíble! 🪴", description: "¡Nivel Planta alcanzado! Ya eres un verdadero guardián ecológico." },
+        5: { title: "¡Qué altura! 🌳", description: "¡Nivel Árbol conseguido! Eres un ejemplo de vida sostenible." },
+        6: { title: "¡EcoMaestro Supremo! 🌲", description: "¡Has alcanzado el nivel Bosque! Inspiras a toda la comunidad." }
+      };
+
+      const message = levelMessages[plantLevel.level];
+      if (message) {
+        toast({
+          title: message.title,
+          description: message.description,
+          duration: 5000,
+        });
+      }
+
+      // Hide animation after 2 seconds
+      setTimeout(() => setShowLevelUpAnimation(false), 2000);
+    }
+  }, [plantLevel.level, previousLevel]);
+
   if (currentGame) {
     const game = games.find(g => g.id === currentGame);
     if (game) {
@@ -468,13 +507,19 @@ const Index = () => {
           </p>
           
           {/* Plant Progress */}
-          <Card className="bg-white/80 backdrop-blur-sm border-2 border-emerald-200 shadow-xl mb-8 sm:mb-12">
+          <Card className={`bg-white/80 backdrop-blur-sm border-2 border-emerald-200 shadow-xl mb-8 sm:mb-12 transition-all duration-500 ${showLevelUpAnimation ? 'ring-4 ring-yellow-400 ring-opacity-75 scale-105' : ''}`}>
             <CardContent className="p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-6">
                 <div className="flex items-center space-x-4">
-                  <div className="text-4xl sm:text-5xl">{plantLevel.emoji}</div>
+                  <div className={`text-4xl sm:text-5xl transition-transform duration-500 ${showLevelUpAnimation ? 'animate-bounce scale-125' : ''}`}>
+                    {plantLevel.emoji}
+                  </div>
                   <div className="text-left">
-                    <h3 className="text-xl sm:text-2xl font-bold text-emerald-700">{plantLevel.stage}</h3>
+                    <h3 className={`text-xl sm:text-2xl font-bold text-emerald-700 ${showLevelUpAnimation ? 'text-yellow-600' : ''}`}>
+                      {showLevelUpAnimation && <span className="mr-2">🎉</span>}
+                      {plantLevel.stage}
+                      {showLevelUpAnimation && <span className="ml-2">🎉</span>}
+                    </h3>
                     <p className="text-emerald-600 text-sm sm:text-base">Nivel {plantLevel.level}</p>
                     <p className="text-emerald-600 text-xs sm:text-sm italic">{plantLevel.description}</p>
                   </div>
