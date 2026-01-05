@@ -76,9 +76,9 @@ const Footer = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#padres" className="hover:text-emerald-900 transition-colors text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded">
+                  <Link to="/parents-info" className="hover:text-emerald-900 transition-colors text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded">
                     Información para Padres
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
