@@ -17,6 +17,7 @@ import EcoResources from "./pages/EcoResources";
 import ParentsInfo from "./pages/ParentsInfo";
 import ChildSafety from "./pages/ChildSafety";
 import EcoGuiaAI from "./components/EcoGuiaAI";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/games" element={<Games />} />
