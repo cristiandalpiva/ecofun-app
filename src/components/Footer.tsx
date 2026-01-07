@@ -71,9 +71,9 @@ const Footer = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#seguridad" className="hover:text-emerald-900 transition-colors text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded">
+                  <Link to="/child-safety" className="hover:text-emerald-900 transition-colors text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded">
                     Seguridad Infantil
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Link to="/parents-info" className="hover:text-emerald-900 transition-colors text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded">
