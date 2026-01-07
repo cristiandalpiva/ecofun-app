@@ -1,4 +1,4 @@
-import { Shield, Eye, Users, Heart, CheckCircle, AlertTriangle, Smartphone, MessageCircle } from "lucide-react";
+import { Shield, Eye, Users, Heart, CheckCircle, AlertTriangle, CreditCard, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,9 +18,9 @@ const ChildSafety = () => {
       description: "Estamos trabajando en funciones de comunidad con enfoque en rankings y desafíos grupales para fomentar el aprendizaje colaborativo."
     },
     {
-      icon: Smartphone,
-      title: "Acceso Gratuito",
-      description: "La plataforma es gratuita y no incluye compras dentro de la aplicación."
+      icon: CreditCard,
+      title: "Compras Seguras",
+      description: "La plataforma ofrece recursos educativos adicionales mediante compras seguras procesadas a través de Stripe. Los padres tienen control total sobre cualquier transacción."
     }
   ];
 
