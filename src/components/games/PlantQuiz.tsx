@@ -236,27 +236,42 @@ const PlantQuiz = ({ onComplete, onBack }: PlantQuizProps) => {
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-emerald-50 to-cyan-100 p-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <Button
-            onClick={onBack}
-            variant="outline"
-            className="text-gray-600 hover:text-gray-800"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Volver
-          </Button>
+        <div className="flex flex-col gap-4 mb-6">
+          {/* Row 1: Back button */}
+          <div>
+            <Button
+              onClick={onBack}
+              variant="outline"
+              className="text-gray-600 hover:text-gray-800"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Volver
+            </Button>
+          </div>
+          
+          {/* Row 2: Title centered */}
           <div className="text-center">
-            <h1 className="text-xl font-bold text-green-700 flex items-center">
+            <h1 className="text-2xl font-bold text-green-700 flex items-center justify-center">
               <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mr-2 shadow-md">
                 <Leaf className="w-4 h-4 text-white" />
               </div>
               Adivina la Planta
             </h1>
-            <p className="text-sm text-gray-600">Pregunta {currentQuestion + 1} de {questions.length}</p>
           </div>
-          <div className="text-right text-sm">
-            <div className="text-gray-500">Tiempo: {timeLeft}s</div>
-            <div className="text-green-600 font-medium">Puntos: {score}</div>
+          
+          {/* Row 3: Question number and stats */}
+          <div className="flex items-center justify-between bg-white/60 rounded-lg px-4 py-2">
+            <div className="text-sm font-medium text-gray-700">
+              Pregunta {currentQuestion + 1} de {questions.length}
+            </div>
+            <div className="flex items-center gap-4 text-sm">
+              <div className={`font-medium ${timeLeft <= 10 ? 'text-red-500' : timeLeft <= 20 ? 'text-yellow-600' : 'text-gray-600'}`}>
+                ⏱️ {timeLeft}s
+              </div>
+              <div className="text-green-600 font-medium">
+                🌿 {score} pts
+              </div>
+            </div>
           </div>
         </div>
 
