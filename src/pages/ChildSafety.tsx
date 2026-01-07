@@ -1,4 +1,4 @@
-import { Shield, Eye, Lock, Users, Heart, CheckCircle, AlertTriangle, Smartphone, MessageCircle } from "lucide-react";
+import { Shield, Eye, Users, Heart, CheckCircle, AlertTriangle, Smartphone, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,26 +6,21 @@ import Footer from "@/components/Footer";
 import LogotipoEcoFun from "@/assets/LogotipoEcoFun.png";
 
 const ChildSafety = () => {
-  const safetyFeatures = [
+  const platformInfo = [
     {
       icon: Eye,
-      title: "Contenido Supervisado",
-      description: "Todo el contenido es revisado y aprobado por educadores y expertos en desarrollo infantil antes de publicarse."
-    },
-    {
-      icon: Lock,
-      title: "Sin Datos Personales",
-      description: "No recopilamos información personal de los niños. La experiencia es completamente anónima y segura."
+      title: "Contenido Educativo",
+      description: "Juegos y actividades diseñados para enseñar sobre ecología y sostenibilidad de forma divertida."
     },
     {
       icon: Users,
-      title: "Sin Interacción Social",
-      description: "No hay chat, mensajería ni funciones sociales que expongan a los niños a contacto con desconocidos."
+      title: "Comunidad en Desarrollo",
+      description: "Estamos trabajando en funciones de comunidad con enfoque en rankings y desafíos grupales para fomentar el aprendizaje colaborativo."
     },
     {
       icon: Smartphone,
-      title: "Sin Compras In-App",
-      description: "La plataforma es completamente gratuita y no incluye compras dentro de la aplicación ni publicidad."
+      title: "Acceso Gratuito",
+      description: "La plataforma es gratuita y no incluye compras dentro de la aplicación."
     }
   ];
 
@@ -111,28 +106,28 @@ const ChildSafety = () => {
         </div>
       </section>
 
-      {/* Safety Features */}
+      {/* Platform Info */}
       <section className="py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-emerald-800 text-center mb-8">
-            Características de Seguridad
+            Sobre la Plataforma
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {safetyFeatures.map((feature, index) => {
-              const Icon = feature.icon;
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {platformInfo.map((info, index) => {
+              const Icon = info.icon;
               return (
                 <Card key={index} className="bg-white/90 border-emerald-200 hover:shadow-lg transition-shadow">
                   <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
+                    <div className="flex flex-col items-center text-center gap-4">
                       <div className="flex-shrink-0 w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
                         <Icon className="w-6 h-6 text-emerald-600" />
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-emerald-800 mb-2">
-                          {feature.title}
+                          {info.title}
                         </h3>
                         <p className="text-emerald-700 text-sm leading-relaxed">
-                          {feature.description}
+                          {info.description}
                         </p>
                       </div>
                     </div>
