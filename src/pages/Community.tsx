@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Users, Sparkles, Bell, Clock, Rocket } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import NotifyMeForm from '@/components/NotifyMeForm';
 
 const Community = () => {
+  const [isNotifyFormOpen, setIsNotifyFormOpen] = useState(false);
   const upcomingFeatures = [
     {
       title: "Ranking de EcoHéroes",
@@ -107,13 +109,22 @@ const Community = () => {
                     <p className="text-sm text-gray-600">Te avisaremos cuando la comunidad esté lista</p>
                   </div>
                 </div>
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white cursor-default">
+                <Button 
+                  onClick={() => setIsNotifyFormOpen(true)}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+                >
                   <Bell className="w-4 h-4 mr-2" />
                   Avisarme
                 </Button>
               </div>
             </CardContent>
           </Card>
+
+          {/* Notify Me Form Modal */}
+          <NotifyMeForm 
+            isOpen={isNotifyFormOpen} 
+            onClose={() => setIsNotifyFormOpen(false)} 
+          />
 
           {/* Funcionalidades que vienen */}
           <Card className="bg-white/90 backdrop-blur-sm border-2 border-indigo-200 shadow-xl mb-8">
