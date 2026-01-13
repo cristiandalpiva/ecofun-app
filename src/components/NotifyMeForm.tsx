@@ -260,7 +260,7 @@ const NotifyMeForm: React.FC<NotifyMeFormProps> = ({ isOpen, onClose }) => {
                     className="text-xs text-gray-700 cursor-pointer leading-relaxed"
                   >
                     He leído y acepto la{' '}
-                    <a href="/child-safety" target="_blank" className="text-purple-600 underline hover:text-purple-800">
+                    <a href="/child-safety" target="_blank" rel="noopener noreferrer" className="text-purple-600 underline hover:text-purple-800">
                       política de privacidad y seguridad infantil
                     </a>
                     . Entiendo que puedo solicitar la eliminación de mis datos en cualquier momento.
