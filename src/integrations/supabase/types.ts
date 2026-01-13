@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      community_subscriptions: {
+        Row: {
+          child_name: string | null
+          consent_date: string | null
+          created_at: string
+          email: string
+          id: string
+          parent_name: string
+          parental_consent: boolean
+          updated_at: string
+        }
+        Insert: {
+          child_name?: string | null
+          consent_date?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          parent_name: string
+          parental_consent?: boolean
+          updated_at?: string
+        }
+        Update: {
+          child_name?: string | null
+          consent_date?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          parent_name?: string
+          parental_consent?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       game_progress: {
         Row: {
           created_at: string
