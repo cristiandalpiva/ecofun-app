@@ -670,6 +670,160 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Environmental NGOs Section */}
+      <section className="container mx-auto px-4 py-12 sm:py-16">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8 sm:mb-10">
+            <h2 className="text-2xl sm:text-3xl font-bold text-emerald-800 mb-3">
+              🌍 ONGs que Cuidan Nuestro Planeta
+            </h2>
+            <p className="text-emerald-700 text-base sm:text-lg max-w-2xl mx-auto">
+              Conoce organizaciones que trabajan por el medio ambiente en el mundo hispanohablante
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {/* Agenda Ambiental */}
+            <a 
+              href="https://www.agendaambiental.com.ar" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group block"
+            >
+              <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
+                <CardContent className="p-5 sm:p-6 text-center">
+                  <div className="text-3xl mb-3">🌿</div>
+                  <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
+                    Agenda Ambiental
+                  </h3>
+                  <p className="text-sm text-emerald-600">
+                    Organización argentina dedicada a la educación y difusión ambiental
+                  </p>
+                  <Badge className="mt-3 bg-emerald-100 text-emerald-700 border-emerald-300">
+                    🇦🇷 Argentina
+                  </Badge>
+                </CardContent>
+              </Card>
+            </a>
+
+            {/* WWF España */}
+            <a 
+              href="https://www.wwf.es" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group block"
+            >
+              <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
+                <CardContent className="p-5 sm:p-6 text-center">
+                  <div className="text-3xl mb-3">🐼</div>
+                  <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
+                    WWF España
+                  </h3>
+                  <p className="text-sm text-emerald-600">
+                    Fondo Mundial para la Naturaleza, protegiendo biodiversidad global
+                  </p>
+                  <Badge className="mt-3 bg-emerald-100 text-emerald-700 border-emerald-300">
+                    🇪🇸 España
+                  </Badge>
+                </CardContent>
+              </Card>
+            </a>
+
+            {/* Fundación Vida Silvestre */}
+            <a 
+              href="https://www.vidasilvestre.org.ar" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group block"
+            >
+              <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
+                <CardContent className="p-5 sm:p-6 text-center">
+                  <div className="text-3xl mb-3">🦜</div>
+                  <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
+                    Fundación Vida Silvestre
+                  </h3>
+                  <p className="text-sm text-emerald-600">
+                    Conservación de la diversidad biológica en Argentina
+                  </p>
+                  <Badge className="mt-3 bg-emerald-100 text-emerald-700 border-emerald-300">
+                    🇦🇷 Argentina
+                  </Badge>
+                </CardContent>
+              </Card>
+            </a>
+
+            {/* Ecologistas en Acción */}
+            <a 
+              href="https://www.ecologistasenaccion.org" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group block"
+            >
+              <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
+                <CardContent className="p-5 sm:p-6 text-center">
+                  <div className="text-3xl mb-3">✊</div>
+                  <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
+                    Ecologistas en Acción
+                  </h3>
+                  <p className="text-sm text-emerald-600">
+                    Confederación de grupos ecologistas de España
+                  </p>
+                  <Badge className="mt-3 bg-emerald-100 text-emerald-700 border-emerald-300">
+                    🇪🇸 España
+                  </Badge>
+                </CardContent>
+              </Card>
+            </a>
+
+            {/* Pronatura México */}
+            <a 
+              href="https://www.pronatura.org.mx" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group block"
+            >
+              <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
+                <CardContent className="p-5 sm:p-6 text-center">
+                  <div className="text-3xl mb-3">🦋</div>
+                  <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
+                    Pronatura México
+                  </h3>
+                  <p className="text-sm text-emerald-600">
+                    Conservación de ecosistemas y especies prioritarias en México
+                  </p>
+                  <Badge className="mt-3 bg-emerald-100 text-emerald-700 border-emerald-300">
+                    🇲🇽 México
+                  </Badge>
+                </CardContent>
+              </Card>
+            </a>
+
+            {/* Fundación Ambiente y Recursos Naturales (FARN) */}
+            <a 
+              href="https://farn.org.ar" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group block"
+            >
+              <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
+                <CardContent className="p-5 sm:p-6 text-center">
+                  <div className="text-3xl mb-3">⚖️</div>
+                  <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
+                    FARN
+                  </h3>
+                  <p className="text-sm text-emerald-600">
+                    Fundación Ambiente y Recursos Naturales - Derecho ambiental
+                  </p>
+                  <Badge className="mt-3 bg-emerald-100 text-emerald-700 border-emerald-300">
+                    🇦🇷 Argentina
+                  </Badge>
+                </CardContent>
+              </Card>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Suggestions Modal */}
       <SuggestionForm 
         isOpen={showSuggestions} 
