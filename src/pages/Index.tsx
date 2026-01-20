@@ -34,7 +34,7 @@ import SuggestionForm from "@/components/SuggestionForm";
 // ONG Logos
 import AgendaAmbientalLogo from "@/assets/ongs/agenda-ambiental-logo.png";
 import WWFLogo from "@/assets/ongs/wwf-logo.png";
-import VidaSilvestreLogo from "@/assets/ongs/vida-silvestre-logo.png";
+import VidaSilvestreLogo from "@/assets/ongs/vida-silvestre-logo.svg";
 import EcologistasAccionLogo from "@/assets/ongs/ecologistas-accion-logo.png";
 import PronaturaLogo from "@/assets/ongs/pronatura-logo.png";
 import FARNLogo from "@/assets/ongs/farn-logo.png";
