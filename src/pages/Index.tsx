@@ -31,6 +31,14 @@ import Footer from "@/components/Footer";
 import OnboardingModal from "@/components/OnboardingModal";
 import SuggestionForm from "@/components/SuggestionForm";
 
+// ONG Logos
+import AgendaAmbientalLogo from "@/assets/ongs/agenda-ambiental-logo.png";
+import WWFLogo from "@/assets/ongs/wwf-logo.png";
+import VidaSilvestreLogo from "@/assets/ongs/vida-silvestre-logo.png";
+import EcologistasAccionLogo from "@/assets/ongs/ecologistas-accion-logo.png";
+import PronaturaLogo from "@/assets/ongs/pronatura-logo.png";
+import FARNLogo from "@/assets/ongs/farn-logo.png";
+
 interface GameProps {
   onComplete: (points: number) => void;
   onBack: () => void;
@@ -685,22 +693,22 @@ const Index = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Agenda Ambiental */}
             <a 
-              href="https://www.agendaambiental.com.ar" 
+              href="https://www.agendaambiental.com/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="group block"
             >
               <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
-                <CardContent className="p-5 sm:p-6 text-center">
-                  <div className="text-3xl mb-3">🌿</div>
+                <CardContent className="p-5 sm:p-6 text-center flex flex-col items-center">
+                  <img src={AgendaAmbientalLogo} alt="Agenda Ambiental" className="h-16 w-auto mb-3 object-contain" />
                   <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
                     Agenda Ambiental
                   </h3>
                   <p className="text-sm text-emerald-600">
-                    Organización argentina dedicada a la educación y difusión ambiental
+                    Conectando a la comunidad ambiental global
                   </p>
                   <Badge className="mt-3 bg-emerald-100 text-emerald-700 border-emerald-300">
-                    🇦🇷 Argentina
+                    🌎 Internacional
                   </Badge>
                 </CardContent>
               </Card>
@@ -714,8 +722,8 @@ const Index = () => {
               className="group block"
             >
               <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
-                <CardContent className="p-5 sm:p-6 text-center">
-                  <div className="text-3xl mb-3">🐼</div>
+                <CardContent className="p-5 sm:p-6 text-center flex flex-col items-center">
+                  <img src={WWFLogo} alt="WWF España" className="h-16 w-auto mb-3 object-contain" />
                   <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
                     WWF España
                   </h3>
@@ -737,8 +745,8 @@ const Index = () => {
               className="group block"
             >
               <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
-                <CardContent className="p-5 sm:p-6 text-center">
-                  <div className="text-3xl mb-3">🦜</div>
+                <CardContent className="p-5 sm:p-6 text-center flex flex-col items-center">
+                  <img src={VidaSilvestreLogo} alt="Fundación Vida Silvestre" className="h-16 w-auto mb-3 object-contain" />
                   <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
                     Fundación Vida Silvestre
                   </h3>
@@ -760,8 +768,8 @@ const Index = () => {
               className="group block"
             >
               <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
-                <CardContent className="p-5 sm:p-6 text-center">
-                  <div className="text-3xl mb-3">✊</div>
+                <CardContent className="p-5 sm:p-6 text-center flex flex-col items-center">
+                  <img src={EcologistasAccionLogo} alt="Ecologistas en Acción" className="h-16 w-auto mb-3 object-contain" />
                   <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
                     Ecologistas en Acción
                   </h3>
@@ -777,14 +785,14 @@ const Index = () => {
 
             {/* Pronatura México */}
             <a 
-              href="https://www.pronatura.org.mx" 
+              href="https://pronatura.org.mx" 
               target="_blank" 
               rel="noopener noreferrer"
               className="group block"
             >
               <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
-                <CardContent className="p-5 sm:p-6 text-center">
-                  <div className="text-3xl mb-3">🦋</div>
+                <CardContent className="p-5 sm:p-6 text-center flex flex-col items-center">
+                  <img src={PronaturaLogo} alt="Pronatura México" className="h-16 w-auto mb-3 object-contain" />
                   <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
                     Pronatura México
                   </h3>
@@ -806,8 +814,8 @@ const Index = () => {
               className="group block"
             >
               <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
-                <CardContent className="p-5 sm:p-6 text-center">
-                  <div className="text-3xl mb-3">⚖️</div>
+                <CardContent className="p-5 sm:p-6 text-center flex flex-col items-center">
+                  <img src={FARNLogo} alt="FARN" className="h-16 w-auto mb-3 object-contain" />
                   <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
                     FARN
                   </h3>
