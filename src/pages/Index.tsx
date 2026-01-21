@@ -34,7 +34,7 @@ import SuggestionForm from "@/components/SuggestionForm";
 // ONG Logos
 import AgendaAmbientalLogo from "@/assets/ongs/agenda-ambiental-logo.png";
 import WWFLogo from "@/assets/ongs/wwf-logo.png";
-import VidaSilvestreLogo from "@/assets/ongs/vida-silvestre-logo.svg";
+import VidaSilvestreLogo from "@/assets/ongs/vida-silvestre-logo.jpg";
 import EcologistasAccionLogo from "@/assets/ongs/ecologistas-accion-logo.png";
 import PronaturaLogo from "@/assets/ongs/pronatura-logo.png";
 import FARNLogo from "@/assets/ongs/farn-logo.png";
@@ -746,7 +746,17 @@ const Index = () => {
             >
               <Card className="h-full bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl hover:scale-105">
                 <CardContent className="p-5 sm:p-6 text-center flex flex-col items-center">
-                  <img src={VidaSilvestreLogo} alt="Fundación Vida Silvestre" className="h-16 w-auto mb-3 object-contain" />
+                  <img
+                    src={VidaSilvestreLogo}
+                    alt="Fundación Vida Silvestre"
+                    loading="lazy"
+                    className="h-16 w-auto mb-3 object-contain"
+                    onError={(e) => {
+                      // Fallback + debug if the asset fails to load in some browsers/caches
+                      console.warn("Vida Silvestre logo failed to load:", (e.currentTarget as HTMLImageElement).src);
+                      (e.currentTarget as HTMLImageElement).src = "/placeholder.svg";
+                    }}
+                  />
                   <h3 className="font-bold text-emerald-800 text-lg mb-2 group-hover:text-emerald-600 transition-colors">
                     Fundación Vida Silvestre
                   </h3>
